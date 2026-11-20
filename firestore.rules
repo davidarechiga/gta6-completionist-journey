@@ -1,0 +1,15 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // One progress document per user, readable and writable only by that user.
+    match /journals/{uid} {
+      allow read, delete: if request.auth != null && request.auth.uid == uid;
+      allow create, update: if request.auth != null && request.auth.uid == uid
+        && request.resource.data.keys().hasOnly(['v', 'items', 'hints', 'names', 'prefs', 'prefsT'])
+        && request.resource.data.items is map && request.resource.data.items.size() <= 2000
+        && request.resource.data.hints is map && request.resource.data.hints.size() <= 2000
+        && request.resource.data.names is map && request.resource.data.names.size() <= 2000;
+    }
+    match /{document=**} { allow read, write: if false; }
+  }
+}

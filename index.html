@@ -1,4 +1,4 @@
-<title>The Completionist's Journey</title>
+<title>GTA VI Spoiler-Free Exploration Companion</title>
 <meta name="description" content="An unofficial, spoiler-light completionist companion for Grand Theft Auto VI: what to do next, why now, and what you'd miss by advancing the story.">
 <meta name="claude:viewport-fit-sides" content="cover">
 <meta name="theme-color" content="#161c1a">
@@ -77,9 +77,9 @@ img { display: block; max-width: 100%; }
   color: var(--ink-3);
 }
 .wrap {
-  max-width: 760px; margin: 0 auto;
-  padding-left: max(16px, env(safe-area-inset-left, 0px));
-  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  max-width: none; margin: 0 auto;
+  padding-left: max(clamp(16px, 4.5vw, 88px), env(safe-area-inset-left, 0px));
+  padding-right: max(clamp(16px, 4.5vw, 88px), env(safe-area-inset-right, 0px));
 }
 
 .skip { position: fixed; left: 12px; top: calc(env(safe-area-inset-top, 0px) + 10px); z-index: 60; padding: 12px 16px; border-radius: 10px; background: var(--ink); color: var(--bg); font-weight: 700; text-decoration: none; transform: translateY(-160%); transition: transform var(--dur) var(--ease); }
@@ -149,11 +149,9 @@ main { padding-bottom: calc(var(--tabbar-h) + env(safe-area-inset-bottom, 0px) +
   .desk-tabs .tab[aria-current="page"]::after { transform: scaleX(1); background: var(--accent); }
   .desk-tabs .tab[aria-current="page"]::before { display: none; }
   .desk-tabs .tab .badge { position: static; }
-  .wrap { max-width: 1200px; }
   main { padding-bottom: 56px; }
 }
 
-@media (min-width: 1232px) { .wrap { padding-left: 0; padding-right: 0; } }
 
 /* ── Generic bits ── */
 .section { display: flex; flex-direction: column; gap: 12px; margin-top: 32px; }
@@ -291,7 +289,7 @@ details.more > div { display: flex; flex-direction: column; gap: 10px; padding-t
 }
 @media (min-width: 900px) {
   .banner-hero { --bh: 380px; padding-top: 226px; }
-  .banner { max-width: 1600px; margin: 0 auto; }
+  .banner { max-width: none; margin: 0 auto; }
   .banner img {
     -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 30%, rgba(0, 0, 0, .4) 64%, rgba(0, 0, 0, .08) 86%, transparent 100%), linear-gradient(to right, transparent 0%, #000 14%, #000 86%, transparent 100%);
     -webkit-mask-composite: source-in;
@@ -444,6 +442,8 @@ html.is-entering .chapter-hero.on-banner > :nth-child(3) { animation-delay: .16s
 .tog[aria-pressed="true"] { background: var(--ink); color: var(--bg); border-color: var(--ink); }
 .sheet-actions { display: flex; gap: 8px; justify-content: flex-end; flex-wrap: wrap; }
 textarea.io { width: 100%; min-height: 160px; border-radius: var(--r-md); border: 1px solid var(--line-strong); background: var(--bg-deep); padding: 12px; font-family: var(--font-mono); font-size: 11.5px; color: var(--ink-2); }
+input.inp { width: 100%; min-height: 44px; border-radius: var(--r-md); border: 1px solid var(--line-strong); background: var(--bg-deep); padding: 0 12px; color: var(--ink); margin: 6px 0 10px; }
+.linkbtn { background: none; border: 0; padding: 0; color: var(--accent); text-decoration: underline; font: inherit; cursor: pointer; }
 select.sel { width: 100%; min-height: 44px; border-radius: var(--r-md); border: 1px solid var(--line-strong); background: var(--bg-deep); padding: 0 12px; }
 
 /* ── Progress view ── */
@@ -503,7 +503,7 @@ select.sel { width: 100%; min-height: 44px; border-radius: var(--r-md); border: 
       <div class="brand">
         <span class="mark mark--initial" aria-hidden="true">C</span>
         <span class="brand-text">
-          <span class="brand-name">The Completionist's Journey</span>
+          <span class="brand-name">GTA VI Spoiler-Free Exploration Companion</span>
           <span class="brand-sub">GTA VI · Leonida · unofficial</span>
         </span>
       </div>
@@ -676,35 +676,95 @@ function mergeStates(a, b) {
   return out;
 }
 
-/* Cross-device sync through the artifact's private per-viewer store, when the viewer provides one. */
+/* Cross-device sync. Two backends share one merge loop:
+   - on claude.ai, the artifact's private per-viewer store;
+   - on the public site, optional Firebase sign-in (Google or email link) with one Firestore doc per user.
+   Signed-out visitors keep working from this browser only. */
+const FB_VERSION = "10.12.2";
 const Sync = {
-  ref: null, mode: "local", timer: null, chain: Promise.resolve(), lastRemote: null,
+  ref: null, mode: "local", timer: null, chain: Promise.resolve(), lastRemote: null, unsub: null,
+  account: null, fb: null, available: false,
   async start() {
     try {
-      if (!window.claude || typeof window.claude.use !== "function") return;
-      const [db, user] = await Promise.all([window.claude.use("db"), window.claude.use("user")]);
-      if (!db || !user) return;
-      const uid = await user.id();
-      if (!uid) return;
-      this.ref = db.collection("data/users/" + uid).doc("journal");
-      this.mode = "connecting"; renderChrome();
-      const loadTimer = setTimeout(() => { if (this.mode === "connecting") { this.mode = "offline"; renderChrome(); } }, 10000);
-      this.ref.onSnapshot((snap) => {
-        if (snap.metadata && snap.metadata.hasPendingWrites) return;
-        const remote = snap.exists ? normalize(snap.data()) : null;
-        if (!snap.metadata || !snap.metadata.fromCache) { clearTimeout(loadTimer); this.mode = "on"; }
-        this.lastRemote = remote ? stable(remote) : null;
-        const merged = mergeStates(S, remote);
-        const changed = stable(merged) !== stable(S);
-        S = merged;
-        lsSet(LS_KEY, JSON.stringify(S));
-        if (changed) render();
-        else renderChrome();
-        // Write back only when this device holds changes the store lacks; never just because the page opened.
-        const hasLocal = Object.keys(S.items).length || Object.keys(S.hints).length || Object.keys(S.names).length || S.prefsT;
-        if (this.mode === "on" && (remote ? stable(S) !== this.lastRemote : hasLocal)) this.schedule(400);
-      }, () => { clearTimeout(loadTimer); this.mode = "offline"; renderChrome(); });
+      if (window.claude && typeof window.claude.use === "function") await this.startClaude();
+      else await this.startFirebase();
     } catch { this.mode = "local"; }
+  },
+  async startClaude() {
+    const [db, user] = await Promise.all([window.claude.use("db"), window.claude.use("user")]);
+    if (!db || !user) return;
+    const uid = await user.id();
+    if (!uid) return;
+    this.attach(db.collection("data/users/" + uid).doc("journal"));
+  },
+  loadScript(src) {
+    return new Promise((res, rej) => {
+      const el = document.createElement("script");
+      el.src = src; el.onload = res; el.onerror = () => rej(new Error("Could not load " + src));
+      document.head.appendChild(el);
+    });
+  },
+  async startFirebase() {
+    try { await this.loadScript("firebase-config.js"); } catch { return; }
+    const cfg = window.FIREBASE_CONFIG;
+    if (!cfg || !cfg.apiKey || /^PASTE/.test(String(cfg.apiKey))) return;
+    this.available = true; render();
+    const base = "https://www.gstatic.com/firebasejs/" + FB_VERSION + "/";
+    await this.loadScript(base + "firebase-app-compat.js");
+    await Promise.all([this.loadScript(base + "firebase-auth-compat.js"), this.loadScript(base + "firebase-firestore-compat.js")]);
+    firebase.initializeApp(cfg);
+    const auth = firebase.auth(), db = firebase.firestore();
+    this.fb = { auth, db };
+    if (auth.isSignInWithEmailLink(location.href)) {
+      let email = lsGet("completionist-journey:email-link");
+      if (!email) email = window.prompt("Confirm your email address to finish signing in:");
+      if (email) {
+        try { await auth.signInWithEmailLink(email.trim(), location.href); showToast("Signed in"); }
+        catch (e) { showToast("That sign-in link didn't work. It may have expired."); }
+      }
+      try { localStorage.removeItem("completionist-journey:email-link"); } catch { /* ignore */ }
+      history.replaceState(null, "", location.pathname + "#progress");
+      UI.view = "progress";
+    }
+    auth.onAuthStateChanged((user) => {
+      if (user) {
+        const prov = (user.providerData && user.providerData[0] && user.providerData[0].providerId) || "";
+        this.account = { uid: user.uid, email: user.email || "", name: user.displayName || "", provider: prov };
+        this.attach(db.collection("journals").doc(user.uid));
+      } else {
+        this.account = null; this.detach(); this.mode = "local";
+      }
+      if ($("#sheetRoot .sheet") && this.account) closeSheet();
+      render();
+    });
+  },
+  detach() {
+    if (this.unsub) { try { this.unsub(); } catch { /* ignore */ } }
+    this.unsub = null; this.ref = null; this.lastRemote = null;
+    clearTimeout(this.timer);
+  },
+  attach(ref) {
+    this.detach();
+    this.ref = ref;
+    this.mode = "connecting"; renderChrome();
+    const loadTimer = setTimeout(() => { if (this.ref === ref && this.mode === "connecting") { this.mode = "offline"; renderChrome(); } }, 10000);
+    const unsub = ref.onSnapshot((snap) => {
+      if (this.ref !== ref) return;
+      if (snap.metadata && snap.metadata.hasPendingWrites) return;
+      const remote = snap.exists ? normalize(snap.data()) : null;
+      if (!snap.metadata || !snap.metadata.fromCache) { clearTimeout(loadTimer); this.mode = "on"; }
+      this.lastRemote = remote ? stable(remote) : null;
+      const merged = mergeStates(S, remote);
+      const changed = stable(merged) !== stable(S);
+      S = merged;
+      lsSet(LS_KEY, JSON.stringify(S));
+      if (changed) render();
+      else renderChrome();
+      // Write back only when this device holds changes the store lacks; never just because the page opened.
+      const hasLocal = Object.keys(S.items).length || Object.keys(S.hints).length || Object.keys(S.names).length || S.prefsT;
+      if (this.mode === "on" && (remote ? stable(S) !== this.lastRemote : hasLocal)) this.schedule(400);
+    }, () => { if (this.ref !== ref) return; clearTimeout(loadTimer); this.mode = "offline"; renderChrome(); });
+    this.unsub = typeof unsub === "function" ? unsub : null;
   },
   schedule(delay = 1200) {
     if (!this.ref) return;
@@ -712,14 +772,72 @@ const Sync = {
     this.timer = setTimeout(() => this.flush(), delay);
   },
   flush() {
-    if (!this.ref) return;
+    const ref = this.ref;
+    if (!ref) return;
+    clearTimeout(this.timer);
     const body = JSON.parse(JSON.stringify(S));
     const key = stable(body);
     if (key === this.lastRemote) return;
-    this.chain = this.chain.then(() => this.ref.set(body)).then(() => { this.lastRemote = key; this.mode = "on"; renderChrome(); })
-      .catch((e) => { this.mode = e && e.code === "invalid_argument" ? "local" : "offline"; renderChrome(); });
+    this.chain = this.chain.then(() => ref.set(body)).then(() => { if (this.ref === ref) { this.lastRemote = key; this.mode = "on"; renderChrome(); } })
+      .catch((e) => { if (this.ref === ref) { this.mode = e && e.code === "invalid_argument" ? "local" : "offline"; renderChrome(); } });
+  },
+  unsynced() { return !!this.ref && stable(JSON.parse(JSON.stringify(S))) !== this.lastRemote; },
+  label() {
+    if (this.mode === "on") return "Synced across your devices";
+    if (this.mode === "connecting") return "Connecting to sync…";
+    if (this.mode === "offline") return "Sync unavailable right now · saved on this device";
+    return this.available && !this.account ? "Saved in this browser · sign in to sync" : "Saved on this device";
+  },
+  async signInGoogle() {
+    try { await this.fb.auth.signInWithPopup(new firebase.auth.GoogleAuthProvider()); }
+    catch (e) {
+      if (e && (e.code === "auth/popup-closed-by-user" || e.code === "auth/cancelled-popup-request")) return;
+      authMsg(e && e.code === "auth/popup-blocked" ? "Your browser blocked the sign-in window. Allow pop-ups for this site and try again." : "Google sign-in didn't work. Try again, or use the email link.");
+    }
+  },
+  async sendLink(email) {
+    if (!/^\S+@\S+\.\S+$/.test(email)) { authMsg("Enter a valid email address."); return; }
+    try {
+      await this.fb.auth.sendSignInLinkToEmail(email, { url: location.origin + location.pathname, handleCodeInApp: true });
+      lsSet("completionist-journey:email-link", email);
+      authMsg("Check your inbox for the sign-in link. Open it on this device.", true);
+    } catch (e) { authMsg("Couldn't send the link. Check the address and try again."); }
+  },
+  async signOut() {
+    try { await this.fb.auth.signOut(); } catch { showToast("Couldn't sign out. Try again."); return; }
+    this.clearLocal();
+    closeSheet(); render(); showToast("Signed out");
+  },
+  clearLocal() {
+    S = freshState();
+    try { localStorage.removeItem(LS_KEY); } catch { /* ignore */ }
+  },
+  async deleteAccount() {
+    const user = this.fb && this.fb.auth.currentUser;
+    if (!user) return;
+    const msg = $("#acct-msg"); const say = (t) => { if (msg) msg.textContent = t; };
+    try {
+      if (this.account && this.account.provider === "google.com") await user.reauthenticateWithPopup(new firebase.auth.GoogleAuthProvider());
+      else if (Date.now() - Date.parse(user.metadata.lastSignInTime) > 4 * 60 * 1000) {
+        say("For safety, sign out and sign in again with your email link, then delete right away."); return;
+      }
+    } catch { say("Couldn't confirm it's you. Nothing was deleted."); return; }
+    const ref = this.ref;
+    try {
+      this.detach();
+      if (ref) await ref.delete();
+      this.clearLocal();
+      await user.delete();
+      this.account = null; this.mode = "local";
+      closeSheet(); render(); showToast("Account and synced data deleted");
+    } catch (e) {
+      say("Something went wrong while deleting. Sign out, sign in again, and retry.");
+      if (this.account) this.attach(this.fb.db.collection("journals").doc(this.account.uid));
+    }
   },
 };
+function authMsg(t, ok) { const m = $("#acct-msg"); if (m) { m.textContent = t; m.style.color = ok ? "var(--accent)" : "var(--danger)"; } }
+document.addEventListener("visibilitychange", () => { if (document.visibilityState === "hidden") Sync.flush(); });
 
 /* ═════════════ Derived status ═════════════ */
 const stored = (id) => (S.items[id] && S.items[id].s) || "todo";
@@ -1231,7 +1349,7 @@ function viewProgress() {
   const sDone = story.filter((a) => stored(a.id) === "done").length;
   const miss = by((a) => a.missable);
   const mMissed = miss.filter((a) => statusOf(a) === "missed").length;
-  const syncLabel = Sync.mode === "on" ? "Synced across your devices" : Sync.mode === "connecting" ? "Connecting to sync…" : Sync.mode === "offline" ? "Sync unavailable right now · saved on this device" : "Saved on this device";
+  const syncLabel = Sync.label();
   let h = `<div class="wrap"><section class="chapter-hero">
     <span class="eyebrow">Your journey so far</span>
     <h1>${o.pct}% of the journal</h1>
@@ -1269,6 +1387,7 @@ function viewProgress() {
     </div>
   </section>
   <section class="section"><h2 class="section-title">Backup and transfer</h2>
+    ${accountPanel()}
     <div class="panel">
       <p class="small muted">Progress saves on this device automatically${Sync.mode === "on" ? " and syncs to your other devices when you open this page signed in" : ""}. Export a JSON file as a backup, or to move progress somewhere else. Progress is keyed by stable step ids, so guide updates won't erase it.</p>
       <div class="actions"><button class="btn btn-sm" data-action="export">Export progress</button><button class="btn btn-sm" data-action="import">Import progress</button><button class="btn btn-sm btn-danger" data-action="reset-all">Reset all progress</button></div>
@@ -1288,8 +1407,47 @@ function viewProgress() {
   return h;
 }
 
+function accountPanel() {
+  if (!Sync.available) return "";
+  if (Sync.account) {
+    const who = Sync.account.email || Sync.account.name || "your account";
+    return `<div class="panel"><h3>Your account</h3><p class="small muted">Signed in as <b>${esc(who)}</b>. Progress syncs to your account on every device you sign in on.</p>
+      <div class="actions"><button class="btn btn-sm" data-action="sign-out">Sign out</button><button class="btn btn-sm btn-ghost" data-action="privacy">Privacy</button><button class="btn btn-sm btn-danger" data-action="delete-account">Delete account and data</button></div></div>`;
+  }
+  return `<div class="panel"><h3>Sync across devices (optional)</h3><p class="small muted">Everything works without an account, saved in this browser only. Clearing site data or switching devices loses it. Sign in to keep it safe and use it anywhere.</p>
+    <div class="actions"><button class="btn btn-sm btn-primary" data-action="sign-in">Sign in to sync</button><button class="btn btn-sm btn-ghost" data-action="privacy">What's stored?</button></div></div>`;
+}
+function signInSheet() {
+  openSheet(`<h3>Sign in to sync</h3><p class="small muted">Your progress so far on this device is kept and merged into your account.</p>
+    <div class="actions"><button class="btn btn-primary" data-action="sign-in-google">Continue with Google</button></div>
+    <p class="small muted" style="margin-top:14px">Or get a one-time sign-in link by email, no password:</p>
+    <input type="email" id="acct-email" class="inp" placeholder="you@example.com" autocomplete="email" inputmode="email">
+    <div class="actions"><button class="btn" data-action="sign-in-email">Email me a link</button></div>
+    <p class="small" id="acct-msg" role="status"></p>
+    <p class="small muted">We store only your progress. <button class="linkbtn" data-action="privacy">Read what's stored</button></p>
+    <div class="sheet-actions"><button class="btn" data-action="close-sheet-btn">Not now</button></div>`);
+}
+function signOutSheet() {
+  const warn = Sync.unsynced() ? '<p class="small" style="color:var(--danger)">Some recent changes haven\'t synced yet. Export first, or wait a moment and try again.</p>' : "";
+  openSheet(`<h3>Sign out?</h3><p class="muted">Your progress stays safe in your account. Signing out also clears it from this device, so the next person who uses it starts fresh.</p>${warn}
+    <div class="sheet-actions"><button class="btn" data-action="close-sheet-btn">Stay signed in</button><button class="btn btn-primary" data-action="do-sign-out">Sign out</button></div>`);
+}
+function deleteAccountSheet() {
+  openSheet(`<h3>Delete your account?</h3><p class="muted">This permanently deletes your account and your synced progress. It can't be undone, and it clears progress from this device. Export first if you want a copy.</p>
+    <p class="small" id="acct-msg" role="status" style="color:var(--danger)"></p>
+    <div class="sheet-actions"><button class="btn" data-action="close-sheet-btn">Keep my account</button><button class="btn btn-danger" data-action="do-delete-account">Delete everything</button></div>`);
+}
+function privacySheet() {
+  openSheet(`<h3>Privacy</h3>
+    <p class="small muted">Using the guide needs no account. Without one, your progress stays in this browser and is never sent anywhere.</p>
+    <p class="small muted"><b>If you sign in</b> (optional), your progress is stored in Google Firebase, and Firebase keeps your sign-in details: your account ID, email address and, with Google, your name and photo. Your progress is a list of steps you've marked done, skipped or saved for later, plus your settings. Only you can read it. The site owner can see account emails in the admin console.</p>
+    <p class="small muted">There are no ads, analytics or trackers, and nothing is sold or shared. You can delete your account and synced data at any time from the Progress tab.</p>
+    <p class="small muted">Unofficial fan project, not affiliated with Rockstar Games or Take-Two Interactive.</p>
+    <div class="sheet-actions"><button class="btn btn-primary" data-action="close-sheet-btn">Close</button></div>`);
+}
+
 function footHTML() {
-  return `<footer class="foot"><p>${esc(DATA.meta.disclaimer)} Data ${esc(DATA.meta.dataVersion)}. Chapter photographs from Wikimedia Commons, used under their licences.</p><p><button class="btn btn-sm btn-ghost" data-action="credits">Photo credits</button></p></footer>`;
+  return `<footer class="foot"><p>${esc(DATA.meta.disclaimer)} Data ${esc(DATA.meta.dataVersion)}. Chapter photographs from Wikimedia Commons, used under their licences.</p><p><button class="btn btn-sm btn-ghost" data-action="credits">Photo credits</button>${Sync.available ? ' <button class="btn btn-sm btn-ghost" data-action="privacy">Privacy</button>' : ""}</p></footer>`;
 }
 
 /* ═════════════ Sheets ═════════════ */
@@ -1406,7 +1564,7 @@ function renderChrome() {
   $("#tabs").innerHTML = html;
   $("#deskTabs").innerHTML = html;
   const sync = $(".sync");
-  if (sync && UI.view === "progress") { /* progress view re-renders its own label on full render */ }
+  if (sync) { sync.className = "sync " + (Sync.mode === "on" ? "on" : Sync.mode === "offline" ? "off" : ""); sync.innerHTML = "<i></i>" + esc(Sync.label()); }
 }
 function render() {
   if (!DATA) return;
@@ -1483,6 +1641,14 @@ document.addEventListener("click", (e) => {
     case "reset-all": resetSheet(); break;
     case "do-reset": doReset(); break;
     case "catch-up": catchUp(); break;
+    case "sign-in": signInSheet(); break;
+    case "sign-in-google": Sync.signInGoogle(); break;
+    case "sign-in-email": Sync.sendLink(($("#acct-email") || {}).value ? $("#acct-email").value.trim() : ""); break;
+    case "sign-out": signOutSheet(); break;
+    case "do-sign-out": Sync.signOut(); break;
+    case "delete-account": deleteAccountSheet(); break;
+    case "do-delete-account": Sync.deleteAccount(); break;
+    case "privacy": privacySheet(); break;
   }
 });
 document.addEventListener("input", (e) => {
