@@ -1,0 +1,1527 @@
+<title>The Completionist's Journey</title>
+<meta name="description" content="An unofficial, spoiler-light completionist companion for Grand Theft Auto VI: what to do next, why now, and what you'd miss by advancing the story.">
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="theme-color" content="#161c1a">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@400..600&family=Figtree:wght@400..700&family=Martian+Mono:wght@400..500&display=swap">
+<style>
+/* Dealt (tasteskill): palette green-black-bone, type sora (Sora / Figtree + Martian Mono), radius soft, buttons solid, mark initial.
+   Why the palette fits: Leonida at night is mangrove water and humid dark; a green-black ground with bone type and a
+   sea-glass accent lets the chapter photographs carry the colour. Layout: one journal column on phones (thumb tab bar),
+   a two-column "now" board and header tabs on desktop. */
+:root {
+  color-scheme: dark;
+  --bg: #161c1a;
+  --bg-deep: #111614;
+  --surface: #1f2725;
+  --surface-2: #26302d;
+  --surface-3: #313c38;
+  --line: rgba(227, 226, 218, 0.08);
+  --line-strong: rgba(227, 226, 218, 0.16);
+  --ink: #e3e2da;
+  --ink-2: #c2c4bb;
+  --ink-3: #a9afa7;
+  --accent: #9fc7b8;
+  --accent-hi: #b6d6ca;
+  --accent-ink: #161c1a;
+  --danger: #f0897a;
+  --warn: #e4bf6e;
+  --apricot: #eaa66f;
+  --font-display: "Sora", "Avenir Next", system-ui, sans-serif;
+  --font-body: "Figtree", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-mono: "Martian Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  --r-xl: 20px;
+  --r-lg: 16px;
+  --r-md: 12px;
+  --r-sm: 8px;
+  --r-btn: 10px;
+  --ease: cubic-bezier(.2, .7, .2, 1);
+  --dur: 180ms;
+  --tabbar-h: 64px;
+  --topbar-h: 64px;
+  /* names the script uses inline */
+  --night: var(--bg);
+  --night-2: var(--surface);
+  --night-3: var(--surface-2);
+  --night-4: var(--surface-3);
+  --teal: var(--accent);
+  --sun: var(--warn);
+}
+* { box-sizing: border-box; }
+html { background: var(--bg); overflow-x: clip; }
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-tap-highlight-color: transparent;
+  font-feature-settings: "ss01";
+}
+body::before {
+  content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 30; background: var(--bg);
+}
+button, input, select, textarea { font: inherit; color: inherit; }
+button { cursor: pointer; }
+a { color: var(--accent); text-underline-offset: 3px; text-decoration-thickness: 1px; }
+a:hover { color: var(--accent-hi); }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 6px; }
+h1, h2, h3, h4 { margin: 0; text-wrap: balance; }
+p { margin: 0; text-wrap: pretty; }
+img { display: block; max-width: 100%; }
+.eyebrow {
+  font-family: var(--font-mono); font-size: 10.5px; font-weight: 500; letter-spacing: .06em; text-transform: uppercase;
+  color: var(--ink-3);
+}
+.wrap {
+  max-width: 760px; margin: 0 auto;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+
+.skip { position: fixed; left: 12px; top: calc(env(safe-area-inset-top, 0px) + 10px); z-index: 60; padding: 12px 16px; border-radius: 10px; background: var(--ink); color: var(--bg); font-weight: 700; text-decoration: none; transform: translateY(-160%); transition: transform var(--dur) var(--ease); }
+.skip:focus, .skip:focus-visible { transform: none; color: var(--bg); }
+
+/* ── Header ── */
+.topbar {
+  position: sticky; top: env(safe-area-inset-top, 0px); z-index: 20;
+  background: color-mix(in srgb, var(--bg) 84%, transparent);
+  backdrop-filter: blur(16px) saturate(140%); -webkit-backdrop-filter: blur(16px) saturate(140%);
+  border-bottom: 1px solid var(--line);
+}
+.topbar-inner { display: flex; align-items: center; gap: 12px; min-height: var(--topbar-h); padding-block: 10px; }
+.brand { display: flex; align-items: center; gap: 10px; min-width: 0; flex: 1; }
+.mark--initial {
+  width: 32px; height: 32px; flex: none; border-radius: 9px; display: grid; place-items: center;
+  background: var(--accent); color: var(--accent-ink); font: 600 17px/1 var(--font-display); letter-spacing: -0.02em;
+}
+.brand-text { display: flex; flex-direction: column; min-width: 0; gap: 2px; }
+.brand-name { font-family: var(--font-display); font-weight: 500; font-size: 15.5px; letter-spacing: -0.015em; line-height: 1.15; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.brand-sub { font-family: var(--font-mono); font-size: 9.5px; letter-spacing: .06em; text-transform: uppercase; color: var(--ink-3); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+@media (max-width: 479px) {
+  .brand-name { white-space: normal; font-size: 15px; line-height: 1.12; }
+  .brand-sub { display: none; }
+}
+.ring { position: relative; width: 44px; height: 44px; flex: none; }
+.ring svg { width: 44px; height: 44px; transform: rotate(-90deg); }
+.ring span { position: absolute; inset: 0; display: grid; place-items: center; font-family: var(--font-mono); font-size: 10px; font-weight: 500; font-variant-numeric: tabular-nums; letter-spacing: -0.02em; }
+.icon-btn {
+  width: 44px; height: 44px; border-radius: 12px; border: 1px solid var(--line-strong); background: var(--surface); display: grid; place-items: center; flex: none;
+  transition: transform var(--dur) var(--ease), background-color var(--dur) var(--ease), border-color var(--dur) var(--ease);
+}
+.icon-btn svg { width: 20px; height: 20px; }
+.desk-tabs { display: none; gap: 2px; }
+
+/* ── Tab bar ── */
+.tabbar {
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 25;
+  background: color-mix(in srgb, var(--bg-deep) 92%, transparent);
+  backdrop-filter: blur(16px) saturate(140%); -webkit-backdrop-filter: blur(16px) saturate(140%);
+  border-top: 1px solid var(--line);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+  padding-left: env(safe-area-inset-left, 0px); padding-right: env(safe-area-inset-right, 0px);
+}
+.tabbar-inner { display: grid; grid-template-columns: repeat(4, 1fr); max-width: 760px; margin: 0 auto; }
+.tab {
+  height: var(--tabbar-h); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px;
+  background: none; border: 0; color: var(--ink-3); font-size: 11.5px; font-weight: 600; letter-spacing: .01em; position: relative;
+  transition: color var(--dur) var(--ease);
+}
+.tab svg { width: 22px; height: 22px; }
+.tab[aria-current="page"] { color: var(--ink); }
+.tab[aria-current="page"] svg { color: var(--accent); }
+.tab[aria-current="page"]::before { content: ""; position: absolute; top: 0; left: calc(50% - 14px); width: 28px; height: 3px; border-radius: 0 0 3px 3px; background: var(--accent); }
+.tab .badge { position: absolute; top: 8px; left: calc(50% + 6px); min-width: 18px; height: 18px; padding: 0 5px; border-radius: 9px; background: var(--danger); color: #22100c; font-family: var(--font-mono); font-size: 10px; font-weight: 500; display: grid; place-items: center; }
+main { padding-bottom: calc(var(--tabbar-h) + env(safe-area-inset-bottom, 0px) + 28px); }
+
+@media (min-width: 900px) {
+  .tabbar { display: none; }
+  .desk-tabs { display: flex; }
+  .desk-tabs .tab { height: 44px; flex-direction: row; padding: 0 14px; font-size: 14.5px; gap: 8px; color: var(--ink-2); }
+  .desk-tabs .tab svg { width: 18px; height: 18px; }
+  .desk-tabs .tab::after { content: ""; position: absolute; left: 14px; right: 14px; bottom: 5px; height: 2px; border-radius: 1px; background: var(--ink-3); transform: scaleX(0); transform-origin: left; transition: transform .28s var(--ease); }
+  .desk-tabs .tab:hover { color: var(--ink); }
+  .desk-tabs .tab:hover::after { transform: scaleX(1); }
+  .desk-tabs .tab[aria-current="page"] { color: var(--ink); }
+  .desk-tabs .tab[aria-current="page"]::after { transform: scaleX(1); background: var(--accent); }
+  .desk-tabs .tab[aria-current="page"]::before { display: none; }
+  .desk-tabs .tab .badge { position: static; }
+  .wrap { max-width: 1200px; }
+  main { padding-bottom: 56px; }
+}
+
+@media (min-width: 1232px) { .wrap { padding-left: 0; padding-right: 0; } }
+
+/* ── Generic bits ── */
+.section { display: flex; flex-direction: column; gap: 12px; margin-top: 32px; }
+.section-head { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 6px 12px; }
+.section-head .eyebrow { white-space: nowrap; }
+.section-title { font-family: var(--font-display); font-size: 21px; font-weight: 500; letter-spacing: -0.02em; line-height: 1.2; }
+.muted { color: var(--ink-3); }
+.small { font-size: 13.5px; }
+.btn {
+  min-height: 44px; padding: 0 16px; border-radius: var(--r-btn); border: 1px solid var(--line-strong); background: var(--surface-2);
+  font-weight: 600; font-size: 15px; display: inline-flex; align-items: center; justify-content: center; gap: 8px; white-space: nowrap; color: var(--ink);
+  transition: transform var(--dur) var(--ease), background-color var(--dur) var(--ease), border-color var(--dur) var(--ease), color var(--dur) var(--ease);
+}
+.btn svg { width: 18px; height: 18px; }
+.btn:active, .icon-btn:active { transform: translateY(0) scale(.97); }
+.btn-primary { background: var(--accent); color: var(--accent-ink); border-color: transparent; }
+.btn-ghost { background: transparent; }
+.btn-danger { border-color: color-mix(in srgb, var(--danger) 55%, transparent); color: var(--danger); background: transparent; }
+.btn-sm { min-height: 40px; padding: 0 14px; font-size: 14px; }
+@media (max-width: 899px) { .btn-sm { min-height: 44px; } }
+@media (hover: hover) {
+  .btn:hover, .icon-btn:hover { transform: translateY(-1px); background: var(--surface-3); border-color: rgba(227, 226, 218, .26); }
+  .btn-primary:hover { background: var(--accent-hi); border-color: transparent; }
+  .btn-ghost:hover { background: var(--surface-2); }
+  .btn-danger:hover { background: color-mix(in srgb, var(--danger) 10%, transparent); border-color: var(--danger); }
+  .btn:active, .icon-btn:active { transform: translateY(0) scale(.97); }
+}
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chip {
+  display: inline-flex; align-items: center; gap: 5px; height: 24px; padding: 0 8px; border-radius: 6px;
+  font-size: 12px; font-weight: 600; background: var(--surface-2); color: var(--ink-2); border: 1px solid var(--line); white-space: nowrap;
+}
+.chip svg { width: 13px; height: 13px; }
+.chip .dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+.chip.p-essential { color: var(--apricot); }
+.chip.p-recommended { color: var(--ink); }
+.chip.p-explore { color: var(--accent); }
+.chip.p-cleanup { color: var(--ink-3); }
+.chip.miss { color: var(--danger); border-color: color-mix(in srgb, var(--danger) 40%, transparent); background: color-mix(in srgb, var(--danger) 10%, var(--surface)); }
+.chip.timed { color: var(--warn); border-color: color-mix(in srgb, var(--warn) 40%, transparent); background: color-mix(in srgb, var(--warn) 9%, var(--surface)); }
+.chip.teaser { color: var(--ink); background: color-mix(in srgb, var(--accent) 12%, var(--surface-2)); border-color: color-mix(in srgb, var(--accent) 30%, transparent); }
+.chip.teaser svg { color: var(--accent); }
+.chip.teaser.plain { background: var(--surface-2); border-color: var(--line); color: var(--ink-2); }
+.chip.st-deferred { color: var(--warn); }
+.chip.st-skipped { color: var(--ink-3); }
+.chip.st-missed { color: var(--danger); }
+.chip.st-locked { color: var(--ink-3); }
+.verif { display: inline-flex; align-items: center; gap: 4px; font-size: 12px; color: var(--ink-3); }
+.verif svg { width: 13px; height: 13px; }
+.verif.v-verified { color: var(--accent); }
+.verif.v-community { color: var(--warn); }
+.verif.v-unconfirmed { color: var(--ink-3); }
+
+/* ── Cards ── */
+.list { display: flex; flex-direction: column; gap: 8px; }
+.card {
+  background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-md); position: relative;
+  transition: transform var(--dur) var(--ease), border-color var(--dur) var(--ease), background-color var(--dur) var(--ease);
+}
+.card.is-open { border-color: var(--line-strong); background: color-mix(in srgb, var(--surface-2) 55%, var(--surface)); }
+@media (hover: hover) { .card:not(.is-open):hover { transform: translateY(-2px); border-color: var(--line-strong); } }
+.card-row { display: grid; grid-template-columns: 56px minmax(0, 1fr); align-items: start; }
+.check {
+  width: 44px; height: 44px; margin: 10px 0 10px 10px; border-radius: 50%; border: 2px solid var(--line-strong); background: transparent;
+  display: grid; place-items: center; color: transparent; transition: background-color .15s, border-color .15s, color .15s, transform .12s var(--ease);
+}
+.check svg { width: 20px; height: 20px; }
+@media (hover: hover) { .card:not(.s-done) .check:hover { border-color: var(--accent); color: color-mix(in srgb, var(--accent) 55%, transparent); } }
+.check:active { transform: scale(.9); }
+.card.s-done .check { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+.card.s-skipped .check { border-style: dashed; color: var(--ink-3); }
+.card.s-deferred .check { border-color: var(--warn); color: var(--warn); }
+.card.s-missed .check { border-color: var(--danger); color: var(--danger); }
+.card-main { padding: 13px 16px 13px 6px; min-width: 0; background: none; border: 0; text-align: left; display: flex; flex-direction: column; gap: 6px; width: 100%; }
+.card-eyebrow { font-family: var(--font-mono); font-size: 10px; font-weight: 500; letter-spacing: .05em; text-transform: uppercase; color: var(--ink-3); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.card-title { font-size: 16.5px; font-weight: 600; line-height: 1.3; letter-spacing: -0.005em; }
+.card.s-done .card-title, .card.s-skipped .card-title { color: var(--ink-3); }
+.card.s-done .card-title { text-decoration: line-through; text-decoration-color: color-mix(in srgb, var(--accent) 55%, transparent); text-decoration-thickness: 1.5px; }
+.card.cat-story { box-shadow: inset 3px 0 0 var(--accent); }
+.card.cat-story .card-title { font-family: var(--font-display); font-size: 18px; font-weight: 500; letter-spacing: -0.02em; }
+.card-body { padding: 14px 16px 16px; display: flex; flex-direction: column; gap: 14px; border-top: 1px solid var(--line); margin-top: 2px; }
+.card-body .desc { color: var(--ink-2); }
+.why { color: var(--ink-2); font-size: 15px; }
+.why b { color: var(--ink); font-weight: 600; }
+.kv { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 5px 16px; font-size: 14px; margin: 0; }
+.kv dt { color: var(--ink-3); }
+.kv dd { margin: 0; color: var(--ink-2); min-width: 0; }
+.unlocks { margin: 4px 0 0; padding-left: 18px; color: var(--ink-2); font-size: 14px; }
+.actions { display: flex; flex-wrap: wrap; gap: 8px; }
+.name-reveal { background: none; border: 0; padding: 0; color: var(--accent); font-size: 13.5px; font-weight: 600; text-decoration: underline; text-underline-offset: 3px; min-height: 32px; }
+
+.missbox { border: 1px solid color-mix(in srgb, var(--danger) 40%, transparent); background: color-mix(in srgb, var(--danger) 8%, var(--surface)); border-radius: var(--r-md); padding: 12px 14px; display: flex; flex-direction: column; gap: 8px; }
+.missbox.temporary { border-color: color-mix(in srgb, var(--warn) 40%, transparent); background: color-mix(in srgb, var(--warn) 7%, var(--surface)); }
+.missbox-head { display: flex; align-items: center; gap: 8px; font-weight: 700; color: var(--danger); font-size: 14px; }
+.missbox.temporary .missbox-head { color: var(--warn); }
+.missbox-head svg { width: 18px; height: 18px; flex: none; }
+
+.during { border: 1px dashed var(--line-strong); border-radius: var(--r-md); padding: 10px 12px; display: flex; flex-direction: column; gap: 8px; }
+.during .card { background: var(--bg); }
+
+/* Hints */
+.hints { border-radius: var(--r-md); background: var(--bg-deep); border: 1px solid var(--line); padding: 14px; display: flex; flex-direction: column; gap: 12px; }
+.hints-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.hint-steps { display: flex; gap: 4px; }
+.hint-steps i { width: 22px; height: 4px; border-radius: 2px; background: var(--surface-3); display: block; transition: background-color .3s var(--ease); }
+.hint-steps i.on { background: var(--accent); }
+.hint { display: grid; grid-template-columns: 26px minmax(0, 1fr); gap: 10px; animation: rise .3s var(--ease) both; }
+.hint-n { width: 26px; height: 26px; border-radius: 8px; display: grid; place-items: center; font-family: var(--font-mono); font-size: 11px; font-weight: 500; background: var(--surface-2); color: var(--ink-2); }
+.hint.l4 .hint-n { background: var(--accent); color: var(--accent-ink); }
+.hint-label { font-family: var(--font-mono); font-size: 10px; letter-spacing: .06em; text-transform: uppercase; color: var(--ink-3); display: block; margin-bottom: 2px; }
+.hint p { color: var(--ink); font-size: 15px; }
+.hint-locked { color: var(--ink-3); font-size: 14px; }
+@keyframes rise { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
+
+.sources { margin: 0; padding-left: 18px; font-size: 13.5px; color: var(--ink-3); display: flex; flex-direction: column; gap: 4px; }
+.sources a { overflow-wrap: anywhere; }
+.sources.credits { list-style: none; padding: 0; gap: 12px; font-size: 15px; color: var(--ink-2); }
+.sources.credits li { display: flex; flex-direction: column; gap: 2px; }
+.foot .btn { color: var(--ink-2); font-weight: 600; }
+details.more > summary { cursor: pointer; color: var(--ink-3); font-size: 13.5px; font-weight: 600; list-style: none; display: flex; align-items: center; gap: 8px; min-height: 36px; transition: color var(--dur) var(--ease); }
+details.more > summary:hover { color: var(--ink); }
+details.more > summary::-webkit-details-marker { display: none; }
+details.more > summary::before { content: "+"; display: inline-grid; place-items: center; width: 20px; height: 20px; border-radius: 6px; border: 1px solid var(--line-strong); font-size: 13px; }
+details.more[open] > summary::before { content: "–"; }
+details.more > div { display: flex; flex-direction: column; gap: 10px; padding-top: 8px; }
+
+/* ── Chapter banner (the setting, full bleed; enters once on load) ── */
+.banner-hero { --bh: clamp(210px, 58vw, 290px); position: relative; isolation: isolate; min-height: var(--bh); padding-top: calc(var(--bh) - 108px); }
+.banner { position: absolute; z-index: 0; top: 0; left: 0; right: 0; height: var(--bh); overflow: hidden; display: block; }
+.banner-hero > .wrap { position: relative; z-index: 1; }
+.banner img {
+  width: 100%; height: 100%; object-fit: cover; filter: brightness(.86) saturate(1.04);
+  -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 34%, rgba(0, 0, 0, .42) 66%, rgba(0, 0, 0, .1) 86%, transparent 100%);
+  mask-image: linear-gradient(to bottom, #000 0%, #000 34%, rgba(0, 0, 0, .42) 66%, rgba(0, 0, 0, .1) 86%, transparent 100%);
+}
+@media (min-width: 900px) {
+  .banner-hero { --bh: 380px; padding-top: 226px; }
+  .banner { max-width: 1600px; margin: 0 auto; }
+  .banner img {
+    -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 30%, rgba(0, 0, 0, .4) 64%, rgba(0, 0, 0, .08) 86%, transparent 100%), linear-gradient(to right, transparent 0%, #000 14%, #000 86%, transparent 100%);
+    -webkit-mask-composite: source-in;
+    mask-image: linear-gradient(to bottom, #000 0%, #000 30%, rgba(0, 0, 0, .4) 64%, rgba(0, 0, 0, .08) 86%, transparent 100%), linear-gradient(to right, transparent 0%, #000 14%, #000 86%, transparent 100%);
+    mask-composite: intersect;
+  }
+}
+html.is-entering [data-enter] .banner img { animation: banner-in 1.2s var(--ease) both; }
+html.is-entering .chapter-hero.on-banner > * { animation: rise-in .8s var(--ease) both; }
+html.is-entering .chapter-hero.on-banner > :nth-child(2) { animation-delay: .08s; }
+html.is-entering .chapter-hero.on-banner > :nth-child(3) { animation-delay: .16s; }
+@keyframes banner-in { from { opacity: 0; transform: scale(1.06); } to { opacity: 1; transform: none; } }
+@keyframes rise-in { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+
+/* ── Now view ── */
+.chapter-hero { padding-top: 28px; display: flex; flex-direction: column; gap: 8px; position: relative; }
+.chapter-hero h1 { font-family: var(--font-display); font-weight: 400; font-size: clamp(34px, 8.6vw, 64px); line-height: 1.02; letter-spacing: -0.04em; color: var(--ink); }
+.chapter-hero .intro { color: var(--ink-2); max-width: 62ch; }
+.chapter-hero.on-banner { padding-top: 0; }
+.chapter-hero.on-banner .eyebrow { color: var(--ink); text-shadow: 0 1px 14px rgba(0, 0, 0, .55); }
+.chapter-hero.on-banner h1 { text-shadow: 0 2px 24px rgba(0, 0, 0, .35); }
+.progress-line { display: flex; flex-direction: column; gap: 8px; margin-top: 6px; }
+.progress-line .num { font-family: var(--font-mono); font-size: 11px; color: var(--ink-2); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.bar { height: 6px; border-radius: 3px; background: var(--surface-3); overflow: hidden; }
+.bar > i { display: block; height: 100%; background: var(--accent); border-radius: 3px; transition: width .6s var(--ease); }
+.bar.teal > i { background: var(--accent); }
+.pace { display: flex; gap: 4px; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 4px; overflow-x: auto; scrollbar-width: none; }
+.pace::-webkit-scrollbar { display: none; }
+.pace button { flex: 1; min-height: 44px; border-radius: 9px; border: 0; background: none; color: var(--ink-3); font-weight: 600; font-size: 14px; padding: 0 12px; white-space: nowrap; transition: background-color var(--dur) var(--ease), color var(--dur) var(--ease); }
+.pace button:hover { color: var(--ink); }
+.pace button[aria-pressed="true"] { background: var(--surface-3); color: var(--ink); box-shadow: 0 1px 0 rgba(255, 255, 255, .04) inset, 0 4px 12px -6px rgba(0, 0, 0, .5); }
+
+.now-grid { display: flex; flex-direction: column; gap: 32px; margin-top: 24px; }
+.now-grid .col { display: contents; }
+.now-grid .section { margin-top: 0; }
+.now-grid .o1 { order: 1; } .now-grid .o2 { order: 2; } .now-grid .o3 { order: 3; }
+.now-grid .o4 { order: 4; } .now-grid .o5 { order: 5; } .now-grid .o6 { order: 6; }
+@media (min-width: 1000px) {
+  .now-grid { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: 24px; align-items: start; margin-top: 32px; }
+  .now-grid .col { display: flex; flex-direction: column; gap: 32px; min-width: 0; }
+  .now-grid .col-main { grid-column: 1 / 8; }
+  .now-grid .col-side { grid-column: 8 / 13; }
+}
+
+.next {
+  position: relative; border-radius: var(--r-xl); padding: 22px 20px 20px; display: flex; flex-direction: column; gap: 12px;
+  background: var(--surface); border: 1px solid var(--line-strong);
+  box-shadow: 0 1px 0 rgba(255, 255, 255, .04) inset, 0 30px 60px -40px rgba(0, 0, 0, .85);
+}
+.next-q { display: flex; align-items: center; gap: 8px; font-family: var(--font-mono); font-size: 10.5px; font-weight: 500; letter-spacing: .06em; text-transform: uppercase; color: var(--accent); }
+.next-q::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent) 18%, transparent); }
+.next h2 { font-family: var(--font-display); font-weight: 400; font-size: clamp(27px, 6.4vw, 38px); line-height: 1.08; letter-spacing: -0.035em; }
+.next .why { font-size: 16px; }
+.next-actions { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-top: 4px; }
+.next-actions .btn-primary { grid-column: 1 / -1; min-height: 52px; font-size: 16px; }
+.next-actions .btn { padding: 0 10px; }
+.q-label { display: flex; align-items: center; gap: 8px; }
+
+.gatecheck { border-radius: var(--r-xl); padding: 20px; display: flex; flex-direction: column; gap: 12px; border: 1px solid var(--line); background: var(--surface); }
+.gatecheck.ok { border-color: color-mix(in srgb, var(--accent) 34%, transparent); background: color-mix(in srgb, var(--accent) 6%, var(--surface)); }
+.gatecheck.warn { border-color: color-mix(in srgb, var(--danger) 45%, transparent); background: color-mix(in srgb, var(--danger) 7%, var(--surface)); }
+.gatecheck h3 { font-family: var(--font-display); font-size: 18px; font-weight: 500; letter-spacing: -0.02em; line-height: 1.25; }
+.gatecheck .verdict { display: flex; align-items: flex-start; gap: 10px; font-weight: 700; }
+.gatecheck.ok .verdict { color: var(--accent); }
+.gatecheck.warn .verdict { color: var(--danger); }
+.verdict svg { width: 22px; height: 22px; flex: none; }
+.mini-row {
+  display: flex; align-items: center; gap: 10px; padding: 10px 12px; min-height: 48px; border-radius: var(--r-sm); background: color-mix(in srgb, var(--bg) 70%, transparent); border: 1px solid var(--line); width: 100%; text-align: left; color: inherit;
+  transition: transform var(--dur) var(--ease), border-color var(--dur) var(--ease), background-color var(--dur) var(--ease);
+}
+.mini-row .t { flex: 1; min-width: 0; font-weight: 600; font-size: 14.5px; }
+.mini-row .t small { display: block; font-weight: 500; color: var(--ink-3); font-size: 13px; margin-top: 1px; }
+.mini-row svg { width: 16px; height: 16px; flex: none; color: var(--ink-3); transition: transform var(--dur) var(--ease); }
+@media (hover: hover) {
+  .mini-row:hover { transform: translateY(-2px); border-color: var(--line-strong); background: var(--bg); }
+  .mini-row:hover svg { transform: translateX(2px); color: var(--ink); }
+}
+
+.gate { border-radius: var(--r-lg); padding: 18px; display: flex; flex-direction: column; gap: 10px; margin: 12px 0 4px; border: 1px solid color-mix(in srgb, var(--danger) 45%, transparent); background: color-mix(in srgb, var(--danger) 8%, var(--surface)); }
+.gate.soft { border-color: color-mix(in srgb, var(--warn) 42%, transparent); background: color-mix(in srgb, var(--warn) 7%, var(--surface)); }
+.gate-eyebrow { display: flex; align-items: center; gap: 8px; font-family: var(--font-mono); font-size: 10.5px; font-weight: 500; letter-spacing: .06em; text-transform: uppercase; color: var(--danger); }
+.gate.soft .gate-eyebrow { color: var(--warn); }
+.gate-eyebrow svg { width: 16px; height: 16px; }
+.gate h3 { font-family: var(--font-display); font-weight: 500; font-size: 21px; line-height: 1.15; letter-spacing: -0.025em; }
+.gate-cols { display: grid; grid-template-columns: 1fr; gap: 12px; }
+@media (min-width: 560px) { .gate-cols { grid-template-columns: 1fr 1fr; } }
+.gate-cols h4 { font-size: 10.5px; font-family: var(--font-mono); font-weight: 500; letter-spacing: .06em; text-transform: uppercase; color: var(--ink-3); margin-bottom: 6px; }
+.gate-cols ul { margin: 0; padding-left: 18px; font-size: 14px; color: var(--ink-2); }
+.gate-save { display: flex; gap: 8px; align-items: flex-start; font-size: 14px; color: var(--ink); font-weight: 600; }
+.gate-save svg { width: 18px; height: 18px; flex: none; margin-top: 1px; color: var(--warn); }
+
+/* ── Journal view ── */
+.chapter-tabs { display: flex; gap: 8px; overflow-x: auto; padding: 18px 0 8px; scrollbar-width: none; scroll-snap-type: x proximity; }
+.chapter-tabs::-webkit-scrollbar { display: none; }
+.ctab {
+  flex: none; scroll-snap-align: start; width: 156px; padding: 0; overflow: hidden; border-radius: var(--r-md); border: 1px solid var(--line); background: var(--surface);
+  text-align: left; display: flex; flex-direction: column; color: inherit;
+  transition: transform var(--dur) var(--ease), border-color var(--dur) var(--ease);
+}
+.ctab .thumb { display: block; height: 60px; overflow: hidden; background: var(--surface-2); }
+.ctab .thumb img { width: 100%; height: 100%; object-fit: cover; filter: brightness(.82) saturate(.9); transition: transform .5s var(--ease), filter .3s var(--ease); }
+.ctab .meta { display: flex; flex-direction: column; gap: 5px; padding: 9px 12px 11px; }
+.ctab .n { font-family: var(--font-mono); font-size: 9.5px; letter-spacing: .05em; text-transform: uppercase; color: var(--ink-3); display: flex; justify-content: space-between; gap: 8px; }
+.ctab .tt { font-size: 14px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ctab .bar { height: 3px; }
+.ctab[aria-pressed="true"] { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent); }
+.ctab[aria-pressed="true"] .thumb img { filter: none; }
+.ctab .here { color: var(--accent); }
+@media (hover: hover) {
+  .ctab:hover { transform: translateY(-2px); border-color: var(--line-strong); }
+  .ctab[aria-pressed="true"]:hover { border-color: var(--accent); }
+  .ctab:hover .thumb img { transform: scale(1.03); filter: none; }
+}
+@media (min-width: 1000px) {
+  .chapter-tabs { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); overflow: visible; }
+  .ctab { width: auto; }
+  .ctab .thumb { height: 72px; }
+  .ctab .tt { white-space: normal; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; line-height: 1.25; min-height: 2.5em; }
+}
+.toolbar { display: flex; gap: 8px; align-items: center; position: sticky; top: calc(env(safe-area-inset-top, 0px) + var(--topbar-h)); z-index: 10; background: var(--bg); padding: 10px 0; }
+.search { flex: 1; min-width: 0; position: relative; }
+.search input { width: 100%; min-height: 44px; border-radius: 12px; border: 1px solid var(--line-strong); background: var(--surface); padding: 0 42px 0 42px; font-size: 16px; transition: border-color var(--dur) var(--ease), background-color var(--dur) var(--ease); }
+.search input:hover { border-color: rgba(227, 226, 218, .26); }
+.search input:focus { outline: none; border-color: var(--accent); background: var(--surface-2); }
+.search input::placeholder { color: var(--ink-3); }
+.search svg { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); width: 18px; height: 18px; color: var(--ink-3); pointer-events: none; }
+.search .clear { position: absolute; right: 2px; top: 50%; transform: translateY(-50%); width: 40px; height: 40px; border: 0; background: none; color: var(--ink-3); border-radius: 10px; display: grid; place-items: center; }
+.search .clear svg { position: static; transform: none; }
+.filter-btn { position: relative; }
+.filter-btn .count { position: absolute; top: -4px; right: -4px; min-width: 18px; height: 18px; border-radius: 9px; background: var(--accent); color: var(--accent-ink); font-family: var(--font-mono); font-size: 10px; font-weight: 500; display: grid; place-items: center; padding: 0 4px; }
+.chapter-head { display: flex; flex-direction: column; gap: 8px; padding: 14px 0 10px; }
+.chapter-head h2 { font-family: var(--font-display); font-weight: 400; font-size: clamp(28px, 6vw, 40px); line-height: 1.05; letter-spacing: -0.035em; }
+.chapter-head .stats { display: flex; gap: 16px; flex-wrap: wrap; font-family: var(--font-mono); font-size: 11px; color: var(--ink-3); font-variant-numeric: tabular-nums; }
+.empty { padding: 32px 16px; text-align: center; color: var(--ink-3); border: 1px dashed var(--line-strong); border-radius: var(--r-md); }
+.group-label { font-family: var(--font-mono); font-size: 10.5px; font-weight: 500; letter-spacing: .06em; text-transform: uppercase; color: var(--ink-3); padding: 14px 2px 2px; }
+
+/* ── Sheet ── */
+.scrim { position: fixed; inset: 0; background: rgba(5, 8, 7, .66); backdrop-filter: blur(2px); -webkit-backdrop-filter: blur(2px); z-index: 40; display: flex; align-items: flex-end; justify-content: center; animation: fade .2s ease both; }
+.sheet { width: 100%; max-width: 640px; max-height: 88vh; overflow-y: auto; background: var(--surface); border: 1px solid var(--line-strong); border-radius: 20px 20px 0 0; padding: 8px max(18px, env(safe-area-inset-right, 0px)) calc(18px + env(safe-area-inset-bottom, 0px)) max(18px, env(safe-area-inset-left, 0px)); display: flex; flex-direction: column; gap: 18px; animation: up .26s var(--ease) both; box-shadow: 0 -20px 60px -20px rgba(0, 0, 0, .6); }
+@media (min-width: 700px) { .scrim { align-items: center; } .sheet { border-radius: 20px; padding-top: 18px; } .grabber { display: none; } }
+@keyframes up { from { transform: translateY(24px); opacity: 0; } to { transform: none; opacity: 1; } }
+@keyframes fade { from { opacity: 0; } to { opacity: 1; } }
+.grabber { width: 40px; height: 4px; border-radius: 2px; background: var(--line-strong); margin: 4px auto 0; }
+.sheet h3 { font-family: var(--font-display); font-weight: 400; font-size: 25px; letter-spacing: -0.03em; }
+.fgroup { display: flex; flex-direction: column; gap: 10px; }
+.toggles { display: flex; flex-wrap: wrap; gap: 6px; }
+.tog { min-height: 44px; padding: 0 14px; border-radius: 10px; border: 1px solid var(--line-strong); background: transparent; color: var(--ink-2); font-size: 14px; font-weight: 600; transition: background-color var(--dur) var(--ease), border-color var(--dur) var(--ease), color var(--dur) var(--ease), transform var(--dur) var(--ease); }
+@media (hover: hover) { .tog:hover { border-color: rgba(227, 226, 218, .3); color: var(--ink); transform: translateY(-1px); } }
+.tog:active { transform: scale(.97); }
+.tog[aria-pressed="true"] { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+.sheet-actions { display: flex; gap: 8px; justify-content: flex-end; flex-wrap: wrap; }
+textarea.io { width: 100%; min-height: 160px; border-radius: var(--r-md); border: 1px solid var(--line-strong); background: var(--bg-deep); padding: 12px; font-family: var(--font-mono); font-size: 11.5px; color: var(--ink-2); }
+select.sel { width: 100%; min-height: 44px; border-radius: var(--r-md); border: 1px solid var(--line-strong); background: var(--bg-deep); padding: 0 12px; }
+
+/* ── Progress view ── */
+.stat-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+@media (min-width: 640px) { .stat-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+.stat { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-md); padding: 14px 16px; display: flex; flex-direction: column; gap: 6px; }
+.stat b { font-family: var(--font-display); font-weight: 400; font-size: 32px; line-height: 1; letter-spacing: -0.04em; font-variant-numeric: tabular-nums; }
+.stat span { font-size: 13px; color: var(--ink-3); }
+.chap-rows { display: flex; flex-direction: column; gap: 8px; }
+.chap-row {
+  display: grid; grid-template-columns: 84px minmax(0, 1fr) auto; gap: 6px 14px; align-items: center; background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-md); padding: 10px 14px 10px 10px; text-align: left; width: 100%; color: inherit;
+  transition: transform var(--dur) var(--ease), border-color var(--dur) var(--ease);
+}
+.chap-row .thumb { grid-row: 1 / span 2; width: 84px; height: 56px; border-radius: 8px; overflow: hidden; background: var(--surface-2); }
+.chap-row .thumb img { width: 100%; height: 100%; object-fit: cover; transition: transform .5s var(--ease); }
+.chap-row .ttl { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.chap-row .ttl b { font-family: var(--font-display); font-weight: 500; font-size: 17px; letter-spacing: -0.02em; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.chap-row .bar { grid-column: 2 / -1; height: 4px; }
+.chap-row .pct { font-family: var(--font-mono); font-size: 12px; font-variant-numeric: tabular-nums; color: var(--ink-2); }
+@media (hover: hover) {
+  .chap-row:hover { transform: translateY(-2px); border-color: var(--line-strong); }
+  .chap-row:hover .thumb img { transform: scale(1.03); }
+}
+.panel { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-md); padding: 16px; display: flex; flex-direction: column; gap: 12px; }
+.panel h3 { font-family: var(--font-display); font-size: 16.5px; font-weight: 500; letter-spacing: -0.015em; }
+.legend { display: flex; flex-direction: column; gap: 8px; font-size: 14px; color: var(--ink-2); }
+.gaps { margin: 0; padding-left: 18px; display: flex; flex-direction: column; gap: 8px; font-size: 14px; color: var(--ink-2); }
+.gaps b { color: var(--ink); }
+.sync { display: inline-flex; align-items: center; gap: 8px; font-size: 13.5px; color: var(--ink-3); }
+.sync i { width: 8px; height: 8px; border-radius: 50%; background: var(--ink-3); display: block; }
+.sync.on i { background: var(--accent); box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent) 18%, transparent); }
+.sync.off i { background: var(--warn); }
+@media (min-width: 1000px) {
+  .progress-cols { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 24px; align-items: start; }
+}
+
+/* ── Toast ── */
+.toast { position: fixed; left: 50%; transform: translateX(-50%); bottom: calc(var(--tabbar-h) + env(safe-area-inset-bottom, 0px) + 14px); z-index: 50; background: var(--ink); color: var(--bg); border-radius: 12px; padding: 6px 6px 6px 18px; display: flex; align-items: center; gap: 12px; font-weight: 600; font-size: 14px; box-shadow: 0 16px 40px rgba(0, 0, 0, .5); max-width: calc(100% - 32px); animation: up .22s var(--ease) both; }
+.toast button { min-height: 40px; border-radius: 9px; border: 0; background: var(--bg); color: var(--ink); padding: 0 14px; font-weight: 700; font-size: 13.5px; }
+.toast.solo { padding: 12px 18px; }
+@media (min-width: 900px) { .toast { bottom: 24px; } }
+
+.loading { padding: 80px 0; text-align: center; color: var(--ink-3); }
+.error-box { margin-top: 40px; }
+.foot { margin-top: 56px; font-size: 12.5px; color: var(--ink-3); display: flex; flex-direction: column; gap: 6px; }
+.foot a { color: var(--ink-2); }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+}
+</style>
+
+<div id="app">
+  <a class="skip" href="#view">Skip to the journal</a>
+  <header class="topbar">
+    <div class="wrap topbar-inner">
+      <div class="brand">
+        <span class="mark mark--initial" aria-hidden="true">C</span>
+        <span class="brand-text">
+          <span class="brand-name">The Completionist's Journey</span>
+          <span class="brand-sub">GTA VI · Leonida · unofficial</span>
+        </span>
+      </div>
+      <nav class="desk-tabs" id="deskTabs" aria-label="Sections"></nav>
+      <div class="ring" id="ring" title="Overall completion" aria-label="Overall completion"></div>
+      <button class="icon-btn" data-action="open-search" aria-label="Search the journal">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+      </button>
+    </div>
+  </header>
+  <main id="view" tabindex="-1"><div class="wrap loading">Opening your journal…</div></main>
+  <nav class="tabbar" aria-label="Sections"><div class="tabbar-inner" id="tabs"></div></nav>
+  <div id="sheetRoot"></div>
+  <div id="toastRoot" aria-live="polite"></div>
+</div>
+
+<script>
+(() => {
+"use strict";
+if (!document.documentElement.lang) document.documentElement.lang = "en";
+
+/* ═════════════ Constants ═════════════ */
+const DATA_URL = "data/walkthrough.json";
+const LS_KEY = "completionist-journey:progress:v1";
+const UI_KEY = "completionist-journey:ui:v1";
+const HINT_LABELS = ["Explorer", "Gentle nudge", "Direct hint", "Full reveal"];
+const PACES = {
+  essentials: { label: "Essentials", priorities: ["essential"], blurb: "Only missables, key unlocks and the story." },
+  focused: { label: "Focused", priorities: ["essential", "recommended"], blurb: "Adds unique rewards and the best side missions." },
+  savor: { label: "Savor", priorities: ["essential", "recommended", "explore"], blurb: "Adds optional activities and exploration. Recommended." },
+  everything: { label: "Everything", priorities: ["essential", "recommended", "explore", "cleanup"], blurb: "Includes collectibles and cleanup as you go." },
+};
+/* One photograph per chapter: stand-ins of the real Florida places Leonida is drawn from (Wikimedia Commons, credited in the footer).
+   w = widths on disk; pos = the crop's focus. */
+const PHOTOS = {
+  prologue: { id: "f24118035", w: [500, 960], pos: "50% 40%", alt: "Dark swamp water under bare cypress trees" },
+  ch1: { id: "f80293882", w: [500, 960], pos: "50% 55%", alt: "Turquoise shallows between two mangrove islands" },
+  ch2: { id: "f6808735", w: [500, 960, 1280], pos: "50% 32%", alt: "White sand beach curving toward high-rise condos on the Gulf" },
+  ch3: { id: "f153970919", w: [500, 960, 1280], pos: "50% 42%", alt: "City towers behind palm trees across a blue bay" },
+  ch4: { id: "f154791999", w: [500, 960, 1280], pos: "50% 50%", alt: "Lifeguard hut beside rows of white beach umbrellas" },
+  ch5: { id: "f5442291", w: [500, 960, 1280], pos: "50% 52%", alt: "Downtown towers lit green and gold over night water" },
+  post: { id: "f123607458", w: [500, 960, 1280, 1920], pos: "50% 44%", alt: "Sunset reflected in still wetland water" },
+};
+const PHOTO_CREDITS = [
+  ["Prologue", "National Park Service", "Public domain", "https://commons.wikimedia.org/wiki/File:Big_Cypress_National_Preserve_BICY1061.jpg"],
+  ["Chapter 1", "NARA", "Public domain", "https://commons.wikimedia.org/wiki/File:Florida_Keys_Scenic_Highway_-_Flats_Fishing_near_Islamorada_-_NARA_-_7718440.jpg"],
+  ["Chapter 2", "J.S. Clark", "CC BY-SA 2.0", "https://commons.wikimedia.org/wiki/File:Panama_City_Beach,_Florida_(J.S._Clark).jpg"],
+  ["Chapter 3", "P. Hughes", "CC BY 4.0", "https://commons.wikimedia.org/wiki/File:Miami_-_City_Skyline_from_Biscayne_Bay_3.jpg"],
+  ["Chapter 4", "P. Hughes", "CC BY 4.0", "https://commons.wikimedia.org/wiki/File:Miami_Beach_-_lifeguard_station.jpg"],
+  ["Chapter 5", "Averette", "CC BY 3.0", "https://commons.wikimedia.org/wiki/File:Northern_Brickell_skyline_at_night_20081203.jpg"],
+  ["After the Credits", "Charles Patrick Ewing", "CC BY 2.0", "https://commons.wikimedia.org/wiki/File:Everglades_Sunset_Reflected.jpg"],
+];
+const STATUS_LABEL = { done: "Done", skipped: "Skipped", deferred: "Later", todo: "To do", missed: "Missed", locked: "Locked" };
+const CHAR_SHORT = { Jason: "Jason", Lucia: "Lucia", Both: "Jason + Lucia", Either: "Either" };
+
+const ICON = {
+  check: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>',
+  skip: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 18 18 6"/></svg>',
+  clock: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="12" r="8"/><path d="M12 8v4l3 2"/></svg>',
+  x: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M7 7l10 10M17 7 7 17"/></svg>',
+  warn: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 2.5 20h19L12 3z"/><path d="M12 10v4.5M12 17.5v.01"/></svg>',
+  hourglass: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3h10M7 21h10M8 3c0 5 8 5 8 9s-8 4-8 9M16 3c0 5-8 5-8 9s8 4 8 9"/></svg>',
+  lock: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>',
+  shield: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 4.5 6v6c0 4.5 3.2 7.8 7.5 9 4.3-1.2 7.5-4.5 7.5-9V6L12 3z"/><path d="m8.5 12 2.5 2.5 4.5-5"/></svg>',
+  save: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 4h11l3 3v13H5z"/><path d="M8 4v5h7V4M8 20v-6h8v6"/></svg>',
+  chev: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg>',
+  filter: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h16M7 12h10M10 18h4"/></svg>',
+  search: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>',
+  verified: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="m8 12.5 2.8 2.8L16.5 9.5"/></svg>',
+  community: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="2.5" fill="currentColor"/></svg>',
+  unconfirmed: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-dasharray="3 3"><circle cx="12" cy="12" r="9"/></svg>',
+  person: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="8" r="3.5"/><path d="M5 20c1-4 4-5.5 7-5.5s6 1.5 7 5.5"/></svg>',
+  moon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4 8 8 0 1 0 20 14.5z"/></svg>',
+  spark: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.5l2.2 6.3 6.3 2.2-6.3 2.2L12 19.5l-2.2-6.3L3.5 11l6.3-2.2z"/></svg>',
+  tabNow: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="m15.5 8.5-2 5-5 2 2-5z"/></svg>',
+  tabJournal: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5.5C6 4.5 9 4.5 12 6c3-1.5 6-1.5 8-.5V19c-2-1-5-1-8 .5-3-1.5-6-1.5-8-.5z"/><path d="M12 6v13.5"/></svg>',
+  tabMiss: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 2.5 20h19L12 3z"/><path d="M12 10v4.5M12 17.5v.01"/></svg>',
+  tabProgress: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 20V12M12 20V5M19 20v-5"/></svg>',
+};
+
+/* ═════════════ Helpers ═════════════ */
+const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+const $ = (sel, root = document) => root.querySelector(sel);
+const photoOf = (chId) => PHOTOS[chId] || PHOTOS.post;
+function photoFile(p, w) {
+  const max = p.w[p.w.length - 1];
+  return `assets/img/photo-${p.id}${w === max && max > 960 ? "" : "-" + w}.webp`;
+}
+function bannerHTML(chId) {
+  const p = photoOf(chId);
+  const srcset = p.w.filter((w) => w >= 960).map((w) => `${photoFile(p, w)} ${w}w`).join(", ");
+  return `<picture class="banner"><img src="${photoFile(p, 960)}" srcset="${srcset}" sizes="(min-width: 900px) min(100vw, 1600px), 100vw" width="1280" height="853" alt="${esc(p.alt)}" style="object-position:${p.pos}" fetchpriority="high" data-source="stand-in" data-subject="stand-in"></picture>`;
+}
+function thumbHTML(chId, lazy) {
+  const p = photoOf(chId);
+  return `<span class="thumb"><img src="${photoFile(p, 500)}" width="500" height="333" alt="" ${lazy ? 'loading="lazy" ' : ""}decoding="async" style="object-position:${p.pos}" data-source="stand-in" data-subject="stand-in"></span>`;
+}
+const now = () => Date.now();
+function lsGet(k) { try { return localStorage.getItem(k); } catch { return null; } }
+function lsSet(k, v) { try { localStorage.setItem(k, v); return true; } catch { return false; } }
+function stable(o) {
+  if (Array.isArray(o)) return "[" + o.map(stable).join(",") + "]";
+  if (o && typeof o === "object") return "{" + Object.keys(o).sort().map((k) => JSON.stringify(k) + ":" + stable(o[k])).join(",") + "}";
+  return JSON.stringify(o);
+}
+const pct = (n, d) => (d ? Math.round((n / d) * 100) : 0);
+const firstSentence = (s) => { const m = String(s || "").match(/^.*?[.!?](?=\s|$)/); return m ? m[0] : String(s || ""); };
+
+/* ═════════════ Data ═════════════ */
+let DATA = null, ACTS = [], BY_ID = new Map(), CHAPTERS = [], CH_IDX = new Map(), DURING = new Map(), ORDERED = [];
+
+function indexData(d) {
+  DATA = d;
+  CHAPTERS = d.chapters.slice().sort((a, b) => a.number - b.number);
+  CHAPTERS.forEach((c, i) => CH_IDX.set(c.id, i));
+  ACTS = d.activities;
+  BY_ID = new Map(ACTS.map((a) => [a.id, a]));
+  ORDERED = ACTS.slice().sort((a, b) => (CH_IDX.get(a.chapter) - CH_IDX.get(b.chapter)) || (a.recommendedOrder - b.recommendedOrder));
+  DURING = new Map();
+  for (const a of ACTS) if (a.duringMission) {
+    if (!DURING.has(a.duringMission)) DURING.set(a.duringMission, []);
+    DURING.get(a.duringMission).push(a);
+  }
+}
+
+/* ═════════════ Progress state ═════════════ */
+const freshState = () => ({ v: 1, items: {}, hints: {}, names: {}, prefs: { pace: "savor", names: "current" }, prefsT: 0 });
+let S = freshState();
+
+function loadLocal() {
+  const raw = lsGet(LS_KEY);
+  if (!raw) return;
+  try { S = normalize(JSON.parse(raw)); } catch { /* keep fresh */ }
+}
+function normalize(x) {
+  const s = freshState();
+  if (!x || typeof x !== "object") return s;
+  s.items = x.items && typeof x.items === "object" ? x.items : {};
+  s.hints = x.hints && typeof x.hints === "object" ? x.hints : {};
+  s.names = x.names && typeof x.names === "object" ? x.names : {};
+  s.prefs = Object.assign(s.prefs, x.prefs || {});
+  s.prefsT = x.prefsT || 0;
+  return s;
+}
+function migrateIds() {
+  for (const a of ACTS) for (const old of a.formerIds || []) {
+    for (const bucket of ["items", "hints", "names"]) {
+      if (S[bucket][old] && !S[bucket][a.id]) S[bucket][a.id] = S[bucket][old];
+    }
+  }
+}
+function persist() {
+  lsSet(LS_KEY, JSON.stringify(S));
+  Sync.schedule();
+}
+
+/* Merge two progress states: per-entry latest timestamp wins. Unknown ids are kept. */
+function mergeStates(a, b) {
+  if (!b) return a;
+  const out = freshState();
+  for (const bucket of ["items", "hints", "names"]) {
+    const A = a[bucket] || {}, B = b[bucket] || {};
+    for (const k of new Set([...Object.keys(A), ...Object.keys(B)])) {
+      const x = A[k], y = B[k];
+      out[bucket][k] = !x ? y : !y ? x : ((y.t || 0) > (x.t || 0) ? y : x);
+    }
+  }
+  if ((b.prefsT || 0) > (a.prefsT || 0)) { out.prefs = Object.assign(freshState().prefs, b.prefs); out.prefsT = b.prefsT; }
+  else { out.prefs = Object.assign(freshState().prefs, a.prefs); out.prefsT = a.prefsT || 0; }
+  return out;
+}
+
+/* Cross-device sync through the artifact's private per-viewer store, when the viewer provides one. */
+const Sync = {
+  ref: null, mode: "local", timer: null, chain: Promise.resolve(), lastRemote: null,
+  async start() {
+    try {
+      if (!window.claude || typeof window.claude.use !== "function") return;
+      const [db, user] = await Promise.all([window.claude.use("db"), window.claude.use("user")]);
+      if (!db || !user) return;
+      const uid = await user.id();
+      if (!uid) return;
+      this.ref = db.collection("data/users/" + uid).doc("journal");
+      this.mode = "connecting"; renderChrome();
+      const loadTimer = setTimeout(() => { if (this.mode === "connecting") { this.mode = "offline"; renderChrome(); } }, 10000);
+      this.ref.onSnapshot((snap) => {
+        if (snap.metadata && snap.metadata.hasPendingWrites) return;
+        const remote = snap.exists ? normalize(snap.data()) : null;
+        if (!snap.metadata || !snap.metadata.fromCache) { clearTimeout(loadTimer); this.mode = "on"; }
+        this.lastRemote = remote ? stable(remote) : null;
+        const merged = mergeStates(S, remote);
+        const changed = stable(merged) !== stable(S);
+        S = merged;
+        lsSet(LS_KEY, JSON.stringify(S));
+        if (changed) render();
+        else renderChrome();
+        // Write back only when this device holds changes the store lacks; never just because the page opened.
+        const hasLocal = Object.keys(S.items).length || Object.keys(S.hints).length || Object.keys(S.names).length || S.prefsT;
+        if (this.mode === "on" && (remote ? stable(S) !== this.lastRemote : hasLocal)) this.schedule(400);
+      }, () => { clearTimeout(loadTimer); this.mode = "offline"; renderChrome(); });
+    } catch { this.mode = "local"; }
+  },
+  schedule(delay = 1200) {
+    if (!this.ref) return;
+    clearTimeout(this.timer);
+    this.timer = setTimeout(() => this.flush(), delay);
+  },
+  flush() {
+    if (!this.ref) return;
+    const body = JSON.parse(JSON.stringify(S));
+    const key = stable(body);
+    if (key === this.lastRemote) return;
+    this.chain = this.chain.then(() => this.ref.set(body)).then(() => { this.lastRemote = key; this.mode = "on"; renderChrome(); })
+      .catch((e) => { this.mode = e && e.code === "invalid_argument" ? "local" : "offline"; renderChrome(); });
+  },
+};
+
+/* ═════════════ Derived status ═════════════ */
+const stored = (id) => (S.items[id] && S.items[id].s) || "todo";
+const isResolved = (id) => { const s = stored(id); return s === "done" || s === "skipped"; };
+const prereqsMet = (a) => (a.prerequisites || []).every((p) => !BY_ID.has(p) || isResolved(p));
+function isMissed(a) {
+  const m = a.missable;
+  if (!m || !m.locksAt || isResolved(a.id)) return false;
+  return stored(m.locksAt) === "done";
+}
+function statusOf(a) {
+  const s = stored(a.id);
+  if (s === "done" || s === "skipped") return s;
+  if (isMissed(a)) return "missed";
+  if (s === "deferred") return "deferred";
+  if (!prereqsMet(a)) return "locked";
+  return "todo";
+}
+const isOpen = (a) => statusOf(a) === "todo";
+function nextMain() { return ORDERED.find((a) => a.category === "story" && !isResolved(a.id)) || null; }
+function currentChapterIdx() { const m = nextMain(); return m ? CH_IDX.get(m.chapter) : CH_IDX.get("post") ?? CHAPTERS.length - 1; }
+const chapterIdx = (a) => CH_IDX.get(a.chapter);
+const chapterOf = (a) => CHAPTERS[chapterIdx(a)];
+
+function showName(a) {
+  if (a.category !== "story") return true;
+  if (S.prefs.names === "always") return true;
+  if (S.names[a.id] && S.names[a.id].r) return true;
+  return chapterIdx(a) <= currentChapterIdx();
+}
+function displayTitle(a) {
+  if (a.category !== "story") return a.title;
+  return showName(a) ? a.missionName : a.safeTitle;
+}
+const labelFor = (id) => { const a = BY_ID.get(id); return a ? displayTitle(a) : id; };
+
+function chapterStats(cid) {
+  const list = ACTS.filter((a) => a.chapter === cid);
+  let done = 0, skipped = 0, missed = 0, open = 0;
+  for (const a of list) {
+    const s = statusOf(a);
+    if (s === "done") done++; else if (s === "skipped") skipped++; else if (s === "missed") missed++; else open++;
+  }
+  const denom = list.length - skipped;
+  return { total: list.length, done, skipped, missed, open, pct: pct(done, denom) };
+}
+function overallStats() {
+  let done = 0, skipped = 0;
+  for (const a of ACTS) { const s = stored(a.id); if (s === "done") done++; else if (s === "skipped") skipped++; }
+  return { done, skipped, total: ACTS.length, pct: pct(done, ACTS.length - skipped) };
+}
+
+/* ═════════════ Recommendation engine ═════════════ */
+function recommendations() {
+  const cur = currentChapterIdx();
+  const curId = CHAPTERS[cur].id;
+  const allowed = new Set(PACES[S.prefs.pace]?.priorities || PACES.savor.priorities);
+  const eligible = (a) => isOpen(a) && !a.duringMission && !a.ambient && chapterIdx(a) <= cur;
+  const nm = nextMain();
+  const urgent = ORDERED.filter((a) => eligible(a) && a.missable && a.missable.hourglass);
+  const gated = nm ? ORDERED.filter((a) => eligible(a) && a.missable && a.missable.locksAt === nm.id && a.missable.type !== "in-mission") : [];
+  const walk = ORDERED.filter((a) => eligible(a) && a.chapter === curId && (a.category === "story" || allowed.has(a.priority)));
+  const seen = new Set(); const out = [];
+  for (const a of [...urgent, ...gated, ...walk]) if (!seen.has(a.id)) { seen.add(a.id); out.push(a); }
+  return out;
+}
+function reasonFor(a, nm) {
+  if (a.missable && a.missable.hourglass) return "Timed mission. It can expire, so it jumps the queue.";
+  if (nm && a.missable && a.missable.locksAt === nm.id) return "Your next story mission closes this for good.";
+  return a.whyNow || a.spoilerFreeDescription;
+}
+function lostAtMission(m) {
+  if (!m) return [];
+  return ACTS.filter((a) => a.missable && a.missable.locksAt === m.id && a.missable.type !== "in-mission" && !isResolved(a.id) && statusOf(a) !== "missed");
+}
+function ambientNow() {
+  const cur = currentChapterIdx();
+  return ORDERED.filter((a) => a.ambient && isOpen(a) && chapterIdx(a) <= cur);
+}
+function earlierLeftovers() {
+  const cur = currentChapterIdx();
+  return ORDERED.filter((a) => chapterIdx(a) < cur && !a.ambient && !a.duringMission && isOpen(a) && a.category !== "story");
+}
+
+/* ═════════════ UI state ═════════════ */
+const UI = Object.assign({ view: "now", chapter: null, q: "", filters: defaultFilters(), heroOpen: false }, (() => {
+  try { const u = JSON.parse(lsGet(UI_KEY) || "{}"); return { filters: Object.assign(defaultFilters(), u.filters || {}) }; } catch { return {}; }
+})());
+UI.expanded = new Set();
+function defaultFilters() { return { pri: [], cat: [], status: "all", missable: false, available: false, character: "any", verif: "any" }; }
+function saveUI() { lsSet(UI_KEY, JSON.stringify({ filters: UI.filters })); }
+function activeFilterCount() {
+  const f = UI.filters; let n = f.pri.length + f.cat.length;
+  if (f.status !== "all") n++; if (f.missable) n++; if (f.available) n++; if (f.character !== "any") n++; if (f.verif !== "any") n++;
+  return n;
+}
+
+/* ═════════════ Actions ═════════════ */
+let undoTimer = null;
+function setStatus(id, s, { toast = true } = {}) {
+  const prev = S.items[id] ? Object.assign({}, S.items[id]) : null;
+  S.items[id] = { s, t: now() };
+  persist();
+  render();
+  if (toast) {
+    const a = BY_ID.get(id);
+    const lost = a && a.category === "story" && s === "done" ? ACTS.filter((x) => x.missable && x.missable.locksAt === id && statusOf(x) === "missed").length : 0;
+    const msg = (s === "done" ? "Marked done" : s === "skipped" ? "Skipped" : s === "deferred" ? "Saved for later" : "Moved back to to-do")
+      + (lost ? ` · ${lost} item${lost > 1 ? "s" : ""} now missed` : "");
+    showToast(msg, () => { if (prev) S.items[id] = Object.assign(prev, { t: now() }); else S.items[id] = { s: "todo", t: now() }; persist(); render(); });
+  }
+}
+function toggleDone(id) { setStatus(id, stored(id) === "done" ? "todo" : "done"); }
+function revealHint(id) {
+  const cur = (S.hints[id] && S.hints[id].l) || 0;
+  S.hints[id] = { l: Math.min(4, cur + 1), t: now() };
+  persist(); render();
+}
+function hideHints(id) { S.hints[id] = { l: 0, t: now() }; persist(); render(); }
+function revealName(id) { S.names[id] = { r: 1, t: now() }; persist(); render(); }
+function setPref(k, v) { S.prefs[k] = v; S.prefsT = now(); persist(); render(); }
+
+function showToast(msg, undo) {
+  clearTimeout(undoTimer);
+  const root = $("#toastRoot");
+  root.innerHTML = `<div class="toast ${undo ? "" : "solo"}" role="status"><span>${esc(msg)}</span>${undo ? '<button data-action="undo">Undo</button>' : ""}</div>`;
+  showToast.undo = undo || null;
+  undoTimer = setTimeout(() => { root.innerHTML = ""; showToast.undo = null; }, undo ? 5000 : 2600);
+}
+
+/* ═════════════ Render: pieces ═════════════ */
+function verifBadge(a, withText = false) {
+  const v = a.verificationStatus || "unconfirmed";
+  const label = v === "verified" ? "Verified" : v === "community" ? "Community-reported" : "Unconfirmed";
+  return `<span class="verif v-${v}" title="${esc(label + ": " + (DATA.meta.verificationLegend[v] || ""))}">${ICON[v] || ""}${withText ? esc(label) : ""}</span>`;
+}
+function priorityChip(a) {
+  if (a.category === "story") return "";
+  const p = DATA.taxonomy.priorities[a.priority];
+  return `<span class="chip p-${a.priority}"><i class="dot"></i>${esc(p ? p.label : a.priority)}</span>`;
+}
+function missChip(a) {
+  const m = a.missable; if (!m) return "";
+  if (m.hourglass || m.type === "timed") return `<span class="chip timed">${ICON.hourglass}${m.hourglass ? "Timed · do it now" : "Time-limited"}</span>`;
+  if (m.type === "temporary") return `<span class="chip timed">${ICON.clock}Temporarily missable</span>`;
+  if (m.type === "in-mission") return `<span class="chip miss">${ICON.warn}During mission only</span>`;
+  const when = m.locksAt ? "before " + labelFor(m.locksAt) : (m.latestSafe || "");
+  return `<span class="chip miss">${ICON.warn}Missable${when ? " · " + esc(when) : ""}</span>`;
+}
+function statusChip(st) {
+  if (st === "deferred") return `<span class="chip st-deferred">${ICON.clock}Later</span>`;
+  if (st === "skipped") return `<span class="chip st-skipped">Skipped</span>`;
+  if (st === "missed") return `<span class="chip st-missed">${ICON.x}Missed</span>`;
+  if (st === "locked") return `<span class="chip st-locked">${ICON.lock}Not yet available</span>`;
+  return "";
+}
+function teaserChip(a) {
+  if (!a.rewardTeaser) return "";
+  const plain = !a.uniqueReward && !["Rare discovery", "Memorable encounter", "Unique reward available"].includes(a.rewardTeaser);
+  return `<span class="chip teaser ${plain ? "plain" : ""}">${a.uniqueReward ? ICON.spark : ""}${esc(a.rewardTeaser)}</span>`;
+}
+function charChip(a) {
+  if (!a.character || a.character === "Either") return "";
+  return `<span class="chip">${ICON.person}${esc(CHAR_SHORT[a.character] || a.character)}</span>`;
+}
+function eyebrow(a) {
+  const cat = DATA.taxonomy.categories[a.category] || a.category;
+  const bits = [cat];
+  if (a.region) bits.push(a.region);
+  return bits.map(esc).join(" · ");
+}
+function checkIcon(st) {
+  return st === "done" ? ICON.check : st === "skipped" ? ICON.skip : st === "deferred" ? ICON.clock : st === "missed" ? ICON.x : ICON.check;
+}
+
+function cardHTML(a, opts = {}) {
+  const st = statusOf(a);
+  const open = UI.expanded.has(a.id);
+  const title = displayTitle(a);
+  const nameHidden = a.category === "story" && !showName(a);
+  const chips = [
+    a.category === "story" && a.marker && showName(a) ? `<span class="chip">Marker: ${esc(a.marker)}</span>` : "",
+    statusChip(st), missChip(a), priorityChip(a), teaserChip(a), charChip(a),
+    a.timeOfDay ? `<span class="chip">${ICON.moon}${esc(a.timeOfDay)}</span>` : "",
+    a.edition ? `<span class="chip">${esc(a.edition)}</span>` : "",
+    (DURING.get(a.id) || []).length ? `<span class="chip miss">${ICON.warn}${DURING.get(a.id).length} one-time pickup inside</span>` : "",
+    verifBadge(a),
+  ].join("");
+  return `<article class="card s-${st} cat-${a.category} ${open ? "is-open" : ""}" id="card-${esc(a.id)}">
+    <div class="card-row">
+      <button class="check" data-action="toggle" data-id="${esc(a.id)}" aria-pressed="${st === "done"}" aria-label="${st === "done" ? "Mark not done" : "Mark done"}: ${esc(title)}">${checkIcon(st)}</button>
+      <button class="card-main" data-action="expand" data-id="${esc(a.id)}" aria-expanded="${open}">
+        <span class="card-eyebrow">${opts.showChapter ? esc(chapterOf(a).title) + " · " : ""}${eyebrow(a)}</span>
+        <span class="card-title">${esc(title)}${nameHidden ? ' <span class="muted small" style="font-family:var(--font-body)">(name hidden)</span>' : ""}</span>
+        <span class="chips">${chips}</span>
+      </button>
+    </div>
+    ${open ? `<div class="card-body">${bodyHTML(a)}</div>` : ""}
+  </article>`;
+}
+
+function missBoxHTML(a) {
+  const m = a.missable; if (!m) return "";
+  const typeLabel = (DATA.taxonomy.missableTypes[m.type] || m.type);
+  const latest = m.locksAt ? "Before starting " + labelFor(m.locksAt) : (m.latestSafe || "Not documented");
+  const affects = m.affects100 === true ? "Yes" : m.affects100 === false ? "No" : "Not documented";
+  return `<div class="missbox ${m.type === "temporary" ? "temporary" : ""}">
+    <div class="missbox-head">${m.hourglass ? ICON.hourglass : ICON.warn}<span>${m.hourglass ? "Timed and missable" : "Missable"} · ${esc(typeLabel)}</span></div>
+    ${m.warning ? `<p>${esc(m.warning)}</p>` : ""}
+    <dl class="kv">
+      <dt>Earliest</dt><dd>${esc(m.earliest || "Not documented")}</dd>
+      <dt>Latest safe</dt><dd>${esc(latest)}</dd>
+      <dt>Character</dt><dd>${esc(CHAR_SHORT[a.character] || a.character || "Either")}</dd>
+      <dt>Affects 100%</dt><dd>${affects}</dd>
+      <dt>Unique reward</dt><dd>${m.uniqueReward || a.uniqueReward ? "Yes" : "No or not documented"}</dd>
+      ${m.returns ? `<dt>Returns</dt><dd>${esc(m.returns)}</dd>` : ""}
+    </dl>
+  </div>`;
+}
+
+function hintsHTML(a) {
+  if (!a.hints || !a.hints.length) return "";
+  const lvl = Math.min(4, (S.hints[a.id] && S.hints[a.id].l) || 0);
+  const steps = [1, 2, 3, 4].map((n) => `<i class="${n <= lvl ? "on" : ""}"></i>`).join("");
+  const shown = a.hints.slice(0, lvl).map((h, i) => `<div class="hint l${i + 1}"><span class="hint-n">${i + 1}</span><div><span class="hint-label">${HINT_LABELS[i]}</span><p>${esc(h)}</p></div></div>`).join("");
+  const kind = lvl >= 2 && a.rewardCategory ? `<p class="muted small">Reward type: ${esc(DATA.taxonomy.rewardCategories[a.rewardCategory] || a.rewardCategory)}</p>` : "";
+  const nextBtn = lvl < 4
+    ? `<button class="btn btn-sm ${lvl === 0 ? "" : "btn-ghost"}" data-action="hint" data-id="${esc(a.id)}">Reveal hint ${lvl + 1} · ${HINT_LABELS[lvl]}</button>` : "";
+  const hideBtn = lvl > 0 ? `<button class="btn btn-sm btn-ghost" data-action="hide-hints" data-id="${esc(a.id)}">Hide hints</button>` : "";
+  return `<div class="hints">
+    <div class="hints-head"><span class="eyebrow">Hints${lvl ? " · level " + lvl + " of 4" : ""}</span><span class="hint-steps" aria-hidden="true">${steps}</span></div>
+    ${lvl === 0 ? `<p class="hint-locked">Hidden. Each level reveals a little more, and only when you ask.</p>` : shown}
+    ${kind}
+    <div class="actions">${nextBtn}${hideBtn}</div>
+  </div>`;
+}
+
+function bodyHTML(a) {
+  const st = statusOf(a);
+  const parts = [];
+  if (a.category === "story" && !showName(a)) {
+    parts.push(`<p class="muted small">Mission name hidden because it's ahead of where you are. <button class="name-reveal" data-action="reveal-name" data-id="${esc(a.id)}">Show the name</button></p>`);
+  }
+  parts.push(`<p class="desc">${esc(a.spoilerFreeDescription)}</p>`);
+  if (a.whyNow) parts.push(`<p class="why"><b>Why now:</b> ${esc(a.whyNow)}</p>`);
+  if (a.unlocks && a.unlocks.length) parts.push(`<div><span class="eyebrow">Unlocks</span><ul class="unlocks">${a.unlocks.map((u) => `<li>${esc(u)}</li>`).join("")}</ul></div>`);
+  if (a.missable) parts.push(missBoxHTML(a));
+  const during = DURING.get(a.id) || [];
+  if (during.length) parts.push(`<div class="during"><span class="eyebrow">During this mission</span>${during.map((d) => cardHTML(d)).join("")}</div>`);
+  if (st === "locked") {
+    const needs = (a.prerequisites || []).filter((p) => !isResolved(p));
+    parts.push(`<p class="muted small">${ICON.lock.replace("<svg", '<svg style="width:14px;height:14px;vertical-align:-2px"')} Available after: ${needs.map((p) => esc(labelFor(p))).join(", ")}</p>`);
+  }
+  parts.push(hintsHTML(a));
+  // Details
+  const det = [];
+  const pre = (a.prerequisites || []).filter((p) => BY_ID.has(p));
+  det.push(`<dl class="kv">
+    <dt>Chapter</dt><dd>${esc(chapterOf(a).title)}</dd>
+    <dt>Order</dt><dd>${esc(a.recommendedOrder)}</dd>
+    ${pre.length ? `<dt>Needs</dt><dd>${pre.map((p) => esc(labelFor(p)) + (isResolved(p) ? " ✓" : "")).join(", ")}</dd>` : ""}
+    <dt>Character</dt><dd>${esc(CHAR_SHORT[a.character] || a.character || "Either")}</dd>
+    ${a.trophy ? `<dt>Trophy</dt><dd>${esc(a.trophy)}</dd>` : ""}
+    <dt>For 100%</dt><dd>${a.requiredFor100Percent ? "Counts toward 100%" : "Not required"}</dd>
+    <dt>Research</dt><dd>${verifBadge(a, true)} · checked ${esc(a.lastVerified || "")}</dd>
+  </dl>`);
+  if (a.notes) det.push(`<p class="small muted">${esc(a.notes)}</p>`);
+  if (a.sources && a.sources.length) det.push(`<ul class="sources">${a.sources.map((k) => {
+    const s = DATA.sources[k]; if (!s) return "";
+    const isUrl = /^https?:/.test(s.url);
+    return `<li>${isUrl ? `<a href="${esc(s.url)}" target="_blank" rel="noopener">${esc(s.name)}</a>` : esc(s.name)}${s.published ? ` <span>(${esc(s.published)})</span>` : ""}</li>`;
+  }).join("")}</ul>`);
+  parts.push(`<details class="more"><summary>Details, sources and spoiler notes</summary><div>${det.join("")}</div></details>`);
+  // Actions
+  const act = [];
+  if (st !== "done") act.push(`<button class="btn btn-sm" data-action="status" data-s="done" data-id="${esc(a.id)}">${ICON.check}Done</button>`);
+  if (st !== "deferred" && st !== "done" && st !== "skipped") act.push(`<button class="btn btn-sm btn-ghost" data-action="status" data-s="deferred" data-id="${esc(a.id)}">${ICON.clock}Later</button>`);
+  if (st !== "skipped" && st !== "done") act.push(`<button class="btn btn-sm btn-ghost" data-action="status" data-s="skipped" data-id="${esc(a.id)}">Skip</button>`);
+  if (stored(a.id) !== "todo") act.push(`<button class="btn btn-sm btn-ghost" data-action="status" data-s="todo" data-id="${esc(a.id)}">Reset</button>`);
+  parts.push(`<div class="actions">${act.join("")}</div>`);
+  return parts.join("");
+}
+
+function gateHTML(m) {
+  const g = m.gate; if (!g) return "";
+  const open = lostAtMission(m);
+  const done = isResolved(m.id);
+  return `<section class="gate ${g.severity === "soft" ? "soft" : ""}">
+    <div class="gate-eyebrow">${ICON.warn}${g.kind === "choice" ? "Save before you choose" : g.severity === "soft" ? "Heads up before the next mission" : "Point of no return"}${done ? " · passed" : ""}</div>
+    <h3>${esc(g.title)}</h3>
+    <p>${esc(g.warning)}</p>
+    <div class="gate-cols">
+      ${g.lose && g.lose.length ? `<div><h4>Won't carry over</h4><ul>${g.lose.map((x) => `<li>${esc(x)}</li>`).join("")}</ul></div>` : ""}
+      ${g.keep && g.keep.length ? `<div><h4>Carries over</h4><ul>${g.keep.map((x) => `<li>${esc(x)}</li>`).join("")}</ul></div>` : ""}
+    </div>
+    ${!done && open.length ? `<div class="list"><span class="eyebrow" style="color:var(--danger)">Still open · lost when this mission starts</span>${open.map((x) => miniRow(x)).join("")}</div>` : ""}
+    ${!done && !open.length && g.kind !== "choice" ? `<p class="small" style="color:var(--teal)">Everything tracked here is handled.</p>` : ""}
+    ${g.save ? `<p class="gate-save">${ICON.save}<span>${esc(g.save)}</span></p>` : ""}
+  </section>`;
+}
+function miniRow(a, sub) {
+  return `<button class="mini-row" data-action="goto" data-id="${esc(a.id)}"><span class="t">${esc(displayTitle(a))}<small>${esc(sub || (chapterOf(a).title + " · " + (a.region || "")))}</small></span>${ICON.chev}</button>`;
+}
+
+/* ═════════════ Views ═════════════ */
+function viewNow() {
+  const cur = currentChapterIdx();
+  const ch = CHAPTERS[cur];
+  const stats = chapterStats(ch.id);
+  const recs = recommendations();
+  const nm = nextMain();
+  const hero = recs[0];
+  const pace = S.prefs.pace;
+  let h = `<section class="banner-hero" data-enter>${bannerHTML(ch.id)}<div class="wrap"><div class="chapter-hero on-banner hero-text">
+    <span class="eyebrow">${ch.number === 0 ? "Prologue" : ch.postGame ? "Free roam" : "Chapter " + ch.number} · ${esc(ch.base)} · ${esc(ch.protagonists.join(" & "))}</span>
+    <h1>${esc(ch.title)}</h1>
+    <div class="progress-line"><div class="bar"><i style="width:${stats.pct}%"></i></div><span class="num">${stats.done} of ${stats.total - stats.skipped} · ${stats.pct}%</span></div>
+  </div></div></section><section class="board"><div class="wrap">`;
+  // Two columns on desktop (main: what next and what else; side: will I miss anything, pace).
+  // On phones the columns dissolve and the "o" classes keep the order: next, miss check, pace, then the rest.
+  const main = [], side = [];
+
+  // Q1 + Q2: what next, and why
+  if (hero) {
+    const open = UI.heroOpen;
+    const during = DURING.get(hero.id) || [];
+    main.push(`<section class="section o1"><div class="next">
+      <span class="next-q">What should I do next?</span>
+      <span class="card-eyebrow">${eyebrow(hero)}</span>
+      <h2>${esc(displayTitle(hero))}</h2>
+      <div class="chips">${[missChip(hero), priorityChip(hero), teaserChip(hero), charChip(hero), hero.timeOfDay ? `<span class="chip">${ICON.moon}${esc(hero.timeOfDay)}</span>` : "", verifBadge(hero)].join("")}</div>
+      <p class="why"><b>Why it's worth doing now:</b> ${esc(reasonFor(hero, nm))}</p>
+      ${hero.category === "story" || hero.whyNow ? `<p class="small" style="color:var(--ink-2)">${esc(hero.spoilerFreeDescription)}</p>` : ""}
+      ${during.length ? `<div class="missbox"><div class="missbox-head">${ICON.warn}<span>${during.length} one-time pickup${during.length > 1 ? "s" : ""} inside this mission</span></div>${during.map((d) => `<p class="small">${esc(d.spoilerFreeDescription)}</p>`).join("")}<p class="small muted">Open the hints if you want a nudge before you start.</p></div>` : ""}
+      <div class="next-actions">
+        <button class="btn btn-primary" data-action="status" data-s="done" data-id="${esc(hero.id)}">${ICON.check}Done</button>
+        <button class="btn" data-action="status" data-s="deferred" data-id="${esc(hero.id)}">Later</button>
+        <button class="btn" data-action="status" data-s="skipped" data-id="${esc(hero.id)}">Skip</button>
+        <button class="btn" data-action="hero-toggle" aria-expanded="${open}">${open ? "Less" : "Hints"}</button>
+      </div>
+      ${open ? `<div class="card-body" style="padding:14px 0 0;border-color:var(--line-strong)">${bodyHTML(hero)}</div>` : ""}
+    </div></section>`);
+  } else {
+    main.push(`<section class="section o1"><div class="next"><span class="next-q">What should I do next?</span><h2>You're all caught up</h2><p class="why">Nothing open at your current pace. Try a wider pace, or check items you saved for later.</p></div></section>`);
+  }
+
+  // Q3: will I miss anything?
+  if (nm) {
+    const lost = lostAtMission(nm);
+    const gate = nm.gate;
+    const warn = lost.length > 0 || (gate && gate.severity === "hard");
+    const during = DURING.get(nm.id) || [];
+    side.push(`<section class="section o2"><div class="gatecheck ${warn ? "warn" : "ok"}">
+      <span class="q-label"><span class="eyebrow">Will I miss anything if I advance the story?</span></span>
+      <h3>Next story mission: ${esc(displayTitle(nm))}${nm.marker && showName(nm) ? ` <span class="muted small" style="font-weight:500;font-family:var(--font-body)">(${esc(nm.marker)})</span>` : ""}</h3>
+      ${lost.length ? `<div class="verdict">${ICON.warn}<span>Yes. Finish ${lost.length === 1 ? "this" : "these " + lost.length} first. Starting it closes ${lost.length === 1 ? "it" : "them"} for good.</span></div><div class="list">${lost.map((a) => miniRow(a, firstSentence(a.missable.warning))).join("")}</div>`
+        : gate && gate.severity === "hard" ? `<div class="verdict">${ICON.warn}<span>Nothing tracked is still open, but this is a point of no return.</span></div>`
+        : `<div class="verdict">${ICON.shield}<span>Safe to continue. Nothing known is lost when you start it.</span></div>`}
+      ${gate ? `<p class="small">${esc(gate.warning)}</p>${gate.save ? `<p class="gate-save">${ICON.save}<span>${esc(gate.save)}</span></p>` : ""}` : ""}
+      ${during.length ? `<p class="small muted">${during.length} one-time pickup${during.length > 1 ? "s" : ""} happen${during.length > 1 ? "" : "s"} inside this mission. Check its card before you start.</p>` : ""}
+    </div></section>`);
+  }
+
+  side.push(`<section class="section o3" aria-label="Pace"><div class="section-head"><h2 class="section-title">Your pace</h2></div><div class="pace" role="group" aria-label="Choose your pace">${Object.entries(PACES).map(([k, p]) => `<button data-action="pace" data-pace="${k}" aria-pressed="${k === pace}">${esc(p.label)}</button>`).join("")}</div><p class="small muted">${esc(PACES[pace].blurb)} ${esc(ch.intro)}</p></section>`);
+
+  // Also available
+  const lostIds = new Set(lostAtMission(nm).map((a) => a.id));
+  const more = recs.slice(1).filter((a) => !lostIds.has(a.id)).slice(0, 5);
+  if (more.length) {
+    main.push(`<section class="section o4"><div class="section-head"><h2 class="section-title">Also open right now</h2><button class="btn btn-sm btn-ghost" data-action="nav" data-view="journal">Full journal</button></div><div class="list">${more.map((a) => cardHTML(a)).join("")}</div></section>`);
+  }
+  const amb = ambientNow();
+  if (amb.length) {
+    main.push(`<section class="section o5"><div class="section-head"><h2 class="section-title">Keep in mind as you play</h2></div><p class="small muted">Habits and chance encounters. They never block the story.</p><div class="list">${amb.slice(0, 4).map((a) => cardHTML(a)).join("")}</div></section>`);
+  }
+  const left = earlierLeftovers();
+  const deferred = ORDERED.filter((a) => statusOf(a) === "deferred");
+  if (left.length || deferred.length) {
+    side.push(`<section class="section o6"><div class="list">
+      ${left.length ? `<button class="mini-row" data-action="filter-open-earlier"><span class="t">${left.length} still open from earlier chapters<small>Optional finds you passed. None are urgent.</small></span>${ICON.chev}</button>` : ""}
+      ${deferred.length ? `<button class="mini-row" data-action="filter-deferred"><span class="t">${deferred.length} saved for later<small>Things you chose to come back to.</small></span>${ICON.chev}</button>` : ""}
+    </div></section>`);
+  }
+  h += `<div class="now-grid"><div class="col col-main">${main.join("")}</div><div class="col col-side">${side.join("")}</div></div>`;
+  h += footHTML();
+  h += `</div></section>`;
+  return h;
+}
+
+function filterMatch(a) {
+  const f = UI.filters;
+  if (f.pri.length && !(a.category === "story" ? f.pri.includes("story") : f.pri.includes(a.priority))) return false;
+  if (f.cat.length && !f.cat.includes(a.category)) return false;
+  const st = statusOf(a);
+  if (f.status === "todo" && !(st === "todo" || st === "locked")) return false;
+  if (f.status !== "all" && f.status !== "todo" && st !== f.status) return false;
+  if (f.missable && !a.missable) return false;
+  if (f.available && st !== "todo") return false;
+  if (f.character !== "any" && !(a.character === f.character || a.character === "Both" || a.character === "Either")) return false;
+  if (f.verif !== "any" && a.verificationStatus !== f.verif) return false;
+  return true;
+}
+function searchMatch(a, q) {
+  const hay = [displayTitle(a), a.category === "story" && showName(a) ? a.marker : "", a.region, a.spoilerFreeDescription, a.rewardTeaser, DATA.taxonomy.categories[a.category], a.character].join(" ").toLowerCase();
+  return q.split(/\s+/).filter(Boolean).every((w) => hay.includes(w));
+}
+
+function viewJournal() {
+  const cur = currentChapterIdx();
+  if (UI.chapter == null || !CH_IDX.has(UI.chapter)) UI.chapter = CHAPTERS[cur].id;
+  const q = UI.q.trim().toLowerCase();
+  const nf = activeFilterCount();
+  let h = `<div class="wrap">`;
+  h += `<div class="chapter-tabs" role="group" aria-label="Chapters">${CHAPTERS.map((c, i) => {
+    const s = chapterStats(c.id);
+    return `<button class="ctab" data-action="chapter" data-ch="${c.id}" aria-pressed="${!q && UI.chapter === c.id}">${thumbHTML(c.id, false)}<span class="meta">
+      <span class="n"><span>${c.number === 0 ? "Prologue" : c.postGame ? "Post-game" : "Ch " + c.number}</span>${i === cur ? '<span class="here">Here</span>' : `<span>${s.pct}%</span>`}</span>
+      <span class="tt">${esc(c.title)}</span><span class="bar"><i style="width:${s.pct}%"></i></span></span></button>`;
+  }).join("")}</div>`;
+  h += `<div class="toolbar">
+    <label class="search">${ICON.search}<input id="q" type="search" placeholder="Search titles, regions, characters" value="${esc(UI.q)}" autocomplete="off" aria-label="Search the journal">${UI.q ? '<button class="clear" data-action="clear-search" aria-label="Clear search">' + ICON.x + "</button>" : ""}</label>
+    <button class="icon-btn filter-btn" data-action="open-filters" aria-label="Filters">${ICON.filter}${nf ? `<span class="count">${nf}</span>` : ""}</button>
+  </div>`;
+
+  if (q) {
+    const res = ORDERED.filter((a) => !a.duringMission && searchMatch(a, q) && filterMatch(a));
+    h += `<div class="chapter-head"><span class="eyebrow">Search · ${res.length} result${res.length === 1 ? "" : "s"} across all chapters</span></div>`;
+    h += res.length ? `<div class="list">${res.map((a) => cardHTML(a, { showChapter: true })).join("")}</div>` : `<div class="empty">Nothing matches “${esc(UI.q)}”${nf ? " with your filters" : ""}.</div>`;
+  } else {
+    const ch = CHAPTERS[CH_IDX.get(UI.chapter)];
+    const s = chapterStats(ch.id);
+    const list = ORDERED.filter((a) => a.chapter === ch.id && !a.duringMission);
+    const shown = list.filter(filterMatch);
+    h += `<div class="chapter-head">
+      <span class="eyebrow">${ch.number === 0 ? "Prologue" : ch.postGame ? "Post-game" : "Chapter " + ch.number} · ${esc(ch.base)}</span>
+      <h2>${esc(ch.title)}</h2>
+      <p class="small" style="color:var(--ink-2)">${esc(ch.intro)}</p>
+      <div class="stats"><span>${s.done} done</span><span>${s.open} open</span>${s.skipped ? `<span>${s.skipped} skipped</span>` : ""}${s.missed ? `<span style="color:var(--danger)">${s.missed} missed</span>` : ""}<span>${s.pct}%</span></div>
+      ${ch.id !== "post" && ch.id !== "prologue" ? `<p class="small muted">${esc(DATA.meta.orderNote)}</p>` : ""}
+    </div>`;
+    if (!shown.length) h += `<div class="empty">No steps match your filters in this chapter.${nf ? ' <button class="name-reveal" data-action="reset-filters">Clear filters</button>' : ""}</div>`;
+    else {
+      h += `<div class="list">`;
+      for (const a of shown) {
+        if (a.gate && !nf) h += gateHTML(a);
+        h += cardHTML(a);
+      }
+      h += `</div>`;
+    }
+  }
+  h += footHTML() + `</div>`;
+  return h;
+}
+
+function viewMissables() {
+  const cur = currentChapterIdx();
+  const all = ORDERED.filter((a) => a.missable);
+  const open = all.filter((a) => ["todo", "locked", "deferred"].includes(statusOf(a)));
+  const missed = all.filter((a) => statusOf(a) === "missed");
+  const handled = all.filter((a) => isResolved(a.id));
+  let h = `<div class="wrap"><section class="chapter-hero">
+    <span class="eyebrow">Missables and points of no return</span>
+    <h1>Don't leave these behind</h1>
+    <p class="intro">Everything research says can be lost, in story order. Warnings here are more direct than the exploration hints because missing something for good is worse than a small spoiler. Exact rewards stay behind the hint levels.</p>
+  </section>
+  <div class="stat-grid" style="margin-top:18px">
+    <div class="stat"><b>${open.length}</b><span>Still open</span></div>
+    <div class="stat"><b>${handled.length}</b><span>Done or skipped</span></div>
+    <div class="stat"><b style="color:${missed.length ? "var(--danger)" : "inherit"}">${missed.length}</b><span>Missed</span></div>
+    <div class="stat"><b>${all.length}</b><span>Tracked in total</span></div>
+  </div>`;
+  // group by lock mission
+  const groups = new Map();
+  for (const a of all) {
+    const key = a.missable.locksAt || (a.missable.type === "timed" ? "__timed_" + a.chapter : "__other_" + a.chapter);
+    if (!groups.has(key)) groups.set(key, []);
+    groups.get(key).push(a);
+  }
+  const keys = [...groups.keys()].sort((x, y) => {
+    const ax = BY_ID.get(x) || groups.get(x)[0], ay = BY_ID.get(y) || groups.get(y)[0];
+    return (chapterIdx(ax) - chapterIdx(ay)) || (ax.recommendedOrder - ay.recommendedOrder);
+  });
+  for (const k of keys) {
+    const items = groups.get(k);
+    const m = BY_ID.get(k);
+    const first = items[0];
+    const chTitle = chapterOf(m || first).title;
+    let label;
+    if (m && items.every((a) => a.missable.type === "in-mission")) label = "Inside " + displayTitle(m);
+    else if (m) label = "Before starting " + displayTitle(m);
+    else if (k.startsWith("__timed_")) label = "Time-limited when they appear";
+    else label = "Other risks";
+    const ahead = chapterIdx(m || first) > cur;
+    h += `<section class="section"><div class="section-head"><h2 class="section-title">${esc(label)}</h2><span class="eyebrow">${esc(chTitle)}${ahead ? " · ahead" : ""}</span></div>
+      ${m && m.gate ? `<p class="small muted">${esc(m.gate.warning)}</p>` : ""}
+      <div class="list">${items.map((a) => cardHTML(a)).join("")}</div></section>`;
+  }
+  h += footHTML() + `</div>`;
+  return h;
+}
+
+function viewProgress() {
+  const o = overallStats();
+  const all = ACTS;
+  const by = (pred) => all.filter(pred);
+  const uniques = by((a) => a.uniqueReward);
+  const uDone = uniques.filter((a) => stored(a.id) === "done").length;
+  const story = by((a) => a.category === "story");
+  const sDone = story.filter((a) => stored(a.id) === "done").length;
+  const miss = by((a) => a.missable);
+  const mMissed = miss.filter((a) => statusOf(a) === "missed").length;
+  const syncLabel = Sync.mode === "on" ? "Synced across your devices" : Sync.mode === "connecting" ? "Connecting to sync…" : Sync.mode === "offline" ? "Sync unavailable right now · saved on this device" : "Saved on this device";
+  let h = `<div class="wrap"><section class="chapter-hero">
+    <span class="eyebrow">Your journey so far</span>
+    <h1>${o.pct}% of the journal</h1>
+    <p class="intro">${o.done} of ${o.total - o.skipped} steps done${o.skipped ? `, ${o.skipped} skipped` : ""}. This counts the guide's steps, not the in-game 100% screen.</p>
+    <span class="sync ${Sync.mode === "on" ? "on" : Sync.mode === "offline" ? "off" : ""}"><i></i>${esc(syncLabel)}</span>
+  </section>
+  <div class="stat-grid" style="margin-top:18px">
+    <div class="stat"><b>${sDone}/${story.length}</b><span>Story steps</span></div>
+    <div class="stat"><b>${uDone}/${uniques.length}</b><span>Unique rewards found</span></div>
+    <div class="stat"><b>${miss.filter((a) => isResolved(a.id)).length}/${miss.length}</b><span>Missables handled</span></div>
+    <div class="stat"><b style="color:${mMissed ? "var(--danger)" : "inherit"}">${mMissed}</b><span>Missed</span></div>
+  </div>
+  <div class="progress-cols"><div>
+  <section class="section"><h2 class="section-title">Chapters</h2><div class="chap-rows">${CHAPTERS.map((c) => {
+    const s = chapterStats(c.id);
+    return `<button class="chap-row" data-action="chapter-go" data-ch="${c.id}">${thumbHTML(c.id, true)}<span class="ttl"><span class="eyebrow">${c.number === 0 ? "Prologue" : c.postGame ? "Post-game" : "Chapter " + c.number}</span><b>${esc(c.title)}</b></span><span class="pct">${s.pct}%</span><span class="bar"><i style="width:${s.pct}%"></i></span></button>`;
+  }).join("")}</div></section>
+  </div><div>
+  <section class="section"><h2 class="section-title">Settings</h2>
+    <div class="panel">
+      <h3>Pace</h3><p class="small muted">Decides which priorities “What should I do next?” suggests. The story and urgent missables always show.</p>
+      <div class="pace" role="group" aria-label="Choose your pace">${Object.entries(PACES).map(([k, p]) => `<button data-action="pace" data-pace="${k}" aria-pressed="${k === S.prefs.pace}">${esc(p.label)}</button>`).join("")}</div>
+    </div>
+    <div class="panel">
+      <h3>Story mission names</h3><p class="small muted">Mission titles can hint at the plot. By default, names ahead of your current chapter stay hidden.</p>
+      <div class="toggles"><button class="tog" data-action="names" data-v="current" aria-pressed="${S.prefs.names !== "always"}">Hide names ahead of me</button><button class="tog" data-action="names" data-v="always" aria-pressed="${S.prefs.names === "always"}">Always show names</button></div>
+    </div>
+    <div class="panel">
+      <h3>Already playing?</h3><p class="small muted">Jump to where you are. This marks every story mission before your pick as done. Side content is left alone.</p>
+      <label class="small muted" for="cu-ch">Chapter</label>
+      <select id="cu-ch" class="sel">${CHAPTERS.filter((c) => !c.postGame).map((c) => `<option value="${c.id}" ${c.id === (UI.cuCh || CHAPTERS[currentChapterIdx()].id) ? "selected" : ""}>${esc(c.number === 0 ? "Prologue" : "Chapter " + c.number + ": " + c.title)}</option>`).join("")}</select>
+      <label class="small muted" for="cu-m">The mission you're about to play</label>
+      <select id="cu-m" class="sel">${ORDERED.filter((a) => a.category === "story" && a.chapter === (UI.cuCh || CHAPTERS[currentChapterIdx()].id)).map((a) => `<option value="${esc(a.id)}">${esc(a.missionName)}</option>`).join("")}</select>
+      <div class="actions"><button class="btn btn-sm" data-action="catch-up">Mark earlier story missions done</button></div>
+    </div>
+  </section>
+  <section class="section"><h2 class="section-title">Backup and transfer</h2>
+    <div class="panel">
+      <p class="small muted">Progress saves on this device automatically${Sync.mode === "on" ? " and syncs to your other devices when you open this page signed in" : ""}. Export a JSON file as a backup, or to move progress somewhere else. Progress is keyed by stable step ids, so guide updates won't erase it.</p>
+      <div class="actions"><button class="btn btn-sm" data-action="export">Export progress</button><button class="btn btn-sm" data-action="import">Import progress</button><button class="btn btn-sm btn-danger" data-action="reset-all">Reset all progress</button></div>
+    </div>
+  </section>
+  </div></div>
+  <section class="section"><h2 class="section-title">Research status</h2>
+    <div class="panel"><h3>How to read the badges</h3><div class="legend">
+      <span>${verifBadge({ verificationStatus: "verified" }, true)} · ${esc(DATA.meta.verificationLegend.verified)}</span>
+      <span>${verifBadge({ verificationStatus: "community" }, true)} · ${esc(DATA.meta.verificationLegend.community)}</span>
+      <span>${verifBadge({ verificationStatus: "unconfirmed" }, true)} · ${esc(DATA.meta.verificationLegend.unconfirmed)}</span>
+    </div><p class="small muted">Counts: ${["verified", "community", "unconfirmed"].map((v) => `${all.filter((a) => a.verificationStatus === v).length} ${v}`).join(" · ")}. Data version ${esc(DATA.meta.dataVersion)}, last updated ${esc(DATA.meta.lastUpdated)}.</p></div>
+    <div class="panel"><h3>Known research gaps</h3><ul class="gaps">${DATA.researchGaps.map((g) => `<li><b>${esc(g.area)}.</b> ${esc(g.detail)}</li>`).join("")}</ul></div>
+    <div class="panel"><details class="more"><summary>All sources (${Object.keys(DATA.sources).length})</summary><div><ul class="sources">${Object.values(DATA.sources).map((s) => `<li>${/^https?:/.test(s.url) ? `<a href="${esc(s.url)}" target="_blank" rel="noopener">${esc(s.name)}</a>` : esc(s.name)}${s.published ? ` (${esc(s.published)})` : ""}</li>`).join("")}</ul></div></details></div>
+  </section>`;
+  h += footHTML() + `</div>`;
+  return h;
+}
+
+function footHTML() {
+  return `<footer class="foot"><p>${esc(DATA.meta.disclaimer)} Data ${esc(DATA.meta.dataVersion)}. Chapter photographs from Wikimedia Commons, used under their licences.</p><p><button class="btn btn-sm btn-ghost" data-action="credits">Photo credits</button></p></footer>`;
+}
+
+/* ═════════════ Sheets ═════════════ */
+function openSheet(html) {
+  const existing = $("#sheetRoot .sheet");
+  if (existing) { const top = existing.scrollTop; existing.innerHTML = '<div class="grabber"></div>' + html; existing.scrollTop = top; return; }
+  $("#sheetRoot").innerHTML = `<div class="scrim" data-action="close-sheet"><div class="sheet" role="dialog" aria-modal="true" data-stop>${'<div class="grabber"></div>' + html}</div></div>`;
+  const first = $("#sheetRoot .sheet button, #sheetRoot .sheet textarea");
+  if (first) first.focus({ preventScroll: true });
+}
+function closeSheet() { $("#sheetRoot").innerHTML = ""; }
+
+function creditsSheet() {
+  openSheet(`<h3>Photo credits</h3>
+    <ul class="sources credits">${PHOTO_CREDITS.map(([ch, by, lic, url]) => `<li><span class="eyebrow">${esc(ch)}</span><a href="${esc(url)}" target="_blank" rel="noopener">${esc(by)}</a> · ${esc(lic)}</li>`).join("")}</ul>
+    <div class="sheet-actions"><button class="btn btn-primary" data-action="close-sheet-btn">Close</button></div>`);
+}
+function filtersSheet() {
+  const f = UI.filters;
+  const tog = (group, val, label, pressed) => `<button class="tog" data-action="ftog" data-g="${group}" data-v="${val}" aria-pressed="${pressed}">${esc(label)}</button>`;
+  openSheet(`<h3>Filter the journal</h3>
+    <div class="fgroup"><span class="eyebrow">Priority</span><div class="toggles">
+      ${tog("pri", "story", "Main story", f.pri.includes("story"))}
+      ${Object.entries(DATA.taxonomy.priorities).map(([k, p]) => tog("pri", k, p.label, f.pri.includes(k))).join("")}
+    </div></div>
+    <div class="fgroup"><span class="eyebrow">Activity type</span><div class="toggles">${Object.entries(DATA.taxonomy.categories).map(([k, v]) => tog("cat", k, v, f.cat.includes(k))).join("")}</div></div>
+    <div class="fgroup"><span class="eyebrow">Status</span><div class="toggles">${[["all", "Any"], ["todo", "To do"], ["done", "Done"], ["deferred", "Later"], ["skipped", "Skipped"], ["missed", "Missed"]].map(([k, v]) => tog("status", k, v, f.status === k)).join("")}</div></div>
+    <div class="fgroup"><span class="eyebrow">Only show</span><div class="toggles">${tog("missable", "1", "Missable", f.missable)}${tog("available", "1", "Available now", f.available)}</div></div>
+    <div class="fgroup"><span class="eyebrow">Character</span><div class="toggles">${[["any", "Anyone"], ["Jason", "Jason"], ["Lucia", "Lucia"]].map(([k, v]) => tog("character", k, v, f.character === k)).join("")}</div></div>
+    <div class="fgroup"><span class="eyebrow">Research status</span><div class="toggles">${[["any", "Any"], ["verified", "Verified"], ["community", "Community-reported"], ["unconfirmed", "Unconfirmed"]].map(([k, v]) => tog("verif", k, v, f.verif === k)).join("")}</div></div>
+    <div class="sheet-actions"><button class="btn btn-ghost" data-action="reset-filters">Clear all</button><button class="btn btn-primary" data-action="close-sheet-btn">Show results</button></div>`);
+}
+
+async function exportProgress() {
+  const payload = { format: "completionist-journey-progress", version: 1, exportedAt: new Date().toISOString(), dataVersion: DATA.meta.dataVersion, state: S };
+  const text = JSON.stringify(payload, null, 2);
+  const filename = `completionist-journey-progress-${new Date().toISOString().slice(0, 10)}.json`;
+  let dl = null;
+  try { dl = window.claude && typeof window.claude.use === "function" ? await window.claude.use("downloads") : null; } catch { dl = null; }
+  if (dl) {
+    try { await dl.save({ filename, data: text }); showToast("Progress exported"); return; }
+    catch (e) { if (e && e.code === "declined") { showToast("Export cancelled"); return; } }
+  }
+  if (!window.claude) {
+    try {
+      const url = URL.createObjectURL(new Blob([text], { type: "application/json" }));
+      const link = document.createElement("a"); link.href = url; link.download = filename; document.body.appendChild(link); link.click(); link.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 2000);
+      showToast("Progress exported"); return;
+    } catch { /* fall through to copy */ }
+  }
+  openSheet(`<h3>Export progress</h3><p class="small muted">Copy this text and keep it somewhere safe. Paste it into Import to restore.</p>
+    <textarea class="io" id="io-out" readonly>${esc(text)}</textarea>
+    <div class="sheet-actions"><button class="btn" data-action="close-sheet-btn">Close</button><button class="btn btn-primary" data-action="copy-export">Copy</button></div>`);
+}
+function importSheet() {
+  openSheet(`<h3>Import progress</h3><p class="small muted">Choose an exported .json file, or paste its contents. Importing replaces your current progress on this device${Sync.mode === "on" ? " and your synced devices" : ""}.</p>
+    <input type="file" id="io-file" accept=".json,application/json" class="small">
+    <textarea class="io" id="io-in" placeholder="…or paste exported JSON here"></textarea>
+    <p class="small" id="io-msg" style="color:var(--danger)"></p>
+    <div class="sheet-actions"><button class="btn" data-action="close-sheet-btn">Cancel</button><button class="btn btn-primary" data-action="do-import">Replace my progress</button></div>`);
+}
+function doImport() {
+  const raw = ($("#io-in") || {}).value || "";
+  const msg = $("#io-msg");
+  let parsed;
+  try { parsed = JSON.parse(raw); } catch { msg.textContent = "That isn't valid JSON. Paste the full exported file."; return; }
+  const st = parsed && parsed.format === "completionist-journey-progress" ? parsed.state : parsed;
+  if (!st || typeof st !== "object" || !st.items) { msg.textContent = "This doesn't look like an exported progress file."; return; }
+  const incoming = normalize(st);
+  const t = now();
+  for (const b of ["items", "hints", "names"]) for (const k of Object.keys(incoming[b])) incoming[b][k] = Object.assign({}, incoming[b][k], { t });
+  // Entries present now but absent from the file become to-do, so a replace really replaces.
+  for (const k of Object.keys(S.items)) if (!incoming.items[k]) incoming.items[k] = { s: "todo", t };
+  for (const k of Object.keys(S.hints)) if (!incoming.hints[k]) incoming.hints[k] = { l: 0, t };
+  incoming.prefsT = t;
+  S = incoming; migrateIds(); persist(); closeSheet(); render();
+  const n = Object.values(S.items).filter((x) => x.s === "done").length;
+  showToast(`Imported · ${n} steps done`);
+}
+function resetSheet() {
+  openSheet(`<h3>Reset all progress?</h3><p class="muted">Every checkmark, skipped step, saved-for-later item and revealed hint goes back to the start${Sync.mode === "on" ? ", on every synced device" : ""}. Export first if you might want it back.</p>
+    <div class="sheet-actions"><button class="btn" data-action="close-sheet-btn">Keep my progress</button><button class="btn btn-danger" data-action="do-reset">Reset everything</button></div>`);
+}
+function doReset() {
+  const t = now();
+  for (const k of Object.keys(S.items)) S.items[k] = { s: "todo", t };
+  for (const k of Object.keys(S.hints)) S.hints[k] = { l: 0, t };
+  for (const k of Object.keys(S.names)) S.names[k] = { r: 0, t };
+  persist(); closeSheet(); render(); showToast("Progress reset");
+}
+function catchUp() {
+  const id = ($("#cu-m") || {}).value;
+  const target = BY_ID.get(id); if (!target) return;
+  const t = now(); let n = 0;
+  for (const a of ORDERED) {
+    if (a === target) break;
+    if (a.category === "story" && stored(a.id) !== "done") { S.items[a.id] = { s: "done", t }; n++; }
+  }
+  persist(); UI.chapter = null; render();
+  showToast(`${n} story mission${n === 1 ? "" : "s"} marked done`);
+}
+
+/* ═════════════ Render root ═════════════ */
+function renderChrome() {
+  if (!DATA) return;
+  const o = overallStats();
+  const C = 2 * Math.PI * 18;
+  $("#ring").innerHTML = `<svg viewBox="0 0 44 44" aria-hidden="true"><circle cx="22" cy="22" r="18" fill="none" stroke="var(--surface-3)" stroke-width="4"/><circle cx="22" cy="22" r="18" fill="none" stroke="var(--accent)" stroke-width="4" stroke-linecap="round" stroke-dasharray="${C}" stroke-dashoffset="${C * (1 - o.pct / 100)}"/></svg><span>${o.pct}%</span>`;
+  $("#ring").setAttribute("aria-label", `Overall completion ${o.pct}%`);
+  const openMiss = ACTS.filter((a) => a.missable && chapterIdx(a) <= currentChapterIdx() && statusOf(a) === "todo").length;
+  const tabs = [["now", "Now", ICON.tabNow, 0], ["journal", "Journal", ICON.tabJournal, 0], ["missables", "Missables", ICON.tabMiss, openMiss], ["progress", "Progress", ICON.tabProgress, 0]];
+  const html = tabs.map(([k, l, ic, b]) => `<button class="tab" data-action="nav" data-view="${k}" ${UI.view === k ? 'aria-current="page"' : ""}>${ic}<span>${l}</span>${b ? `<span class="badge">${b}</span>` : ""}</button>`).join("");
+  $("#tabs").innerHTML = html;
+  $("#deskTabs").innerHTML = html;
+  const sync = $(".sync");
+  if (sync && UI.view === "progress") { /* progress view re-renders its own label on full render */ }
+}
+function render() {
+  if (!DATA) return;
+  const y = window.scrollY;
+  const focusId = document.activeElement && document.activeElement.id;
+  const selStart = focusId === "q" ? document.activeElement.selectionStart : null;
+  const v = UI.view;
+  $("#view").innerHTML = v === "journal" ? viewJournal() : v === "missables" ? viewMissables() : v === "progress" ? viewProgress() : viewNow();
+  renderChrome();
+  window.scrollTo(0, y);
+  if (focusId) { const el = document.getElementById(focusId); if (el) { el.focus({ preventScroll: true }); if (selStart != null && el.setSelectionRange) el.setSelectionRange(selStart, selStart); } }
+}
+function navigate(view, { scrollTop = true } = {}) {
+  UI.view = view;
+  if (location.hash.slice(1) !== view) history.replaceState(null, "", "#" + view);
+  render();
+  if (scrollTop) window.scrollTo(0, 0);
+}
+function gotoCard(id) {
+  const a = BY_ID.get(id); if (!a) return;
+  const target = a.duringMission ? BY_ID.get(a.duringMission) : a;
+  UI.q = ""; UI.chapter = target.chapter; UI.expanded.add(target.id); if (a !== target) UI.expanded.add(a.id);
+  UI.view = "journal"; history.replaceState(null, "", "#journal");
+  render();
+  requestAnimationFrame(() => { const el = document.getElementById("card-" + id); if (el) el.scrollIntoView({ block: "center", behavior: "smooth" }); });
+}
+
+/* ═════════════ Events ═════════════ */
+document.addEventListener("click", (e) => {
+  const el = e.target.closest("[data-action]");
+  if (!el) return;
+  const act = el.dataset.action, id = el.dataset.id;
+  if (act === "close-sheet") { if (e.target.closest("[data-stop]")) return; closeSheet(); return; }
+  switch (act) {
+    case "nav": navigate(el.dataset.view); break;
+    case "toggle": toggleDone(id); break;
+    case "status": setStatus(id, el.dataset.s); if (el.closest(".next")) UI.heroOpen = false; break;
+    case "expand": UI.expanded.has(id) ? UI.expanded.delete(id) : UI.expanded.add(id); render(); break;
+    case "hint": revealHint(id); break;
+    case "hide-hints": hideHints(id); break;
+    case "reveal-name": revealName(id); break;
+    case "hero-toggle": UI.heroOpen = !UI.heroOpen; render(); break;
+    case "pace": setPref("pace", el.dataset.pace); break;
+    case "names": setPref("names", el.dataset.v); break;
+    case "chapter": UI.chapter = el.dataset.ch; UI.q = ""; render(); window.scrollTo(0, 0); break;
+    case "chapter-go": UI.chapter = el.dataset.ch; UI.q = ""; navigate("journal"); break;
+    case "goto": closeSheet(); gotoCard(id); break;
+    case "open-search": UI.view = "journal"; history.replaceState(null, "", "#journal"); render(); requestAnimationFrame(() => { const q = $("#q"); if (q) q.focus(); }); break;
+    case "clear-search": UI.q = ""; render(); break;
+    case "open-filters": filtersSheet(); break;
+    case "credits": creditsSheet(); break;
+    case "ftog": {
+      const f = UI.filters, g = el.dataset.g, v = el.dataset.v;
+      if (g === "pri" || g === "cat") { f[g] = f[g].includes(v) ? f[g].filter((x) => x !== v) : [...f[g], v]; }
+      else if (g === "missable" || g === "available") f[g] = !f[g];
+      else f[g] = v;
+      saveUI(); render(); filtersSheet(); break;
+    }
+    case "reset-filters": UI.filters = defaultFilters(); saveUI(); render(); if ($("#sheetRoot").innerHTML) filtersSheet(); break;
+    case "close-sheet-btn": closeSheet(); break;
+    case "filter-open-earlier": UI.filters = Object.assign(defaultFilters(), { available: true }); UI.chapter = CHAPTERS[Math.max(0, currentChapterIdx() - 1)].id; saveUI(); navigate("journal"); break;
+    case "filter-deferred": UI.filters = Object.assign(defaultFilters(), { status: "deferred" }); UI.q = ""; saveUI(); navigate("journal"); showToast("Showing items saved for later. Switch chapters to see others."); break;
+    case "undo": if (showToast.undo) { const u = showToast.undo; showToast.undo = null; $("#toastRoot").innerHTML = ""; u(); } break;
+    case "export": exportProgress(); break;
+    case "import": importSheet(); break;
+    case "do-import": doImport(); break;
+    case "copy-export": {
+      const ta = $("#io-out");
+      const done = () => showToast("Copied");
+      if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(ta.value).then(done).catch(() => { ta.select(); });
+      else ta.select();
+      break;
+    }
+    case "reset-all": resetSheet(); break;
+    case "do-reset": doReset(); break;
+    case "catch-up": catchUp(); break;
+  }
+});
+document.addEventListener("input", (e) => {
+  if (e.target.id === "q") { UI.q = e.target.value; render(); }
+  if (e.target.id === "io-in") { const m = $("#io-msg"); if (m) m.textContent = ""; }
+});
+document.addEventListener("change", (e) => {
+  if (e.target.id === "cu-ch") { UI.cuCh = e.target.value; render(); }
+  if (e.target.id === "io-file" && e.target.files && e.target.files[0]) {
+    const r = new FileReader();
+    r.onload = () => { const ta = $("#io-in"); if (ta) ta.value = String(r.result || ""); };
+    r.readAsText(e.target.files[0]);
+  }
+});
+document.addEventListener("keydown", (e) => { if (e.key === "Escape" && $("#sheetRoot").innerHTML) closeSheet(); });
+window.addEventListener("hashchange", () => {
+  const v = location.hash.slice(1);
+  if (["now", "journal", "missables", "progress"].includes(v) && v !== UI.view) navigate(v);
+});
+
+/* ═════════════ Boot ═════════════ */
+async function boot() {
+  const h = location.hash.slice(1);
+  if (["now", "journal", "missables", "progress"].includes(h)) UI.view = h;
+  try {
+    const res = await fetch(DATA_URL, { cache: "no-cache" });
+    if (!res.ok) throw new Error("HTTP " + res.status);
+    indexData(await res.json());
+  } catch (err) {
+    $("#view").innerHTML = `<div class="wrap error-box"><div class="panel"><h3>Couldn't load the walkthrough data</h3>
+      <p class="small muted">The page reads its steps from <code>${DATA_URL}</code> and couldn't open it (${esc(err.message)}). If you opened index.html straight from disk, serve the folder instead, for example with <code>python3 -m http.server</code>, then open http://localhost:8000.</p></div></div>`;
+    return;
+  }
+  loadLocal(); migrateIds();
+  document.documentElement.classList.add("is-entering");
+  render();
+  setTimeout(() => document.documentElement.classList.remove("is-entering"), 1600);
+  Sync.start();
+}
+boot();
+})();
+</script>

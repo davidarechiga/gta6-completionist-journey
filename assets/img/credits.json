@@ -1,0 +1,125 @@
+{
+ "note": "Credits for the photographs in this folder: photos.mjs credits prints the footer block for the ones the pages use.",
+ "photos": [
+  {
+   "file": "photo-f24118035-960.webp",
+   "files": [
+    "photo-f24118035-500.webp",
+    "photo-f24118035-960.webp"
+   ],
+   "id": "f24118035",
+   "alt": "Big Cypress National Preserve BICY1061",
+   "by": "National Park Service Digital Image Archives",
+   "licence": "Public domain",
+   "licenceUrl": "https://creativecommons.org/publicdomain/mark/1.0/",
+   "page": "https://commons.wikimedia.org/wiki/File:Big_Cypress_National_Preserve_BICY1061.jpg",
+   "source": "Wikimedia Commons"
+  },
+  {
+   "file": "photo-f80293882-960.webp",
+   "files": [
+    "photo-f80293882-500.webp",
+    "photo-f80293882-960.webp"
+   ],
+   "id": "f80293882",
+   "alt": "Florida Keys Scenic Highway - Flats Fishing near Islamorada",
+   "by": "Unknown author Unknown author or not provided",
+   "licence": "Public domain",
+   "licenceUrl": "https://creativecommons.org/publicdomain/mark/1.0/",
+   "page": "https://commons.wikimedia.org/wiki/File:Florida_Keys_Scenic_Highway_-_Flats_Fishing_near_Islamorada_-_NARA_-_7718440.jpg",
+   "source": "Wikimedia Commons"
+  },
+  {
+   "file": "photo-f6808735.webp",
+   "files": [
+    "photo-f6808735-500.webp",
+    "photo-f6808735-960.webp",
+    "photo-f6808735.webp"
+   ],
+   "id": "f6808735",
+   "alt": "Panama City Beach, Florida (J.S. Clark)",
+   "by": "j.s. clark / \"Image by jsclark.net.\"",
+   "licence": "CC BY-SA 2.0",
+   "licenceUrl": "https://creativecommons.org/licenses/by-sa/2.0",
+   "page": "https://commons.wikimedia.org/wiki/File:Panama_City_Beach,_Florida_(J.S._Clark).jpg",
+   "source": "Wikimedia Commons"
+  },
+  {
+   "file": "photo-f153970919.webp",
+   "files": [
+    "photo-f153970919-500.webp",
+    "photo-f153970919-960.webp",
+    "photo-f153970919.webp"
+   ],
+   "id": "f153970919",
+   "alt": "Miami - City Skyline from Biscayne Bay 3",
+   "by": "P. Hughes",
+   "licence": "CC BY 4.0",
+   "licenceUrl": "https://creativecommons.org/licenses/by/4.0",
+   "page": "https://commons.wikimedia.org/wiki/File:Miami_-_City_Skyline_from_Biscayne_Bay_3.jpg",
+   "source": "Wikimedia Commons"
+  },
+  {
+   "file": "photo-f136343875.webp",
+   "files": [
+    "photo-f136343875-500.webp",
+    "photo-f136343875-960.webp",
+    "photo-f136343875.webp"
+   ],
+   "id": "f136343875",
+   "alt": "Lifeguard tower in Miami Beach - november 2022",
+   "by": "Elbert Hampton",
+   "licence": "CC0",
+   "licenceUrl": "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
+   "page": "https://commons.wikimedia.org/wiki/File:Lifeguard_tower_in_Miami_Beach_-_november_2022.jpg",
+   "source": "Wikimedia Commons"
+  },
+  {
+   "file": "photo-f5442291.webp",
+   "files": [
+    "photo-f5442291-500.webp",
+    "photo-f5442291-960.webp",
+    "photo-f5442291.webp"
+   ],
+   "id": "f5442291",
+   "alt": "Northern Brickell skyline at night 20081203",
+   "by": "Averette",
+   "licence": "CC BY 3.0",
+   "licenceUrl": "https://creativecommons.org/licenses/by/3.0",
+   "page": "https://commons.wikimedia.org/wiki/File:Northern_Brickell_skyline_at_night_20081203.jpg",
+   "source": "Wikimedia Commons"
+  },
+  {
+   "file": "photo-f123607458.webp",
+   "files": [
+    "photo-f123607458-500.webp",
+    "photo-f123607458-960.webp",
+    "photo-f123607458-1280.webp",
+    "photo-f123607458.webp",
+    "photo-f123607458-780x975.webp"
+   ],
+   "id": "f123607458",
+   "alt": "Everglades Sunset Reflected",
+   "by": "Charles Patrick Ewing",
+   "licence": "CC BY 2.0",
+   "licenceUrl": "https://creativecommons.org/licenses/by/2.0",
+   "page": "https://commons.wikimedia.org/wiki/File:Everglades_Sunset_Reflected.jpg",
+   "source": "Wikimedia Commons"
+  },
+  {
+   "file": "photo-f154791999.webp",
+   "files": [
+    "photo-f154791999-500.webp",
+    "photo-f154791999-960.webp",
+    "photo-f154791999.webp"
+   ],
+   "id": "f154791999",
+   "alt": "Miami Beach - lifeguard station",
+   "by": "P. Hughes",
+   "licence": "CC BY 4.0",
+   "licenceUrl": "https://creativecommons.org/licenses/by/4.0",
+   "page": "https://commons.wikimedia.org/wiki/File:Miami_Beach_-_lifeguard_station.jpg",
+   "source": "Wikimedia Commons"
+  }
+ ]
+}
