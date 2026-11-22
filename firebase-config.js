@@ -1,9 +1,10 @@
 // Public Firebase web config (safe to commit: access is enforced by firestore.rules, not by hiding this).
-// Paste the values from Firebase console > Project settings > Your apps > Web app.
-// While apiKey starts with "PASTE", the sign-in feature stays hidden and the site runs browser-only.
+// Analytics is intentionally not used.
 window.FIREBASE_CONFIG = {
-  apiKey: "PASTE_API_KEY",
-  authDomain: "PASTE_PROJECT_ID.firebaseapp.com",
-  projectId: "PASTE_PROJECT_ID",
-  appId: "PASTE_APP_ID",
+  apiKey: "AIzaSyDU8o9E_ERw4Tix3G_g0Y8M47rQuiPhshQ",
+  authDomain: "gta-exploring-companion.firebaseapp.com",
+  projectId: "gta-exploring-companion",
+  storageBucket: "gta-exploring-companion.firebasestorage.app",
+  messagingSenderId: "149548815111",
+  appId: "1:149548815111:web:3cc15800d88fe458062ba2",
 };
