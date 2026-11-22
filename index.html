@@ -414,6 +414,11 @@ html.is-entering [data-enter] .banner img { animation: fade .5s ease both; }
 .tog[aria-pressed="true"] { background: var(--ink); color: var(--bg); border-color: var(--ink); }
 .sheet-actions { display: flex; gap: 8px; justify-content: flex-end; flex-wrap: wrap; }
 textarea.io { width: 100%; min-height: 160px; border-radius: var(--r-md); border: 1px solid var(--line-strong); background: var(--bg-deep); padding: 12px; font-family: var(--font-mono); font-size: 12px; color: var(--ink-2); }
+.acct-btn { flex: none; min-height: 44px; padding: 0 10px; border: 0; border-radius: var(--r-btn); background: none; color: var(--ink); font: inherit; font-size: 14px; font-weight: 600; cursor: pointer; white-space: nowrap; transition: background-color var(--dur) var(--ease); }
+.acct-btn[hidden] { display: none; }
+.acct-btn.on { color: var(--accent); }
+@media (hover: hover) { .acct-btn:hover { background: var(--surface-2); } }
+@media (max-width: 479px) { .acct-btn { padding: 0 6px; font-size: 13px; } }
 input.inp { width: 100%; min-height: 44px; border-radius: var(--r-md); border: 1px solid var(--line-strong); background: var(--bg-deep); padding: 0 12px; color: var(--ink); margin: 6px 0 10px; }
 .linkbtn { background: none; border: 0; padding: 0; color: var(--accent); text-decoration: underline; text-underline-offset: 3px; font: inherit; cursor: pointer; }
 select.sel { width: 100%; min-height: 44px; border-radius: var(--r-md); border: 1px solid var(--line-strong); background: var(--bg-deep); padding: 0 12px; }
@@ -639,6 +644,7 @@ select.sel { width: 100%; min-height: 44px; border-radius: var(--r-md); border: 
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7.5v5.5M12 16.5v.01"/></svg><i class="wip-dot" hidden></i>
       </button>
       <button class="ring" id="ring" type="button" data-action="pop-toggle" data-pop="stats" aria-haspopup="dialog" aria-expanded="false" aria-label="Overall completion"></button>
+      <button class="acct-btn" id="acctBtn" type="button" data-action="account" hidden></button>
       <button class="icon-btn" data-action="open-search" aria-label="Search the journal">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
       </button>
@@ -1877,6 +1883,13 @@ function accountPanel() {
   return `<div class="panel"><h3>Sync across devices (optional)</h3><p class="small muted">Everything works without an account, saved in this browser only. Clearing site data or switching devices loses it. Sign in to keep it safe and use it anywhere.</p>
     <div class="actions"><button class="btn btn-sm btn-primary" data-action="sign-in">Sign in to sync</button><button class="btn btn-sm btn-ghost" data-action="privacy">What's stored?</button></div></div>`;
 }
+function accountSheet() {
+  const who = (Sync.account && (Sync.account.email || Sync.account.name)) || "your account";
+  openSheet(`<h3>Your account</h3><p class="muted">Signed in as <b>${esc(who)}</b>. <span class="sync ${Sync.mode === "on" ? "on" : Sync.mode === "offline" ? "off" : ""}"><i></i>${esc(Sync.label())}</span></p>
+    <p class="small muted">Progress syncs to your account on every device you sign in on.</p>
+    <div class="actions"><button class="btn" data-action="sign-out">Sign out</button><button class="btn btn-ghost" data-action="privacy">Privacy</button><button class="btn btn-danger" data-action="delete-account">Delete account and data</button></div>
+    <div class="sheet-actions"><button class="btn btn-primary" data-action="close-sheet-btn">Close</button></div>`);
+}
 function signInSheet() {
   openSheet(`<h3>Sign in to sync</h3><p class="small muted">Your progress so far on this device is kept and merged into your account.</p>
     <div class="actions"><button class="btn btn-primary" data-action="sign-in-google">Continue with Google</button></div>
@@ -2505,6 +2518,13 @@ function renderChrome() {
   const html = tabs.map(([k, l, ic, b]) => `<button class="tab" data-action="nav" data-view="${k}" ${UI.view === k ? 'aria-current="page"' : ""}>${ic}<span>${l}</span>${b ? `<span class="badge">${b}</span>` : ""}</button>`).join("");
   $("#tabs").innerHTML = html;
   $("#deskTabs").innerHTML = html;
+  const ab = $("#acctBtn");
+  if (ab) {
+    ab.hidden = !Sync.available;
+    ab.classList.toggle("on", !!Sync.account);
+    ab.textContent = Sync.account ? "Account" : "Sign in";
+    ab.setAttribute("aria-label", Sync.account ? "Your account and sync" : "Sign in to sync your progress");
+  }
   const sync = $(".sync");
   if (sync) { sync.className = "sync " + (Sync.mode === "on" ? "on" : Sync.mode === "offline" ? "off" : ""); sync.innerHTML = "<i></i>" + esc(Sync.label()); }
 }
@@ -2616,6 +2636,7 @@ document.addEventListener("click", (e) => {
     case "do-reset": doReset(); break;
     case "catch-up": catchUp(); break;
     case "sign-in": signInSheet(); break;
+    case "account": if (Sync.account) accountSheet(); else signInSheet(); break;
     case "sign-in-google": Sync.signInGoogle(); break;
     case "sign-in-email": Sync.sendLink(($("#acct-email") || {}).value ? $("#acct-email").value.trim() : ""); break;
     case "sign-out": signOutSheet(); break;
