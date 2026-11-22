@@ -4,12 +4,16 @@
 <meta name="theme-color" content="#161c1a">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@400..600&family=Figtree:wght@400..700&family=Martian+Mono:wght@400..500&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Overpass:wght@400..800&display=swap">
 <style>
-/* Dealt (tasteskill): palette green-black-bone, type sora (Sora / Figtree + Martian Mono), radius soft, buttons solid, mark initial.
-   Why the palette fits: Leonida at night is mangrove water and humid dark; a green-black ground with bone type and a
-   sea-glass accent lets the chapter photographs carry the colour. Layout: one journal column on phones (thumb tab bar),
+/* Look: green-black ground, bone type, sea-glass accent, one Florida photograph per chapter.
+   Second pass (2026-11-20) took out the common AI-template habits: no mono caps labels, no pill badges,
+   no boxed cards for list rows, no letter-tile logo or progress ring, no photo faded into the page,
+   no glass header, no hover lifts or staggered fade-ins. One family, Overpass: an open-source cut of
+   Highway Gothic, the lettering on Florida's road signs. Layout: one column on phones (thumb tab bar),
    a two-column "now" board and header tabs on desktop. */
+/* Overpass's middle dot sits off-centre; borrow a system one for that single character. */
+@font-face { font-family: "Sep"; src: local("Helvetica Neue"), local("HelveticaNeue"), local("Arial"), local("Roboto"); unicode-range: U+00B7; }
 :root {
   color-scheme: dark;
   --bg: #161c1a;
@@ -17,8 +21,8 @@
   --surface: #1f2725;
   --surface-2: #26302d;
   --surface-3: #313c38;
-  --line: rgba(227, 226, 218, 0.08);
-  --line-strong: rgba(227, 226, 218, 0.16);
+  --line: rgba(227, 226, 218, 0.09);
+  --line-strong: rgba(227, 226, 218, 0.18);
   --ink: #e3e2da;
   --ink-2: #c2c4bb;
   --ink-3: #a9afa7;
@@ -28,18 +32,19 @@
   --danger: #f0897a;
   --warn: #e4bf6e;
   --apricot: #eaa66f;
-  --font-display: "Sora", "Avenir Next", system-ui, sans-serif;
-  --font-body: "Figtree", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-  --font-mono: "Martian Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
-  --r-xl: 20px;
-  --r-lg: 16px;
-  --r-md: 12px;
-  --r-sm: 8px;
-  --r-btn: 10px;
+  --font: "Sep", "Overpass", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-display: var(--font);
+  --font-body: var(--font);
+  --font-mono: ui-monospace, "SFMono-Regular", Menlo, monospace;
+  --r-xl: 8px;
+  --r-lg: 6px;
+  --r-md: 6px;
+  --r-sm: 4px;
+  --r-btn: 6px;
   --ease: cubic-bezier(.2, .7, .2, 1);
-  --dur: 180ms;
+  --dur: 160ms;
   --tabbar-h: 64px;
-  --topbar-h: 64px;
+  --topbar-h: 60px;
   /* names the script uses inline */
   --night: var(--bg);
   --night-2: var(--surface);
@@ -51,15 +56,15 @@
 * { box-sizing: border-box; }
 html { background: var(--bg); overflow-x: clip; }
 body {
+  margin: 0;
   background: var(--bg);
   color: var(--ink);
-  font-family: var(--font-body);
+  font-family: var(--font);
   font-size: 16px;
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   -webkit-tap-highlight-color: transparent;
-  font-feature-settings: "ss01";
 }
 body::before {
   content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 30; background: var(--bg);
@@ -68,432 +73,555 @@ button, input, select, textarea { font: inherit; color: inherit; }
 button { cursor: pointer; }
 a { color: var(--accent); text-underline-offset: 3px; text-decoration-thickness: 1px; }
 a:hover { color: var(--accent-hi); }
-:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 6px; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 4px; }
 h1, h2, h3, h4 { margin: 0; text-wrap: balance; }
 p { margin: 0; text-wrap: pretty; }
 img { display: block; max-width: 100%; }
-.eyebrow {
-  font-family: var(--font-mono); font-size: 10.5px; font-weight: 500; letter-spacing: .06em; text-transform: uppercase;
-  color: var(--ink-3);
-}
+.eyebrow { font-size: 13px; font-weight: 600; color: var(--ink-3); }
 .wrap {
   max-width: none; margin: 0 auto;
   padding-left: max(clamp(16px, 4.5vw, 88px), env(safe-area-inset-left, 0px));
   padding-right: max(clamp(16px, 4.5vw, 88px), env(safe-area-inset-right, 0px));
 }
 
-.skip { position: fixed; left: 12px; top: calc(env(safe-area-inset-top, 0px) + 10px); z-index: 60; padding: 12px 16px; border-radius: 10px; background: var(--ink); color: var(--bg); font-weight: 700; text-decoration: none; transform: translateY(-160%); transition: transform var(--dur) var(--ease); }
+.skip { position: fixed; left: 12px; top: calc(env(safe-area-inset-top, 0px) + 10px); z-index: 60; padding: 12px 16px; border-radius: 6px; background: var(--ink); color: var(--bg); font-weight: 700; text-decoration: none; transform: translateY(-160%); transition: transform var(--dur) var(--ease); }
 .skip:focus, .skip:focus-visible { transform: none; color: var(--bg); }
 
 /* ── Header ── */
 .topbar {
   position: sticky; top: env(safe-area-inset-top, 0px); z-index: 20;
-  background: color-mix(in srgb, var(--bg) 84%, transparent);
-  backdrop-filter: blur(16px) saturate(140%); -webkit-backdrop-filter: blur(16px) saturate(140%);
-  border-bottom: 1px solid var(--line);
+  background: var(--bg); border-bottom: 1px solid var(--line);
 }
-.topbar-inner { display: flex; align-items: center; gap: 12px; min-height: var(--topbar-h); padding-block: 10px; }
-.brand { display: flex; align-items: center; gap: 10px; min-width: 0; flex: 1; }
-.mark--initial {
-  width: 32px; height: 32px; flex: none; border-radius: 9px; display: grid; place-items: center;
-  background: var(--accent); color: var(--accent-ink); font: 600 17px/1 var(--font-display); letter-spacing: -0.02em;
-}
-.brand-text { display: flex; flex-direction: column; min-width: 0; gap: 2px; }
-.brand-name { font-family: var(--font-display); font-weight: 500; font-size: 15.5px; letter-spacing: -0.015em; line-height: 1.15; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.brand-sub { font-family: var(--font-mono); font-size: 9.5px; letter-spacing: .06em; text-transform: uppercase; color: var(--ink-3); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-@media (max-width: 479px) {
-  .brand-name { white-space: normal; font-size: 15px; line-height: 1.12; }
-  .brand-sub { display: none; }
-}
-.ring { position: relative; width: 44px; height: 44px; flex: none; }
-.ring svg { width: 44px; height: 44px; transform: rotate(-90deg); }
-.ring span { position: absolute; inset: 0; display: grid; place-items: center; font-family: var(--font-mono); font-size: 10px; font-weight: 500; font-variant-numeric: tabular-nums; letter-spacing: -0.02em; }
+.topbar-inner { display: flex; align-items: center; gap: 8px; min-height: var(--topbar-h); padding-block: 8px; }
+.brand { display: flex; align-items: baseline; gap: 10px; min-width: 0; flex: 1; }
+.brand-text { display: flex; align-items: baseline; gap: 10px; min-width: 0; }
+.brand-name { font-weight: 800; font-size: 17px; line-height: 1.15; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.brand-sub { font-size: 13px; font-weight: 500; color: var(--ink-3); white-space: nowrap; }
+@media (max-width: 719px), (min-width: 900px) and (max-width: 1279px) { .brand-sub { display: none; } }
+@media (max-width: 479px) { .brand-name { white-space: normal; font-size: 16px; line-height: 1.1; } }
+.ring { display: flex; align-items: center; flex: none; padding: 0 8px; min-height: 44px; border: 0; border-radius: var(--r-btn); background: none; color: var(--ink); cursor: pointer; font-variant-numeric: tabular-nums; transition: background-color var(--dur) var(--ease); }
+.ring b { font-weight: 800; font-size: 16px; }
+.ring small { font-size: 13px; font-weight: 600; color: var(--ink-3); }
 .icon-btn {
-  width: 44px; height: 44px; border-radius: 12px; border: 1px solid var(--line-strong); background: var(--surface); display: grid; place-items: center; flex: none;
-  transition: transform var(--dur) var(--ease), background-color var(--dur) var(--ease), border-color var(--dur) var(--ease);
+  width: 44px; height: 44px; border-radius: 6px; border: 0; background: transparent; display: grid; place-items: center; flex: none; color: var(--ink-2);
+  transition: background-color var(--dur) var(--ease), color var(--dur) var(--ease);
 }
 .icon-btn svg { width: 20px; height: 20px; }
-.desk-tabs { display: none; gap: 2px; }
+.desk-tabs { display: none; gap: 0; }
 
 /* ── Tab bar ── */
 .tabbar {
   position: fixed; left: 0; right: 0; bottom: 0; z-index: 25;
-  background: color-mix(in srgb, var(--bg-deep) 92%, transparent);
-  backdrop-filter: blur(16px) saturate(140%); -webkit-backdrop-filter: blur(16px) saturate(140%);
-  border-top: 1px solid var(--line);
+  background: var(--bg-deep); border-top: 1px solid var(--line);
   padding-bottom: env(safe-area-inset-bottom, 0px);
   padding-left: env(safe-area-inset-left, 0px); padding-right: env(safe-area-inset-right, 0px);
 }
-.tabbar-inner { display: grid; grid-template-columns: repeat(4, 1fr); max-width: 760px; margin: 0 auto; }
+.tabbar-inner { display: grid; grid-template-columns: repeat(6, 1fr); max-width: 760px; margin: 0 auto; }
 .tab {
   height: var(--tabbar-h); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px;
-  background: none; border: 0; color: var(--ink-3); font-size: 11.5px; font-weight: 600; letter-spacing: .01em; position: relative;
+  background: none; border: 0; color: var(--ink-3); font-size: 12px; font-weight: 700; position: relative;
   transition: color var(--dur) var(--ease);
 }
 .tab svg { width: 22px; height: 22px; }
 .tab[aria-current="page"] { color: var(--ink); }
 .tab[aria-current="page"] svg { color: var(--accent); }
-.tab[aria-current="page"]::before { content: ""; position: absolute; top: 0; left: calc(50% - 14px); width: 28px; height: 3px; border-radius: 0 0 3px 3px; background: var(--accent); }
-.tab .badge { position: absolute; top: 8px; left: calc(50% + 6px); min-width: 18px; height: 18px; padding: 0 5px; border-radius: 9px; background: var(--danger); color: #22100c; font-family: var(--font-mono); font-size: 10px; font-weight: 500; display: grid; place-items: center; }
+.tab[aria-current="page"]::before { content: ""; position: absolute; top: 0; left: calc(50% - 14px); width: 28px; height: 3px; background: var(--accent); }
+.tab .badge { position: absolute; top: 8px; left: calc(50% + 6px); min-width: 18px; height: 18px; padding: 0 5px; border-radius: 9px; background: var(--danger); color: #22100c; font-size: 11px; font-weight: 800; display: grid; place-items: center; line-height: 1; }
 main { padding-bottom: calc(var(--tabbar-h) + env(safe-area-inset-bottom, 0px) + 28px); }
 
 @media (min-width: 900px) {
   .tabbar { display: none; }
-  .desk-tabs { display: flex; }
-  .desk-tabs .tab { height: 44px; flex-direction: row; padding: 0 14px; font-size: 14.5px; gap: 8px; color: var(--ink-2); }
-  .desk-tabs .tab svg { width: 18px; height: 18px; }
-  .desk-tabs .tab::after { content: ""; position: absolute; left: 14px; right: 14px; bottom: 5px; height: 2px; border-radius: 1px; background: var(--ink-3); transform: scaleX(0); transform-origin: left; transition: transform .28s var(--ease); }
+  .desk-tabs { display: flex; margin-right: 8px; }
+  .desk-tabs .tab { height: var(--topbar-h); flex-direction: row; padding: 0 12px; font-size: 15px; gap: 8px; color: var(--ink-3); }
+  .desk-tabs .tab svg { display: none; }
   .desk-tabs .tab:hover { color: var(--ink); }
-  .desk-tabs .tab:hover::after { transform: scaleX(1); }
   .desk-tabs .tab[aria-current="page"] { color: var(--ink); }
-  .desk-tabs .tab[aria-current="page"]::after { transform: scaleX(1); background: var(--accent); }
   .desk-tabs .tab[aria-current="page"]::before { display: none; }
+  .desk-tabs .tab[aria-current="page"]::after { content: ""; position: absolute; left: 12px; right: 12px; bottom: -1px; height: 2px; background: var(--accent); }
   .desk-tabs .tab .badge { position: static; }
   main { padding-bottom: 56px; }
 }
 
-
 /* ── Generic bits ── */
-.section { display: flex; flex-direction: column; gap: 12px; margin-top: 32px; }
-.section-head { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 6px 12px; }
-.section-head .eyebrow { white-space: nowrap; }
-.section-title { font-family: var(--font-display); font-size: 21px; font-weight: 500; letter-spacing: -0.02em; line-height: 1.2; }
+.section { display: flex; flex-direction: column; gap: 12px; margin-top: 36px; }
+.section-head { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 4px 12px; }
+.section-title { font-size: 20px; font-weight: 800; line-height: 1.2; }
 .muted { color: var(--ink-3); }
-.small { font-size: 13.5px; }
+.small { font-size: 14px; }
 .btn {
-  min-height: 44px; padding: 0 16px; border-radius: var(--r-btn); border: 1px solid var(--line-strong); background: var(--surface-2);
-  font-weight: 600; font-size: 15px; display: inline-flex; align-items: center; justify-content: center; gap: 8px; white-space: nowrap; color: var(--ink);
-  transition: transform var(--dur) var(--ease), background-color var(--dur) var(--ease), border-color var(--dur) var(--ease), color var(--dur) var(--ease);
+  min-height: 44px; padding: 0 16px; border-radius: var(--r-btn); border: 1px solid transparent; background: var(--surface-2);
+  font-weight: 700; font-size: 15px; display: inline-flex; align-items: center; justify-content: center; gap: 8px; white-space: nowrap; color: var(--ink);
+  transition: background-color var(--dur) var(--ease), border-color var(--dur) var(--ease), color var(--dur) var(--ease);
 }
 .btn svg { width: 18px; height: 18px; }
-.btn:active, .icon-btn:active { transform: translateY(0) scale(.97); }
-.btn-primary { background: var(--accent); color: var(--accent-ink); border-color: transparent; }
+.btn-primary { background: var(--accent); color: var(--accent-ink); }
 .btn-ghost { background: transparent; }
-.btn-danger { border-color: color-mix(in srgb, var(--danger) 55%, transparent); color: var(--danger); background: transparent; }
+.btn-danger { border-color: color-mix(in srgb, var(--danger) 50%, transparent); color: var(--danger); background: transparent; }
 .btn-sm { min-height: 40px; padding: 0 14px; font-size: 14px; }
 @media (max-width: 899px) { .btn-sm { min-height: 44px; } }
 @media (hover: hover) {
-  .btn:hover, .icon-btn:hover { transform: translateY(-1px); background: var(--surface-3); border-color: rgba(227, 226, 218, .26); }
-  .btn-primary:hover { background: var(--accent-hi); border-color: transparent; }
+  .btn:hover { background: var(--surface-3); }
+  .icon-btn:hover { background: var(--surface-2); color: var(--ink); }
+  .btn-primary:hover { background: var(--accent-hi); }
   .btn-ghost:hover { background: var(--surface-2); }
   .btn-danger:hover { background: color-mix(in srgb, var(--danger) 10%, transparent); border-color: var(--danger); }
-  .btn:active, .icon-btn:active { transform: translateY(0) scale(.97); }
 }
-.chips { display: flex; flex-wrap: wrap; gap: 6px; }
-.chip {
-  display: inline-flex; align-items: center; gap: 5px; height: 24px; padding: 0 8px; border-radius: 6px;
-  font-size: 12px; font-weight: 600; background: var(--surface-2); color: var(--ink-2); border: 1px solid var(--line); white-space: nowrap;
-}
-.chip svg { width: 13px; height: 13px; }
-.chip .dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+.btn:active, .icon-btn:active { transform: scale(.98); }
+
+/* Tags: plain coloured words, not pills. Colour only where it means something (missable, timed, essential). */
+.chips { display: flex; flex-wrap: wrap; align-items: center; gap: 2px 14px; }
+.chip { display: inline-flex; align-items: center; gap: 5px; font-size: 13.5px; font-weight: 600; line-height: 1.4; color: var(--ink-3); white-space: nowrap; }
+.chip svg { width: 14px; height: 14px; flex: none; }
+.chip .dot { display: none; }
 .chip.p-essential { color: var(--apricot); }
-.chip.p-recommended { color: var(--ink); }
-.chip.p-explore { color: var(--accent); }
-.chip.p-cleanup { color: var(--ink-3); }
-.chip.miss { color: var(--danger); border-color: color-mix(in srgb, var(--danger) 40%, transparent); background: color-mix(in srgb, var(--danger) 10%, var(--surface)); }
-.chip.timed { color: var(--warn); border-color: color-mix(in srgb, var(--warn) 40%, transparent); background: color-mix(in srgb, var(--warn) 9%, var(--surface)); }
-.chip.teaser { color: var(--ink); background: color-mix(in srgb, var(--accent) 12%, var(--surface-2)); border-color: color-mix(in srgb, var(--accent) 30%, transparent); }
+.chip.p-recommended { color: var(--ink-2); }
+.chip.miss { color: var(--danger); }
+.chip.f-gunfight { color: var(--warn); }
+.chip.f-possible { color: var(--ink-2); }
+.chip.timed { color: var(--warn); }
+.chip.teaser { color: var(--ink-2); }
 .chip.teaser svg { color: var(--accent); }
-.chip.teaser.plain { background: var(--surface-2); border-color: var(--line); color: var(--ink-2); }
+.chip.teaser.plain { color: var(--ink-3); }
 .chip.st-deferred { color: var(--warn); }
-.chip.st-skipped { color: var(--ink-3); }
 .chip.st-missed { color: var(--danger); }
-.chip.st-locked { color: var(--ink-3); }
-.verif { display: inline-flex; align-items: center; gap: 4px; font-size: 12px; color: var(--ink-3); }
-.verif svg { width: 13px; height: 13px; }
+.verif { display: inline-flex; align-items: center; gap: 5px; font-size: 13.5px; font-weight: 600; color: var(--ink-3); }
+.verif svg { width: 14px; height: 14px; }
 .verif.v-verified { color: var(--accent); }
 .verif.v-community { color: var(--warn); }
 .verif.v-unconfirmed { color: var(--ink-3); }
 
-/* ── Cards ── */
-.list { display: flex; flex-direction: column; gap: 8px; }
-.card {
-  background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-md); position: relative;
-  transition: transform var(--dur) var(--ease), border-color var(--dur) var(--ease), background-color var(--dur) var(--ease);
-}
-.card.is-open { border-color: var(--line-strong); background: color-mix(in srgb, var(--surface-2) 55%, var(--surface)); }
-@media (hover: hover) { .card:not(.is-open):hover { transform: translateY(-2px); border-color: var(--line-strong); } }
-.card-row { display: grid; grid-template-columns: 56px minmax(0, 1fr); align-items: start; }
+/* ── Rows (a checklist, not a stack of cards) ── */
+.list { display: flex; flex-direction: column; }
+.list > article:first-of-type { border-top: 1px solid var(--line); }
+.card { position: relative; border-bottom: 1px solid var(--line); transition: background-color var(--dur) var(--ease); }
+.card.is-open { background: var(--surface); border-bottom-color: transparent; border-radius: var(--r-md); margin: 4px 0; }
+@media (hover: hover) { .card:not(.is-open):hover { background: color-mix(in srgb, var(--surface) 55%, transparent); } }
+.card-row { display: grid; grid-template-columns: 48px minmax(0, 1fr); align-items: start; }
 .check {
-  width: 44px; height: 44px; margin: 10px 0 10px 10px; border-radius: 50%; border: 2px solid var(--line-strong); background: transparent;
-  display: grid; place-items: center; color: transparent; transition: background-color .15s, border-color .15s, color .15s, transform .12s var(--ease);
+  width: 44px; height: 44px; margin: 8px 0 8px 2px; border: 0; background: none; position: relative;
+  display: grid; place-items: center; color: transparent; transition: color .15s;
 }
-.check svg { width: 20px; height: 20px; }
-@media (hover: hover) { .card:not(.s-done) .check:hover { border-color: var(--accent); color: color-mix(in srgb, var(--accent) 55%, transparent); } }
-.check:active { transform: scale(.9); }
-.card.s-done .check { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
-.card.s-skipped .check { border-style: dashed; color: var(--ink-3); }
-.card.s-deferred .check { border-color: var(--warn); color: var(--warn); }
-.card.s-missed .check { border-color: var(--danger); color: var(--danger); }
-.card-main { padding: 13px 16px 13px 6px; min-width: 0; background: none; border: 0; text-align: left; display: flex; flex-direction: column; gap: 6px; width: 100%; }
-.card-eyebrow { font-family: var(--font-mono); font-size: 10px; font-weight: 500; letter-spacing: .05em; text-transform: uppercase; color: var(--ink-3); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.card-title { font-size: 16.5px; font-weight: 600; line-height: 1.3; letter-spacing: -0.005em; }
+.check::before {
+  content: ""; position: absolute; inset: 12px; border: 2px solid var(--line-strong); border-radius: 4px;
+  transition: background-color .15s, border-color .15s;
+}
+.check svg { width: 14px; height: 14px; position: relative; }
+@media (hover: hover) { .card:not(.s-done) .check:hover::before { border-color: var(--accent); } }
+.check:active { transform: scale(.92); }
+.card.s-done .check { color: var(--accent-ink); }
+.card.s-done .check::before { background: var(--accent); border-color: var(--accent); }
+.card.s-skipped .check { color: var(--ink-3); }
+.card.s-skipped .check::before { border-style: dashed; }
+.card.s-deferred .check { color: var(--warn); }
+.card.s-deferred .check::before { border-color: var(--warn); }
+.card.s-missed .check { color: var(--danger); }
+.card.s-missed .check::before { border-color: var(--danger); }
+.card.s-locked .check::before { border-color: var(--line); }
+.card-main { padding: 12px 12px 13px 4px; min-width: 0; background: none; border: 0; text-align: left; display: flex; flex-direction: column; gap: 3px; width: 100%; }
+.card-eyebrow { font-size: 13px; font-weight: 500; color: var(--ink-3); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.card-title { font-size: 16.5px; font-weight: 700; line-height: 1.3; }
+.card .chips { margin-top: 3px; }
 .card.s-done .card-title, .card.s-skipped .card-title { color: var(--ink-3); }
-.card.s-done .card-title { text-decoration: line-through; text-decoration-color: color-mix(in srgb, var(--accent) 55%, transparent); text-decoration-thickness: 1.5px; }
-.card.cat-story { box-shadow: inset 3px 0 0 var(--accent); }
-.card.cat-story .card-title { font-family: var(--font-display); font-size: 18px; font-weight: 500; letter-spacing: -0.02em; }
-.card-body { padding: 14px 16px 16px; display: flex; flex-direction: column; gap: 14px; border-top: 1px solid var(--line); margin-top: 2px; }
+.card.s-done .card-title { text-decoration: line-through; text-decoration-color: color-mix(in srgb, var(--ink-3) 70%, transparent); text-decoration-thickness: 1.5px; }
+.card.cat-story .card-title { font-size: 18px; font-weight: 800; }
+.card-body { padding: 2px 16px 18px 52px; display: flex; flex-direction: column; gap: 14px; }
+@media (max-width: 479px) { .card-body { padding-left: 16px; } }
 .card-body .desc { color: var(--ink-2); }
-.why { color: var(--ink-2); font-size: 15px; }
-.why b { color: var(--ink); font-weight: 600; }
+.why { color: var(--ink); font-size: 15px; }
+.why b { color: var(--ink); font-weight: 700; }
 .kv { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 5px 16px; font-size: 14px; margin: 0; }
 .kv dt { color: var(--ink-3); }
 .kv dd { margin: 0; color: var(--ink-2); min-width: 0; }
 .unlocks { margin: 4px 0 0; padding-left: 18px; color: var(--ink-2); font-size: 14px; }
 .actions { display: flex; flex-wrap: wrap; gap: 8px; }
-.name-reveal { background: none; border: 0; padding: 0; color: var(--accent); font-size: 13.5px; font-weight: 600; text-decoration: underline; text-underline-offset: 3px; min-height: 32px; }
+.name-reveal { background: none; border: 0; padding: 0; color: var(--accent); font-size: 14px; font-weight: 700; text-decoration: underline; text-underline-offset: 3px; min-height: 32px; }
 
-.missbox { border: 1px solid color-mix(in srgb, var(--danger) 40%, transparent); background: color-mix(in srgb, var(--danger) 8%, var(--surface)); border-radius: var(--r-md); padding: 12px 14px; display: flex; flex-direction: column; gap: 8px; }
-.missbox.temporary { border-color: color-mix(in srgb, var(--warn) 40%, transparent); background: color-mix(in srgb, var(--warn) 7%, var(--surface)); }
-.missbox-head { display: flex; align-items: center; gap: 8px; font-weight: 700; color: var(--danger); font-size: 14px; }
+.missbox { border-left: 3px solid var(--danger); background: color-mix(in srgb, var(--danger) 7%, transparent); border-radius: 0 var(--r-md) var(--r-md) 0; padding: 12px 14px; display: flex; flex-direction: column; gap: 8px; }
+.missbox.temporary { border-left-color: var(--warn); background: color-mix(in srgb, var(--warn) 6%, transparent); }
+.missbox-head { display: flex; align-items: center; gap: 8px; font-weight: 800; color: var(--danger); font-size: 15px; }
 .missbox.temporary .missbox-head { color: var(--warn); }
 .missbox-head svg { width: 18px; height: 18px; flex: none; }
 
-.during { border: 1px dashed var(--line-strong); border-radius: var(--r-md); padding: 10px 12px; display: flex; flex-direction: column; gap: 8px; }
-.during .card { background: var(--bg); }
+.during { border: 1px dashed var(--line-strong); border-radius: var(--r-md); padding: 10px 12px; display: flex; flex-direction: column; gap: 4px; }
+.during .card { border-bottom: 0; }
 
 /* Hints */
-.hints { border-radius: var(--r-md); background: var(--bg-deep); border: 1px solid var(--line); padding: 14px; display: flex; flex-direction: column; gap: 12px; }
+.hints { border-radius: var(--r-md); background: var(--bg-deep); padding: 14px; display: flex; flex-direction: column; gap: 12px; }
 .hints-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
-.hint-steps { display: flex; gap: 4px; }
-.hint-steps i { width: 22px; height: 4px; border-radius: 2px; background: var(--surface-3); display: block; transition: background-color .3s var(--ease); }
+.hint-steps { display: flex; gap: 3px; }
+.hint-steps i { width: 20px; height: 4px; background: var(--surface-3); display: block; transition: background-color .3s var(--ease); }
 .hint-steps i.on { background: var(--accent); }
-.hint { display: grid; grid-template-columns: 26px minmax(0, 1fr); gap: 10px; animation: rise .3s var(--ease) both; }
-.hint-n { width: 26px; height: 26px; border-radius: 8px; display: grid; place-items: center; font-family: var(--font-mono); font-size: 11px; font-weight: 500; background: var(--surface-2); color: var(--ink-2); }
+.hint { display: grid; grid-template-columns: 24px minmax(0, 1fr); gap: 10px; }
+.hint-n { width: 24px; height: 24px; border-radius: 4px; display: grid; place-items: center; font-size: 13px; font-weight: 800; background: var(--surface-2); color: var(--ink-2); line-height: 1; }
 .hint.l4 .hint-n { background: var(--accent); color: var(--accent-ink); }
-.hint-label { font-family: var(--font-mono); font-size: 10px; letter-spacing: .06em; text-transform: uppercase; color: var(--ink-3); display: block; margin-bottom: 2px; }
+.hint-label { font-size: 13px; font-weight: 600; color: var(--ink-3); display: block; margin-bottom: 2px; }
 .hint p { color: var(--ink); font-size: 15px; }
 .hint-locked { color: var(--ink-3); font-size: 14px; }
-@keyframes rise { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
 
-.sources { margin: 0; padding-left: 18px; font-size: 13.5px; color: var(--ink-3); display: flex; flex-direction: column; gap: 4px; }
+.sources { margin: 0; padding-left: 18px; font-size: 14px; color: var(--ink-3); display: flex; flex-direction: column; gap: 4px; }
 .sources a { overflow-wrap: anywhere; }
 .sources.credits { list-style: none; padding: 0; gap: 12px; font-size: 15px; color: var(--ink-2); }
 .sources.credits li { display: flex; flex-direction: column; gap: 2px; }
-.foot .btn { color: var(--ink-2); font-weight: 600; }
-details.more > summary { cursor: pointer; color: var(--ink-3); font-size: 13.5px; font-weight: 600; list-style: none; display: flex; align-items: center; gap: 8px; min-height: 36px; transition: color var(--dur) var(--ease); }
+details.more > summary { cursor: pointer; color: var(--ink-3); font-size: 14px; font-weight: 700; list-style: none; display: flex; align-items: center; gap: 6px; min-height: 36px; transition: color var(--dur) var(--ease); }
 details.more > summary:hover { color: var(--ink); }
 details.more > summary::-webkit-details-marker { display: none; }
-details.more > summary::before { content: "+"; display: inline-grid; place-items: center; width: 20px; height: 20px; border-radius: 6px; border: 1px solid var(--line-strong); font-size: 13px; }
+details.more > summary::before { content: "+"; width: 12px; font-size: 16px; font-weight: 600; }
 details.more[open] > summary::before { content: "–"; }
 details.more > div { display: flex; flex-direction: column; gap: 10px; padding-top: 8px; }
 
-/* ── Chapter banner (the setting, full bleed; enters once on load) ── */
-.banner-hero { --bh: clamp(210px, 58vw, 290px); position: relative; isolation: isolate; min-height: var(--bh); padding-top: calc(var(--bh) - 108px); }
-.banner { position: absolute; z-index: 0; top: 0; left: 0; right: 0; height: var(--bh); overflow: hidden; display: block; }
-.banner-hero > .wrap { position: relative; z-index: 1; }
-.banner img {
-  width: 100%; height: 100%; object-fit: cover; filter: brightness(.86) saturate(1.04);
-  -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 34%, rgba(0, 0, 0, .42) 66%, rgba(0, 0, 0, .1) 86%, transparent 100%);
-  mask-image: linear-gradient(to bottom, #000 0%, #000 34%, rgba(0, 0, 0, .42) 66%, rgba(0, 0, 0, .1) 86%, transparent 100%);
-}
-@media (min-width: 900px) {
-  .banner-hero { --bh: 380px; padding-top: 226px; }
-  .banner { max-width: none; margin: 0 auto; }
-  .banner img {
-    -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 30%, rgba(0, 0, 0, .4) 64%, rgba(0, 0, 0, .08) 86%, transparent 100%), linear-gradient(to right, transparent 0%, #000 14%, #000 86%, transparent 100%);
-    -webkit-mask-composite: source-in;
-    mask-image: linear-gradient(to bottom, #000 0%, #000 30%, rgba(0, 0, 0, .4) 64%, rgba(0, 0, 0, .08) 86%, transparent 100%), linear-gradient(to right, transparent 0%, #000 14%, #000 86%, transparent 100%);
-    mask-composite: intersect;
-  }
-}
-html.is-entering [data-enter] .banner img { animation: banner-in 1.2s var(--ease) both; }
-html.is-entering .chapter-hero.on-banner > * { animation: rise-in .8s var(--ease) both; }
-html.is-entering .chapter-hero.on-banner > :nth-child(2) { animation-delay: .08s; }
-html.is-entering .chapter-hero.on-banner > :nth-child(3) { animation-delay: .16s; }
-@keyframes banner-in { from { opacity: 0; transform: scale(1.06); } to { opacity: 1; transform: none; } }
-@keyframes rise-in { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+/* ── Chapter banner: the setting as a hard-edged photograph, title set on it ── */
+.banner-hero { position: relative; isolation: isolate; display: flex; align-items: flex-end; min-height: clamp(250px, 66vw, 330px); padding: 0 0 18px; }
+.banner { position: absolute; inset: 0; z-index: 0; overflow: hidden; display: block; background: var(--bg-deep); }
+.banner::after { content: ""; position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(17, 22, 20, 0) 28%, rgba(17, 22, 20, .5) 58%, rgba(17, 22, 20, .9) 100%); }
+.banner img { width: 100%; height: 100%; object-fit: cover; filter: brightness(.92) saturate(1.04); }
+.banner-hero > .wrap { position: relative; z-index: 1; width: 100%; }
+@media (min-width: 900px) { .banner-hero { min-height: 420px; padding-bottom: 26px; } }
+html.is-entering [data-enter] .banner img { animation: fade .5s ease both; }
 
 /* ── Now view ── */
-.chapter-hero { padding-top: 28px; display: flex; flex-direction: column; gap: 8px; position: relative; }
-.chapter-hero h1 { font-family: var(--font-display); font-weight: 400; font-size: clamp(34px, 8.6vw, 64px); line-height: 1.02; letter-spacing: -0.04em; color: var(--ink); }
+.chapter-hero { padding-top: 28px; display: flex; flex-direction: column; gap: 6px; position: relative; }
+.chapter-hero .kicker { font-size: 15px; font-weight: 700; color: var(--ink-2); }
+.chapter-hero h1 { font-weight: 800; font-size: clamp(36px, 9vw, 68px); line-height: 1; letter-spacing: -0.01em; color: var(--ink); }
 .chapter-hero .intro { color: var(--ink-2); max-width: 62ch; }
+.chapter-hero .hero-meta { font-size: 15px; font-weight: 600; color: var(--ink-2); }
 .chapter-hero.on-banner { padding-top: 0; }
-.chapter-hero.on-banner .eyebrow { color: var(--ink); text-shadow: 0 1px 14px rgba(0, 0, 0, .55); }
-.chapter-hero.on-banner h1 { text-shadow: 0 2px 24px rgba(0, 0, 0, .35); }
-.progress-line { display: flex; flex-direction: column; gap: 8px; margin-top: 6px; }
-.progress-line .num { font-family: var(--font-mono); font-size: 11px; color: var(--ink-2); font-variant-numeric: tabular-nums; white-space: nowrap; }
-.bar { height: 6px; border-radius: 3px; background: var(--surface-3); overflow: hidden; }
-.bar > i { display: block; height: 100%; background: var(--accent); border-radius: 3px; transition: width .6s var(--ease); }
+.progress-line { display: flex; align-items: center; gap: 12px; margin-top: 8px; max-width: 440px; }
+.progress-line .bar { flex: 1; }
+.progress-line .num { font-size: 14px; font-weight: 700; color: var(--ink-2); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.on-banner .bar { background: rgba(227, 226, 218, .2); }
+.bar { height: 5px; background: var(--surface-3); overflow: hidden; }
+.bar > i { display: block; height: 100%; background: var(--accent); transition: width .6s var(--ease); }
 .bar.teal > i { background: var(--accent); }
-.pace { display: flex; gap: 4px; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 4px; overflow-x: auto; scrollbar-width: none; }
+.pace { display: flex; gap: 2px; background: var(--surface); border-radius: var(--r-md); padding: 3px; overflow-x: auto; scrollbar-width: none; }
 .pace::-webkit-scrollbar { display: none; }
-.pace button { flex: 1; min-height: 44px; border-radius: 9px; border: 0; background: none; color: var(--ink-3); font-weight: 600; font-size: 14px; padding: 0 12px; white-space: nowrap; transition: background-color var(--dur) var(--ease), color var(--dur) var(--ease); }
+.pace button { flex: 1; min-height: 42px; border-radius: 4px; border: 0; background: none; color: var(--ink-3); font-weight: 700; font-size: 14.5px; padding: 0 12px; white-space: nowrap; transition: background-color var(--dur) var(--ease), color var(--dur) var(--ease); }
 .pace button:hover { color: var(--ink); }
-.pace button[aria-pressed="true"] { background: var(--surface-3); color: var(--ink); box-shadow: 0 1px 0 rgba(255, 255, 255, .04) inset, 0 4px 12px -6px rgba(0, 0, 0, .5); }
+.pace button[aria-pressed="true"] { background: var(--surface-3); color: var(--ink); }
 
-.now-grid { display: flex; flex-direction: column; gap: 32px; margin-top: 24px; }
+.now-grid { display: flex; flex-direction: column; gap: 36px; margin-top: 24px; }
 .now-grid .col { display: contents; }
 .now-grid .section { margin-top: 0; }
 .now-grid .o1 { order: 1; } .now-grid .o2 { order: 2; } .now-grid .o3 { order: 3; }
 .now-grid .o4 { order: 4; } .now-grid .o5 { order: 5; } .now-grid .o6 { order: 6; }
 @media (min-width: 1000px) {
-  .now-grid { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: 24px; align-items: start; margin-top: 32px; }
-  .now-grid .col { display: flex; flex-direction: column; gap: 32px; min-width: 0; }
+  .now-grid { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: 48px; align-items: start; margin-top: 36px; }
+  .now-grid .col { display: flex; flex-direction: column; gap: 40px; min-width: 0; }
   .now-grid .col-main { grid-column: 1 / 8; }
   .now-grid .col-side { grid-column: 8 / 13; }
 }
 
-.next {
-  position: relative; border-radius: var(--r-xl); padding: 22px 20px 20px; display: flex; flex-direction: column; gap: 12px;
-  background: var(--surface); border: 1px solid var(--line-strong);
-  box-shadow: 0 1px 0 rgba(255, 255, 255, .04) inset, 0 30px 60px -40px rgba(0, 0, 0, .85);
+.next { position: relative; border-radius: var(--r-xl); padding: 20px; display: flex; flex-direction: column; gap: 10px; background: var(--surface); }
+.next-q { font-size: 14px; font-weight: 800; color: var(--accent); }
+.next h2 { font-weight: 800; font-size: clamp(26px, 6vw, 36px); line-height: 1.08; letter-spacing: -0.01em; }
+.next .why { font-size: 17px; line-height: 1.45; }
+.next-actions { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px; margin-top: 6px; }
+.next-actions .btn-primary { grid-column: 1 / -1; min-height: 50px; font-size: 16px; }
+.next-actions .btn { padding: 0 12px; }
+.next-actions .btn:not(.btn-primary) { background: transparent; color: var(--ink-2); }
+@media (hover: hover) { .next-actions .btn:not(.btn-primary):hover { background: var(--surface-2); color: var(--ink); } }
+@media (min-width: 600px) {
+  .next-actions { display: flex; flex-wrap: wrap; }
+  .next-actions .btn-primary { min-width: 200px; margin-right: 6px; }
 }
-.next-q { display: flex; align-items: center; gap: 8px; font-family: var(--font-mono); font-size: 10.5px; font-weight: 500; letter-spacing: .06em; text-transform: uppercase; color: var(--accent); }
-.next-q::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent) 18%, transparent); }
-.next h2 { font-family: var(--font-display); font-weight: 400; font-size: clamp(27px, 6.4vw, 38px); line-height: 1.08; letter-spacing: -0.035em; }
-.next .why { font-size: 16px; }
-.next-actions { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-top: 4px; }
-.next-actions .btn-primary { grid-column: 1 / -1; min-height: 52px; font-size: 16px; }
-.next-actions .btn { padding: 0 10px; }
 .q-label { display: flex; align-items: center; gap: 8px; }
 
-.gatecheck { border-radius: var(--r-xl); padding: 20px; display: flex; flex-direction: column; gap: 12px; border: 1px solid var(--line); background: var(--surface); }
-.gatecheck.ok { border-color: color-mix(in srgb, var(--accent) 34%, transparent); background: color-mix(in srgb, var(--accent) 6%, var(--surface)); }
-.gatecheck.warn { border-color: color-mix(in srgb, var(--danger) 45%, transparent); background: color-mix(in srgb, var(--danger) 7%, var(--surface)); }
-.gatecheck h3 { font-family: var(--font-display); font-size: 18px; font-weight: 500; letter-spacing: -0.02em; line-height: 1.25; }
-.gatecheck .verdict { display: flex; align-items: flex-start; gap: 10px; font-weight: 700; }
-.gatecheck.ok .verdict { color: var(--accent); }
+.gatecheck { padding: 16px 0 0; display: flex; flex-direction: column; gap: 10px; border-top: 3px solid var(--line-strong); }
+.gatecheck.ok { border-top-color: var(--accent); }
+.gatecheck.warn { border-top-color: var(--danger); }
+.gatecheck h3 { font-size: 17px; font-weight: 700; line-height: 1.3; color: var(--ink-2); }
+.gatecheck .verdict { display: flex; align-items: flex-start; gap: 10px; font-weight: 700; font-size: 17px; line-height: 1.4; }
+.gatecheck.ok .verdict { color: var(--ink); }
+.gatecheck.ok .verdict svg { color: var(--accent); }
 .gatecheck.warn .verdict { color: var(--danger); }
 .verdict svg { width: 22px; height: 22px; flex: none; }
 .mini-row {
-  display: flex; align-items: center; gap: 10px; padding: 10px 12px; min-height: 48px; border-radius: var(--r-sm); background: color-mix(in srgb, var(--bg) 70%, transparent); border: 1px solid var(--line); width: 100%; text-align: left; color: inherit;
-  transition: transform var(--dur) var(--ease), border-color var(--dur) var(--ease), background-color var(--dur) var(--ease);
+  display: flex; align-items: center; gap: 10px; padding: 10px 0; min-height: 48px; background: none; border: 0; border-top: 1px solid var(--line); width: 100%; text-align: left; color: inherit;
 }
-.mini-row .t { flex: 1; min-width: 0; font-weight: 600; font-size: 14.5px; }
-.mini-row .t small { display: block; font-weight: 500; color: var(--ink-3); font-size: 13px; margin-top: 1px; }
+.mini-row .t { flex: 1; min-width: 0; font-weight: 700; font-size: 15px; transition: color var(--dur) var(--ease); }
+.mini-row .t small { display: block; font-weight: 500; color: var(--ink-3); font-size: 13.5px; margin-top: 1px; }
 .mini-row svg { width: 16px; height: 16px; flex: none; color: var(--ink-3); transition: transform var(--dur) var(--ease); }
 @media (hover: hover) {
-  .mini-row:hover { transform: translateY(-2px); border-color: var(--line-strong); background: var(--bg); }
+  .mini-row:hover .t { color: var(--accent-hi); }
   .mini-row:hover svg { transform: translateX(2px); color: var(--ink); }
 }
 
-.gate { border-radius: var(--r-lg); padding: 18px; display: flex; flex-direction: column; gap: 10px; margin: 12px 0 4px; border: 1px solid color-mix(in srgb, var(--danger) 45%, transparent); background: color-mix(in srgb, var(--danger) 8%, var(--surface)); }
-.gate.soft { border-color: color-mix(in srgb, var(--warn) 42%, transparent); background: color-mix(in srgb, var(--warn) 7%, var(--surface)); }
-.gate-eyebrow { display: flex; align-items: center; gap: 8px; font-family: var(--font-mono); font-size: 10.5px; font-weight: 500; letter-spacing: .06em; text-transform: uppercase; color: var(--danger); }
+.gate { border-radius: var(--r-md); padding: 16px 18px; display: flex; flex-direction: column; gap: 10px; margin: 16px 0 8px; border-left: 3px solid var(--danger); background: color-mix(in srgb, var(--danger) 7%, var(--bg)); }
+.gate.soft { border-left-color: var(--warn); background: color-mix(in srgb, var(--warn) 6%, var(--bg)); }
+.gate-eyebrow { display: flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 800; color: var(--danger); }
 .gate.soft .gate-eyebrow { color: var(--warn); }
 .gate-eyebrow svg { width: 16px; height: 16px; }
-.gate h3 { font-family: var(--font-display); font-weight: 500; font-size: 21px; line-height: 1.15; letter-spacing: -0.025em; }
+.gate h3 { font-weight: 800; font-size: 21px; line-height: 1.15; }
 .gate-cols { display: grid; grid-template-columns: 1fr; gap: 12px; }
 @media (min-width: 560px) { .gate-cols { grid-template-columns: 1fr 1fr; } }
-.gate-cols h4 { font-size: 10.5px; font-family: var(--font-mono); font-weight: 500; letter-spacing: .06em; text-transform: uppercase; color: var(--ink-3); margin-bottom: 6px; }
+.gate-cols h4 { font-size: 14px; font-weight: 700; color: var(--ink-3); margin-bottom: 4px; }
 .gate-cols ul { margin: 0; padding-left: 18px; font-size: 14px; color: var(--ink-2); }
-.gate-save { display: flex; gap: 8px; align-items: flex-start; font-size: 14px; color: var(--ink); font-weight: 600; }
+.gate-save { display: flex; gap: 8px; align-items: flex-start; font-size: 14px; color: var(--ink); font-weight: 700; }
 .gate-save svg { width: 18px; height: 18px; flex: none; margin-top: 1px; color: var(--warn); }
 
 /* ── Journal view ── */
 .chapter-tabs { display: flex; gap: 8px; overflow-x: auto; padding: 18px 0 8px; scrollbar-width: none; scroll-snap-type: x proximity; }
 .chapter-tabs::-webkit-scrollbar { display: none; }
 .ctab {
-  flex: none; scroll-snap-align: start; width: 156px; padding: 0; overflow: hidden; border-radius: var(--r-md); border: 1px solid var(--line); background: var(--surface);
-  text-align: left; display: flex; flex-direction: column; color: inherit;
-  transition: transform var(--dur) var(--ease), border-color var(--dur) var(--ease);
+  flex: none; scroll-snap-align: start; width: 150px; padding: 0; overflow: hidden; border-radius: var(--r-md); border: 0; background: var(--surface);
+  text-align: left; display: flex; flex-direction: column; color: inherit; box-shadow: inset 0 0 0 1px var(--line);
 }
 .ctab .thumb { display: block; height: 60px; overflow: hidden; background: var(--surface-2); }
-.ctab .thumb img { width: 100%; height: 100%; object-fit: cover; filter: brightness(.82) saturate(.9); transition: transform .5s var(--ease), filter .3s var(--ease); }
-.ctab .meta { display: flex; flex-direction: column; gap: 5px; padding: 9px 12px 11px; }
-.ctab .n { font-family: var(--font-mono); font-size: 9.5px; letter-spacing: .05em; text-transform: uppercase; color: var(--ink-3); display: flex; justify-content: space-between; gap: 8px; }
-.ctab .tt { font-size: 14px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.ctab .bar { height: 3px; }
-.ctab[aria-pressed="true"] { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent); }
+.ctab .thumb img { width: 100%; height: 100%; object-fit: cover; filter: brightness(.78) saturate(.85); transition: filter .3s var(--ease); }
+.ctab .meta { display: flex; flex-direction: column; gap: 4px; padding: 8px 10px 10px; }
+.ctab .n { font-size: 12.5px; font-weight: 600; color: var(--ink-3); display: flex; justify-content: space-between; gap: 8px; font-variant-numeric: tabular-nums; }
+.ctab .tt { font-size: 14.5px; font-weight: 700; line-height: 1.25; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ctab .bar { height: 3px; margin-top: 2px; }
+.ctab[aria-pressed="true"] { box-shadow: inset 0 0 0 2px var(--accent); }
 .ctab[aria-pressed="true"] .thumb img { filter: none; }
-.ctab .here { color: var(--accent); }
-@media (hover: hover) {
-  .ctab:hover { transform: translateY(-2px); border-color: var(--line-strong); }
-  .ctab[aria-pressed="true"]:hover { border-color: var(--accent); }
-  .ctab:hover .thumb img { transform: scale(1.03); filter: none; }
-}
+.ctab .here { color: var(--accent); font-weight: 800; }
+@media (hover: hover) { .ctab:hover .thumb img { filter: none; } }
 @media (min-width: 1000px) {
   .chapter-tabs { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); overflow: visible; }
   .ctab { width: auto; }
   .ctab .thumb { height: 72px; }
-  .ctab .tt { white-space: normal; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; line-height: 1.25; min-height: 2.5em; }
+  .ctab .tt { white-space: normal; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; min-height: 2.5em; }
 }
-.toolbar { display: flex; gap: 8px; align-items: center; position: sticky; top: calc(env(safe-area-inset-top, 0px) + var(--topbar-h)); z-index: 10; background: var(--bg); padding: 10px 0; }
+.toolbar { display: flex; gap: 8px; align-items: center; position: sticky; top: calc(env(safe-area-inset-top, 0px) + var(--sticky-h, var(--topbar-h))); z-index: 10; background: var(--bg); padding: 10px 0; }
 .search { flex: 1; min-width: 0; position: relative; }
-.search input { width: 100%; min-height: 44px; border-radius: 12px; border: 1px solid var(--line-strong); background: var(--surface); padding: 0 42px 0 42px; font-size: 16px; transition: border-color var(--dur) var(--ease), background-color var(--dur) var(--ease); }
-.search input:hover { border-color: rgba(227, 226, 218, .26); }
-.search input:focus { outline: none; border-color: var(--accent); background: var(--surface-2); }
+.search input { width: 100%; min-height: 44px; border-radius: var(--r-md); border: 1px solid var(--line-strong); background: var(--bg-deep); padding: 0 42px; font-size: 16px; transition: border-color var(--dur) var(--ease); }
+.search input:hover { border-color: rgba(227, 226, 218, .28); }
+.search input:focus { outline: none; border-color: var(--accent); }
 .search input::placeholder { color: var(--ink-3); }
 .search svg { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); width: 18px; height: 18px; color: var(--ink-3); pointer-events: none; }
-.search .clear { position: absolute; right: 2px; top: 50%; transform: translateY(-50%); width: 40px; height: 40px; border: 0; background: none; color: var(--ink-3); border-radius: 10px; display: grid; place-items: center; }
+.search .clear { position: absolute; right: 2px; top: 50%; transform: translateY(-50%); width: 40px; height: 40px; border: 0; background: none; color: var(--ink-3); border-radius: 4px; display: grid; place-items: center; }
 .search .clear svg { position: static; transform: none; }
-.filter-btn { position: relative; }
-.filter-btn .count { position: absolute; top: -4px; right: -4px; min-width: 18px; height: 18px; border-radius: 9px; background: var(--accent); color: var(--accent-ink); font-family: var(--font-mono); font-size: 10px; font-weight: 500; display: grid; place-items: center; padding: 0 4px; }
-.chapter-head { display: flex; flex-direction: column; gap: 8px; padding: 14px 0 10px; }
-.chapter-head h2 { font-family: var(--font-display); font-weight: 400; font-size: clamp(28px, 6vw, 40px); line-height: 1.05; letter-spacing: -0.035em; }
-.chapter-head .stats { display: flex; gap: 16px; flex-wrap: wrap; font-family: var(--font-mono); font-size: 11px; color: var(--ink-3); font-variant-numeric: tabular-nums; }
+.filter-btn { position: relative; box-shadow: inset 0 0 0 1px var(--line-strong); }
+.filter-btn .count { position: absolute; top: -4px; right: -4px; min-width: 18px; height: 18px; border-radius: 9px; background: var(--accent); color: var(--accent-ink); font-size: 11px; font-weight: 800; display: grid; place-items: center; padding: 0 4px; line-height: 1; }
+.chapter-head { display: flex; flex-direction: column; gap: 6px; padding: 16px 0 12px; }
+.chapter-head h2 { font-weight: 800; font-size: clamp(28px, 6vw, 40px); line-height: 1.05; letter-spacing: -0.01em; }
+.chapter-head .stats { display: flex; gap: 6px 18px; flex-wrap: wrap; font-size: 14px; font-weight: 700; color: var(--ink-2); font-variant-numeric: tabular-nums; }
 .empty { padding: 32px 16px; text-align: center; color: var(--ink-3); border: 1px dashed var(--line-strong); border-radius: var(--r-md); }
-.group-label { font-family: var(--font-mono); font-size: 10.5px; font-weight: 500; letter-spacing: .06em; text-transform: uppercase; color: var(--ink-3); padding: 14px 2px 2px; }
+.group-label { font-size: 14px; font-weight: 700; color: var(--ink-3); padding: 16px 0 6px; }
 
 /* ── Sheet ── */
-.scrim { position: fixed; inset: 0; background: rgba(5, 8, 7, .66); backdrop-filter: blur(2px); -webkit-backdrop-filter: blur(2px); z-index: 40; display: flex; align-items: flex-end; justify-content: center; animation: fade .2s ease both; }
-.sheet { width: 100%; max-width: 640px; max-height: 88vh; overflow-y: auto; background: var(--surface); border: 1px solid var(--line-strong); border-radius: 20px 20px 0 0; padding: 8px max(18px, env(safe-area-inset-right, 0px)) calc(18px + env(safe-area-inset-bottom, 0px)) max(18px, env(safe-area-inset-left, 0px)); display: flex; flex-direction: column; gap: 18px; animation: up .26s var(--ease) both; box-shadow: 0 -20px 60px -20px rgba(0, 0, 0, .6); }
-@media (min-width: 700px) { .scrim { align-items: center; } .sheet { border-radius: 20px; padding-top: 18px; } .grabber { display: none; } }
+.scrim { position: fixed; inset: 0; background: rgba(5, 8, 7, .7); z-index: 40; display: flex; align-items: flex-end; justify-content: center; animation: fade .2s ease both; }
+.sheet { width: 100%; max-width: 640px; max-height: 88vh; overflow-y: auto; background: var(--surface); border-radius: 12px 12px 0 0; padding: 8px max(18px, env(safe-area-inset-right, 0px)) calc(18px + env(safe-area-inset-bottom, 0px)) max(18px, env(safe-area-inset-left, 0px)); display: flex; flex-direction: column; gap: 18px; animation: up .24s var(--ease) both; }
+@media (min-width: 700px) { .scrim { align-items: center; } .sheet { border-radius: 10px; padding-top: 20px; } .grabber { display: none; } }
 @keyframes up { from { transform: translateY(24px); opacity: 0; } to { transform: none; opacity: 1; } }
 @keyframes fade { from { opacity: 0; } to { opacity: 1; } }
 .grabber { width: 40px; height: 4px; border-radius: 2px; background: var(--line-strong); margin: 4px auto 0; }
-.sheet h3 { font-family: var(--font-display); font-weight: 400; font-size: 25px; letter-spacing: -0.03em; }
-.fgroup { display: flex; flex-direction: column; gap: 10px; }
+.sheet h3 { font-weight: 800; font-size: 24px; line-height: 1.15; }
+.fgroup { display: flex; flex-direction: column; gap: 8px; }
 .toggles { display: flex; flex-wrap: wrap; gap: 6px; }
-.tog { min-height: 44px; padding: 0 14px; border-radius: 10px; border: 1px solid var(--line-strong); background: transparent; color: var(--ink-2); font-size: 14px; font-weight: 600; transition: background-color var(--dur) var(--ease), border-color var(--dur) var(--ease), color var(--dur) var(--ease), transform var(--dur) var(--ease); }
-@media (hover: hover) { .tog:hover { border-color: rgba(227, 226, 218, .3); color: var(--ink); transform: translateY(-1px); } }
-.tog:active { transform: scale(.97); }
+.tog { min-height: 44px; padding: 0 14px; border-radius: var(--r-btn); border: 1px solid var(--line-strong); background: transparent; color: var(--ink-2); font-size: 14.5px; font-weight: 700; transition: background-color var(--dur) var(--ease), border-color var(--dur) var(--ease), color var(--dur) var(--ease); }
+@media (hover: hover) { .tog:hover { border-color: rgba(227, 226, 218, .32); color: var(--ink); } }
+.tog:active { transform: scale(.98); }
 .tog[aria-pressed="true"] { background: var(--ink); color: var(--bg); border-color: var(--ink); }
 .sheet-actions { display: flex; gap: 8px; justify-content: flex-end; flex-wrap: wrap; }
-textarea.io { width: 100%; min-height: 160px; border-radius: var(--r-md); border: 1px solid var(--line-strong); background: var(--bg-deep); padding: 12px; font-family: var(--font-mono); font-size: 11.5px; color: var(--ink-2); }
+textarea.io { width: 100%; min-height: 160px; border-radius: var(--r-md); border: 1px solid var(--line-strong); background: var(--bg-deep); padding: 12px; font-family: var(--font-mono); font-size: 12px; color: var(--ink-2); }
 input.inp { width: 100%; min-height: 44px; border-radius: var(--r-md); border: 1px solid var(--line-strong); background: var(--bg-deep); padding: 0 12px; color: var(--ink); margin: 6px 0 10px; }
-.linkbtn { background: none; border: 0; padding: 0; color: var(--accent); text-decoration: underline; font: inherit; cursor: pointer; }
+.linkbtn { background: none; border: 0; padding: 0; color: var(--accent); text-decoration: underline; text-underline-offset: 3px; font: inherit; cursor: pointer; }
 select.sel { width: 100%; min-height: 44px; border-radius: var(--r-md); border: 1px solid var(--line-strong); background: var(--bg-deep); padding: 0 12px; }
 
 /* ── Progress view ── */
-.stat-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
-@media (min-width: 640px) { .stat-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
-.stat { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-md); padding: 14px 16px; display: flex; flex-direction: column; gap: 6px; }
-.stat b { font-family: var(--font-display); font-weight: 400; font-size: 32px; line-height: 1; letter-spacing: -0.04em; font-variant-numeric: tabular-nums; }
-.stat span { font-size: 13px; color: var(--ink-3); }
-.chap-rows { display: flex; flex-direction: column; gap: 8px; }
+.tally { display: flex; flex-wrap: wrap; gap: 10px 32px; margin-top: 22px; padding: 16px 0; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+.tally > div { display: flex; flex-direction: column; gap: 2px; }
+.tally b { font-size: 28px; font-weight: 800; line-height: 1.05; font-variant-numeric: tabular-nums; }
+.tally b small { font-size: 17px; font-weight: 700; color: var(--ink-3); }
+.tally span { font-size: 14px; font-weight: 600; color: var(--ink-3); }
+.tally .bad b { color: var(--danger); }
+.chap-rows { display: flex; flex-direction: column; border-top: 1px solid var(--line); }
 .chap-row {
-  display: grid; grid-template-columns: 84px minmax(0, 1fr) auto; gap: 6px 14px; align-items: center; background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-md); padding: 10px 14px 10px 10px; text-align: left; width: 100%; color: inherit;
-  transition: transform var(--dur) var(--ease), border-color var(--dur) var(--ease);
+  display: grid; grid-template-columns: 76px minmax(0, 1fr) auto; gap: 6px 14px; align-items: center; background: none; border: 0; border-bottom: 1px solid var(--line); padding: 10px 0; text-align: left; width: 100%; color: inherit;
 }
-.chap-row .thumb { grid-row: 1 / span 2; width: 84px; height: 56px; border-radius: 8px; overflow: hidden; background: var(--surface-2); }
-.chap-row .thumb img { width: 100%; height: 100%; object-fit: cover; transition: transform .5s var(--ease); }
-.chap-row .ttl { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
-.chap-row .ttl b { font-family: var(--font-display); font-weight: 500; font-size: 17px; letter-spacing: -0.02em; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.chap-row .bar { grid-column: 2 / -1; height: 4px; }
-.chap-row .pct { font-family: var(--font-mono); font-size: 12px; font-variant-numeric: tabular-nums; color: var(--ink-2); }
+.chap-row .thumb { grid-row: 1 / span 2; width: 76px; height: 50px; border-radius: 4px; overflow: hidden; background: var(--surface-2); }
+.chap-row .thumb img { width: 100%; height: 100%; object-fit: cover; filter: brightness(.85); transition: filter .3s var(--ease); }
+.chap-row .ttl { display: flex; flex-direction: column; gap: 0; min-width: 0; }
+.chap-row .ttl .eyebrow { font-weight: 500; }
+.chap-row .ttl b { font-weight: 800; font-size: 17px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; transition: color var(--dur) var(--ease); }
+.chap-row .bar { grid-column: 2 / -1; height: 3px; }
+.chap-row .pct { font-size: 14px; font-weight: 700; font-variant-numeric: tabular-nums; color: var(--ink-2); }
 @media (hover: hover) {
-  .chap-row:hover { transform: translateY(-2px); border-color: var(--line-strong); }
-  .chap-row:hover .thumb img { transform: scale(1.03); }
+  .chap-row:hover .thumb img { filter: none; }
+  .chap-row:hover .ttl b { color: var(--accent-hi); }
 }
-.panel { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-md); padding: 16px; display: flex; flex-direction: column; gap: 12px; }
-.panel h3 { font-family: var(--font-display); font-size: 16.5px; font-weight: 500; letter-spacing: -0.015em; }
+.panel { border-top: 1px solid var(--line); padding: 18px 0 4px; display: flex; flex-direction: column; gap: 12px; }
+.section > .panel:first-of-type, .section-title + .panel { border-top: 0; padding-top: 4px; }
+.panel h3 { font-size: 17px; font-weight: 800; }
 .legend { display: flex; flex-direction: column; gap: 8px; font-size: 14px; color: var(--ink-2); }
 .gaps { margin: 0; padding-left: 18px; display: flex; flex-direction: column; gap: 8px; font-size: 14px; color: var(--ink-2); }
 .gaps b { color: var(--ink); }
-.sync { display: inline-flex; align-items: center; gap: 8px; font-size: 13.5px; color: var(--ink-3); }
-.sync i { width: 8px; height: 8px; border-radius: 50%; background: var(--ink-3); display: block; }
-.sync.on i { background: var(--accent); box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent) 18%, transparent); }
+.sync { display: inline-flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 600; color: var(--ink-3); }
+.sync i { width: 7px; height: 7px; border-radius: 50%; background: var(--ink-3); display: block; }
+.sync.on i { background: var(--accent); }
 .sync.off i { background: var(--warn); }
 @media (min-width: 1000px) {
-  .progress-cols { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 24px; align-items: start; }
+  .progress-cols { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 48px; align-items: start; }
 }
 
 /* ── Toast ── */
-.toast { position: fixed; left: 50%; transform: translateX(-50%); bottom: calc(var(--tabbar-h) + env(safe-area-inset-bottom, 0px) + 14px); z-index: 50; background: var(--ink); color: var(--bg); border-radius: 12px; padding: 6px 6px 6px 18px; display: flex; align-items: center; gap: 12px; font-weight: 600; font-size: 14px; box-shadow: 0 16px 40px rgba(0, 0, 0, .5); max-width: calc(100% - 32px); animation: up .22s var(--ease) both; }
-.toast button { min-height: 40px; border-radius: 9px; border: 0; background: var(--bg); color: var(--ink); padding: 0 14px; font-weight: 700; font-size: 13.5px; }
+.toast { position: fixed; left: 50%; transform: translateX(-50%); bottom: calc(var(--tabbar-h) + env(safe-area-inset-bottom, 0px) + 14px); z-index: 50; background: var(--ink); color: var(--bg); border-radius: 8px; padding: 6px 6px 6px 18px; display: flex; align-items: center; gap: 12px; font-weight: 700; font-size: 14.5px; box-shadow: 0 12px 32px rgba(0, 0, 0, .45); max-width: calc(100% - 32px); animation: up .22s var(--ease) both; }
+.toast button { min-height: 40px; border-radius: 5px; border: 0; background: var(--bg); color: var(--ink); padding: 0 14px; font-weight: 800; font-size: 14px; }
 .toast.solo { padding: 12px 18px; }
 @media (min-width: 900px) { .toast { bottom: 24px; } }
 
 .loading { padding: 80px 0; text-align: center; color: var(--ink-3); }
 .error-box { margin-top: 40px; }
-.foot { margin-top: 56px; font-size: 12.5px; color: var(--ink-3); display: flex; flex-direction: column; gap: 6px; }
-.foot a { color: var(--ink-2); }
+.foot { margin-top: 64px; padding-top: 18px; border-top: 1px solid var(--line); font-size: 13px; color: var(--ink-3); display: flex; flex-direction: column; gap: 6px; }
+.foot a, .foot .linkbtn { color: var(--ink-2); }
+.foot .linkbtn { font-weight: 600; margin-right: 18px; display: inline-flex; align-items: center; min-height: 44px; }
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition: none !important; }
 }
+
+/* ── Work in progress (data: meta.workInProgress, chapters[].coverage) ──
+   Same voice as the other notices: a warm left rule, plain labels, no ornament. */
+.wip { position: relative; border-radius: 0 var(--r-md) var(--r-md) 0; padding: 16px 18px; display: flex; flex-direction: column; gap: 12px; border-left: 3px solid var(--warn); background: color-mix(in srgb, var(--warn) 6%, var(--bg)); }
+.wip-topo { display: none; }
+.wip-head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
+.wip-live { display: inline-flex; align-items: center; gap: 7px; font-size: 14px; font-weight: 800; color: var(--warn); white-space: nowrap; }
+.wip-live i { width: 7px; height: 7px; border-radius: 50%; background: var(--warn); flex: none; }
+.wip-date { font-size: 13px; font-weight: 600; color: var(--ink-3); white-space: nowrap; }
+.wip h3 { font-weight: 800; font-size: 21px; line-height: 1.15; max-width: 24ch; }
+.wip .lede { color: var(--ink-2); font-size: 15px; max-width: 58ch; }
+.wip-cov { display: flex; flex-direction: column; gap: 10px; padding-top: 2px; }
+.wip-map { display: grid; grid-template-columns: repeat(var(--n, 7), minmax(0, 1fr)); gap: 4px; }
+.wip-seg { display: flex; flex-direction: column; align-items: stretch; gap: 6px; min-width: 0; }
+.wip-seg i { display: block; height: 8px; border-radius: 1px; }
+.wip-seg b { font-size: 12.5px; font-weight: 700; color: var(--ink-3); text-align: center; line-height: 1; font-variant-numeric: tabular-nums; }
+.wip-seg.here b { color: var(--ink); }
+.wip-seg.here b::after { content: ""; display: block; width: 14px; height: 2px; margin: 4px auto 0; background: var(--ink); }
+.lv-solid { background: var(--accent); }
+.lv-partial { background: repeating-linear-gradient(-45deg, color-mix(in srgb, var(--warn) 85%, transparent) 0 2px, transparent 2px 5px); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--warn) 60%, transparent); }
+.lv-thin { background: transparent; border: 1px dashed color-mix(in srgb, var(--warn) 85%, transparent); }
+.wip-legend { display: flex; flex-wrap: wrap; gap: 4px 14px; font-size: 13px; color: var(--ink-3); }
+.wip-legend span { display: inline-flex; align-items: center; gap: 7px; }
+.wip-legend i { display: block; width: 16px; height: 6px; border-radius: 1px; }
+.wip-here { font-size: 14px; color: var(--ink-2); }
+.wip-here b { color: var(--ink); }
+.wip-block { display: flex; flex-direction: column; gap: 6px; }
+.wip-new { padding-top: 12px; border-top: 1px solid var(--line); }
+.wip-new p { color: var(--ink-2); }
+.wip-focus { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; font-size: 14px; color: var(--ink-2); }
+.wip-focus li { display: grid; grid-template-columns: 10px 1fr; gap: 10px; }
+.wip-focus li::before { content: ""; width: 9px; height: 9px; margin-top: 6px; border-radius: 1px; border: 1px dashed var(--warn); }
+.wip-actions { display: flex; flex-wrap: wrap; gap: 8px; }
+.wip-pill { padding: 12px 14px; border: 0; border-left: 3px solid var(--warn); border-radius: 0 var(--r-md) var(--r-md) 0; background: color-mix(in srgb, var(--warn) 6%, var(--bg)); }
+.wip-pill .t small { margin-top: 2px; }
+.wip-inline { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 10px; padding: 10px 12px; border-left: 3px solid var(--warn); border-radius: 0 var(--r-md) var(--r-md) 0; font-size: 14px; color: var(--ink-2); background: color-mix(in srgb, var(--warn) 6%, var(--bg)); }
+.wgroup { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; padding: 20px 0 8px; border-bottom: 1px solid var(--line); margin-bottom: 8px; scroll-margin-top: calc(var(--sticky-h, var(--topbar-h)) + env(safe-area-inset-top, 0px) + 72px); }
+.wgroup .wcount { font-size: 14px; font-weight: 700; color: var(--ink-2); font-variant-numeric: tabular-nums; }
+.wgroup { flex-wrap: wrap; }
+.wgroup .wnote { flex-basis: 100%; color: var(--ink-2); }
+.wsection { padding: 36px 0 0; display: flex; flex-direction: column; gap: 6px; }
+.wsection h2 { font-weight: 800; font-size: 22px; line-height: 1.15; }
+.wsection p { color: var(--ink-2); max-width: 60ch; }
+.wtools { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; padding: 2px 0 8px; }
+.wtools select.sel { width: auto; min-width: 0; flex: 0 1 auto; }
+.wbar { max-width: 420px; margin: 4px 0 2px; }
+.wcard .card-title { font-size: 16px; }
+.wgroup + .list > article:first-of-type { border-top: 0; }
+#gaps { scroll-margin-top: calc(var(--sticky-h, var(--topbar-h)) + env(safe-area-inset-top, 0px) + 16px); }
+/* ── Header extras: completion summary, work-in-progress alert, Ask the guide ── */
+.ring > span { display: flex; align-items: baseline; gap: 4px; }
+.ring[aria-expanded="true"] { background: var(--surface-2); }
+@media (hover: hover) { .ring:hover { background: var(--surface-2); } }
+.wip-btn { position: relative; color: var(--warn); }
+.wip-btn[hidden] { display: none; }
+.wip-btn[aria-expanded="true"] { background: var(--surface-2); }
+.wip-dot { position: absolute; top: 10px; right: 10px; width: 8px; height: 8px; border-radius: 50%; background: var(--warn); box-shadow: 0 0 0 2px var(--bg); }
+.wip-dot[hidden] { display: none; }
+@media (max-width: 479px) { .topbar-inner { gap: 2px; } .topbar .icon-btn { width: 40px; } .ring { padding: 0 6px; } }
+
+.pop { position: fixed; z-index: 35; width: min(360px, calc(100vw - 24px)); overflow-y: auto; overscroll-behavior: contain; background: var(--surface); border: 1px solid var(--line-strong); border-radius: var(--r-xl); box-shadow: 0 16px 36px rgba(0, 0, 0, .5); padding: 16px; animation: fade .12s ease both; }
+.pop:focus { outline: none; }
+.pop-head { display: flex; align-items: baseline; gap: 8px; color: var(--ink-2); font-weight: 600; }
+.pop-big { font-size: 30px; font-weight: 800; line-height: 1; color: var(--ink); font-variant-numeric: tabular-nums; }
+.pop-sub { margin-top: 6px; font-size: 14px; color: var(--ink-3); }
+.pop .bar { margin-top: 12px; }
+.pop-rows { list-style: none; margin: 14px 0 0; padding: 0; }
+.pop-rows li { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; padding: 8px 0; border-top: 1px solid var(--line); font-size: 14.5px; }
+.pop-rows li > span { color: var(--ink-2); }
+.pop-rows li b { font-weight: 700; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.pop-rows li small { margin-left: 8px; font-size: 13px; font-weight: 600; color: var(--ink-3); }
+.pop-rows .warn b { color: var(--warn); }
+.pop-rows .bad b { color: var(--danger); }
+.pop-foot { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; padding-top: 10px; border-top: 1px solid var(--line); font-size: 13px; color: var(--ink-3); }
+.pop-foot .linkbtn { font-size: 14px; font-weight: 700; white-space: nowrap; }
+.pop-wip { width: min(420px, calc(100vw - 24px)); padding: 0; border-left: 3px solid var(--warn); }
+.pop-wip .wip { border-left: 0; border-radius: 0; background: none; }
+
+.askbar { background: var(--bg); border-bottom: 1px solid var(--line); }
+.askbar[hidden] { display: none; }
+.askbar-inner { display: flex; align-items: center; gap: 8px; padding-top: 8px; padding-bottom: 8px; }
+.ask-field { position: relative; flex: 1; min-width: 0; }
+.ask-field svg { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); width: 18px; height: 18px; color: var(--ink-3); pointer-events: none; }
+.ask-field input { width: 100%; min-height: 44px; border-radius: var(--r-md); border: 1px solid var(--line-strong); background: var(--bg-deep); padding: 0 12px 0 42px; font-size: 16px; transition: border-color var(--dur) var(--ease); }
+.ask-field input:hover { border-color: rgba(227, 226, 218, .28); }
+.ask-field input:focus { outline: none; border-color: var(--accent); }
+.ask-field input::placeholder { color: var(--ink-3); }
+.askbar .btn { flex: none; }
+@media (min-width: 900px) {
+  .topbar { border-bottom-color: transparent; }
+  .askbar { position: sticky; top: calc(env(safe-area-inset-top, 0px) + var(--tb-h, var(--topbar-h))); z-index: 19; }
+  .askbar-inner { padding-top: 2px; padding-bottom: 10px; }
+}
+
+.scrim.ask-scrim { z-index: 45; align-items: flex-start; padding-top: calc(env(safe-area-inset-top, 0px) + var(--ask-vt, 0px)); }
+.sheet.ask { max-width: 760px; height: min(760px, calc(var(--ask-vh, 100dvh) * .92)); max-height: none; gap: 0; overflow: hidden; padding-top: 10px; border-radius: 0 0 12px 12px; animation: drop .22s var(--ease) both; }
+.sheet.ask .grabber { display: none; }
+@media (min-width: 700px) {
+  .scrim.ask-scrim { padding-top: calc(env(safe-area-inset-top, 0px) + var(--sticky-h, var(--topbar-h)) + 8px); }
+  .sheet.ask { height: min(680px, calc(100dvh - var(--sticky-h, var(--topbar-h)) - 32px)); padding-top: 14px; border-radius: 10px; }
+}
+@keyframes drop { from { transform: translateY(-14px); opacity: 0; } to { transform: none; opacity: 1; } }
+.ask-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding-bottom: 8px; border-bottom: 1px solid var(--line); }
+.sheet .ask-head h3 { font-size: 20px; }
+.ask-head-actions { display: flex; align-items: center; gap: 2px; }
+.ask-head-actions .btn[hidden] { display: none; }
+.ask-log { flex: 1; min-height: 0; overflow-y: auto; overscroll-behavior: contain; }
+.ask-ex { display: flex; flex-direction: column; gap: 8px; padding: 16px 0; border-bottom: 1px solid var(--line); }
+.ask-ex:last-child { border-bottom: 0; }
+.ask-q { font-weight: 700; color: var(--ink); overflow-wrap: anywhere; }
+.ask-a { display: flex; flex-direction: column; gap: 8px; max-width: 66ch; color: var(--ink-2); overflow-wrap: anywhere; }
+.ask-a p, .ask-a ul, .ask-a ol { margin: 0; }
+.ask-a ul, .ask-a ol { display: flex; flex-direction: column; gap: 4px; padding-left: 20px; }
+.ask-a b { color: var(--ink); }
+.ask-ref { display: inline; padding: 0; border: 0; background: none; font: inherit; color: var(--accent); text-align: left; text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; cursor: pointer; }
+@media (hover: hover) { .ask-ref:hover { color: var(--accent-hi); } .ask-suggest:hover { color: var(--accent-hi); } }
+.ask-status { font-size: 14px; color: var(--ink-3); }
+.ask-err { font-size: 14px; color: var(--warn); }
+.ask-empty { display: flex; flex-direction: column; gap: 14px; padding: 16px 0; }
+.ask-empty > p { max-width: 58ch; color: var(--ink-2); }
+.ask-suggest { display: block; width: 100%; padding: 12px 0; border: 0; border-top: 1px solid var(--line); background: none; color: var(--ink); font-weight: 600; text-align: left; cursor: pointer; transition: color var(--dur) var(--ease); }
+.ask-suggest:last-child { border-bottom: 1px solid var(--line); }
+.ask-form { display: flex; align-items: flex-end; gap: 8px; padding-top: 12px; border-top: 1px solid var(--line); }
+.ask-form textarea { flex: 1; min-width: 0; min-height: 44px; max-height: 140px; resize: none; border-radius: var(--r-md); border: 1px solid var(--line-strong); background: var(--bg-deep); padding: 10px 12px; font-size: 16px; line-height: 1.4; transition: border-color var(--dur) var(--ease); }
+.ask-form textarea:focus { outline: none; border-color: var(--accent); }
+.ask-form textarea::placeholder { color: var(--ink-3); }
+.ask-foot { padding-top: 8px; font-size: 13px; color: var(--ink-3); }
+@media (prefers-reduced-motion: reduce) { .pop, .sheet.ask { animation: none; } }
+
+/* ── Tips (data: tips[], taxonomy.tipTopics). Same hairline rows as the journal, no check box. ── */
+.tip { position: relative; border-bottom: 1px solid var(--line); transition: background-color var(--dur) var(--ease); }
+.tip.is-open { background: var(--surface); border-bottom-color: transparent; border-radius: var(--r-md); margin: 4px 0; }
+@media (hover: hover) { .tip:not(.is-open):hover { background: color-mix(in srgb, var(--surface) 55%, transparent); } }
+.tip-main { width: 100%; padding: 12px 12px 13px; border: 0; background: none; color: inherit; text-align: left; display: flex; flex-direction: column; gap: 3px; }
+.tip-title { font-size: 16.5px; font-weight: 700; line-height: 1.3; }
+.tip-sum { color: var(--ink-2); font-size: 15px; }
+.tip .chips { margin-top: 3px; }
+.tip-body { padding: 0 12px 16px; display: flex; flex-direction: column; gap: 14px; }
+.tip-points { margin: 0; padding-left: 18px; display: flex; flex-direction: column; gap: 6px; font-size: 15px; color: var(--ink); }
+.tip-nudge { display: flex; align-items: baseline; gap: 10px; padding-top: 10px; border-top: 1px solid var(--line); font-size: 14.5px; color: var(--ink-2); }
+.tip-nudge b { flex: none; color: var(--accent); font-weight: 800; }
+.tip-nudge .linkbtn { font-weight: 700; white-space: nowrap; }
+/* Now tab: tips picked for this moment, each hideable. */
+.tip-now .tip-main { padding-right: 48px; }
+.tip-why { font-size: 13px; font-weight: 600; color: var(--ink-3); }
+.tip-why.is-near { color: var(--accent); }
+.tip-now:not(.is-open) .tip-sum { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.tip-hide { position: absolute; top: 6px; right: 2px; width: 40px; height: 40px; display: grid; place-items: center; border: 0; background: none; color: var(--ink-3); border-radius: var(--r-sm); }
+.tip-hide svg { width: 16px; height: 16px; }
+@media (hover: hover) { .tip-hide:hover { color: var(--ink); background: var(--surface-2); } }
+.pace-pick { display: inline-flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 600; color: var(--ink-3); }
+.pace-pick select { font: inherit; font-weight: 700; color: var(--ink); background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-sm); min-height: 38px; padding: 0 10px; }
+.now-more { margin-top: 0; }
 </style>
 
 <div id="app">
@@ -501,22 +629,35 @@ select.sel { width: 100%; min-height: 44px; border-radius: var(--r-md); border: 
   <header class="topbar">
     <div class="wrap topbar-inner">
       <div class="brand">
-        <span class="mark mark--initial" aria-hidden="true">C</span>
         <span class="brand-text">
           <span class="brand-name">GTA VI Spoiler-Free Exploration Companion</span>
-          <span class="brand-sub">GTA VI · Leonida · unofficial</span>
+          <span class="brand-sub">Unofficial fan guide</span>
         </span>
       </div>
       <nav class="desk-tabs" id="deskTabs" aria-label="Sections"></nav>
-      <div class="ring" id="ring" title="Overall completion" aria-label="Overall completion"></div>
+      <button class="icon-btn wip-btn" id="wipBtn" type="button" data-action="pop-toggle" data-pop="wip" aria-haspopup="dialog" aria-expanded="false" aria-label="Work in progress" hidden>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7.5v5.5M12 16.5v.01"/></svg><i class="wip-dot" hidden></i>
+      </button>
+      <button class="ring" id="ring" type="button" data-action="pop-toggle" data-pop="stats" aria-haspopup="dialog" aria-expanded="false" aria-label="Overall completion"></button>
       <button class="icon-btn" data-action="open-search" aria-label="Search the journal">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
       </button>
     </div>
   </header>
+  <div class="askbar" id="askbar" hidden>
+    <form class="wrap askbar-inner" id="askBarForm" autocomplete="off">
+      <span class="ask-field">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 11.5a7.5 7.5 0 0 1-10.9 6.7L4 19.5l1.3-4.6A7.5 7.5 0 1 1 20 11.5z"/></svg>
+        <input id="askBarInput" type="text" enterkeyhint="send" maxlength="600" placeholder="Ask the guide a question" aria-label="Ask the guide a question">
+      </span>
+      <button type="submit" class="btn btn-sm">Ask</button>
+    </form>
+  </div>
   <main id="view" tabindex="-1"><div class="wrap loading">Opening your journal…</div></main>
   <nav class="tabbar" aria-label="Sections"><div class="tabbar-inner" id="tabs"></div></nav>
   <div id="sheetRoot"></div>
+  <div id="askRoot"></div>
+  <div id="popRoot"></div>
   <div id="toastRoot" aria-live="polite"></div>
 </div>
 
@@ -582,6 +723,8 @@ const ICON = {
   tabJournal: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5.5C6 4.5 9 4.5 12 6c3-1.5 6-1.5 8-.5V19c-2-1-5-1-8 .5-3-1.5-6-1.5-8-.5z"/><path d="M12 6v13.5"/></svg>',
   tabMiss: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 2.5 20h19L12 3z"/><path d="M12 10v4.5M12 17.5v.01"/></svg>',
   tabProgress: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 20V12M12 20V5M19 20v-5"/></svg>',
+  crosshair: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="7"/><path d="M12 2.5v4M12 17.5v4M2.5 12h4M17.5 12h4"/></svg>',
+  tabTips: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9.5 18h5M10.5 21h3"/><path d="M12 3a6 6 0 0 0-3.6 10.8c.7.6 1.1 1.3 1.1 2.2h5c0-.9.4-1.6 1.1-2.2A6 6 0 0 0 12 3z"/></svg>',
 };
 
 /* ═════════════ Helpers ═════════════ */
@@ -614,6 +757,8 @@ const firstSentence = (s) => { const m = String(s || "").match(/^.*?[.!?](?=\s|$
 
 /* ═════════════ Data ═════════════ */
 let DATA = null, ACTS = [], BY_ID = new Map(), CHAPTERS = [], CH_IDX = new Map(), DURING = new Map(), ORDERED = [];
+let TIPS = [], TIP_BY_ID = new Map(), TIPS_FOR = new Map();
+let WEAPONS = [], WPN_BY_ID = new Map();
 
 function indexData(d) {
   DATA = d;
@@ -627,10 +772,19 @@ function indexData(d) {
     if (!DURING.has(a.duringMission)) DURING.set(a.duringMission, []);
     DURING.get(a.duringMission).push(a);
   }
+  WEAPONS = Array.isArray(d.weapons) ? d.weapons : [];
+  WPN_BY_ID = new Map(WEAPONS.map((w) => [w.id, w]));
+  TIPS = Array.isArray(d.tips) ? d.tips : [];
+  TIP_BY_ID = new Map(TIPS.map((t) => [t.id, t]));
+  TIPS_FOR = new Map();
+  for (const t of TIPS) for (const id of t.related || []) {
+    if (!TIPS_FOR.has(id)) TIPS_FOR.set(id, []);
+    TIPS_FOR.get(id).push(t);
+  }
 }
 
 /* ═════════════ Progress state ═════════════ */
-const freshState = () => ({ v: 1, items: {}, hints: {}, names: {}, prefs: { pace: "savor", names: "current" }, prefsT: 0 });
+const freshState = () => ({ v: 1, items: {}, hints: {}, names: {}, tips: {}, prefs: { pace: "savor", names: "current", wnames: false }, prefsT: 0 });
 let S = freshState();
 
 function loadLocal() {
@@ -644,6 +798,7 @@ function normalize(x) {
   s.items = x.items && typeof x.items === "object" ? x.items : {};
   s.hints = x.hints && typeof x.hints === "object" ? x.hints : {};
   s.names = x.names && typeof x.names === "object" ? x.names : {};
+  s.tips = x.tips && typeof x.tips === "object" ? x.tips : {};
   s.prefs = Object.assign(s.prefs, x.prefs || {});
   s.prefsT = x.prefsT || 0;
   return s;
@@ -664,7 +819,7 @@ function persist() {
 function mergeStates(a, b) {
   if (!b) return a;
   const out = freshState();
-  for (const bucket of ["items", "hints", "names"]) {
+  for (const bucket of ["items", "hints", "names", "tips"]) {
     const A = a[bucket] || {}, B = b[bucket] || {};
     for (const k of new Set([...Object.keys(A), ...Object.keys(B)])) {
       const x = A[k], y = B[k];
@@ -923,15 +1078,16 @@ function earlierLeftovers() {
 }
 
 /* ═════════════ UI state ═════════════ */
-const UI = Object.assign({ view: "now", chapter: null, q: "", filters: defaultFilters(), heroOpen: false }, (() => {
-  try { const u = JSON.parse(lsGet(UI_KEY) || "{}"); return { filters: Object.assign(defaultFilters(), u.filters || {}) }; } catch { return {}; }
+const UI = Object.assign({ view: "now", chapter: null, q: "", tq: "", wq: "", filters: defaultFilters(), w: defaultWeaponView(), heroOpen: false, wipSeen: null }, (() => {
+  try { const u = JSON.parse(lsGet(UI_KEY) || "{}"); return { filters: Object.assign(defaultFilters(), u.filters || {}), w: Object.assign(defaultWeaponView(), u.w || {}), wipSeen: typeof u.wipSeen === "string" ? u.wipSeen : null }; } catch { return {}; }
 })());
 UI.expanded = new Set();
-function defaultFilters() { return { pri: [], cat: [], status: "all", missable: false, available: false, character: "any", verif: "any" }; }
-function saveUI() { lsSet(UI_KEY, JSON.stringify({ filters: UI.filters })); }
+function defaultFilters() { return { pri: [], cat: [], status: "all", missable: false, available: false, weapons: false, character: "any", verif: "any" }; }
+function defaultWeaponView() { return { show: "all", how: "any", sort: "story" }; }
+function saveUI() { lsSet(UI_KEY, JSON.stringify({ filters: UI.filters, w: UI.w, wipSeen: UI.wipSeen || null })); }
 function activeFilterCount() {
   const f = UI.filters; let n = f.pri.length + f.cat.length;
-  if (f.status !== "all") n++; if (f.missable) n++; if (f.available) n++; if (f.character !== "any") n++; if (f.verif !== "any") n++;
+  if (f.status !== "all") n++; if (f.missable) n++; if (f.available) n++; if (f.weapons) n++; if (f.character !== "any") n++; if (f.verif !== "any") n++;
   return n;
 }
 
@@ -981,11 +1137,11 @@ function priorityChip(a) {
 }
 function missChip(a) {
   const m = a.missable; if (!m) return "";
-  if (m.hourglass || m.type === "timed") return `<span class="chip timed">${ICON.hourglass}${m.hourglass ? "Timed · do it now" : "Time-limited"}</span>`;
+  if (m.hourglass || m.type === "timed") return `<span class="chip timed">${ICON.hourglass}${m.hourglass ? "Timed, do it now" : "Time-limited"}</span>`;
   if (m.type === "temporary") return `<span class="chip timed">${ICON.clock}Temporarily missable</span>`;
   if (m.type === "in-mission") return `<span class="chip miss">${ICON.warn}During mission only</span>`;
   const when = m.locksAt ? "before " + labelFor(m.locksAt) : (m.latestSafe || "");
-  return `<span class="chip miss">${ICON.warn}Missable${when ? " · " + esc(when) : ""}</span>`;
+  return `<span class="chip miss">${ICON.warn}Missable${when ? " " + esc(when) : ""}</span>`;
 }
 function statusChip(st) {
   if (st === "deferred") return `<span class="chip st-deferred">${ICON.clock}Later</span>`;
@@ -993,6 +1149,40 @@ function statusChip(st) {
   if (st === "missed") return `<span class="chip st-missed">${ICON.x}Missed</span>`;
   if (st === "locked") return `<span class="chip st-locked">${ICON.lock}Not yet available</span>`;
   return "";
+}
+/* Fight ratings on story missions (data: activities[].fight, from walkthroughs). */
+const FIGHT = {
+  gunfight: { label: "Gunfight expected", short: "Gunfight" },
+  possible: { label: "Some shooting possible", short: "Maybe shooting" },
+  melee: { label: "Fists only", short: "Fists only" },
+  none: { label: "No fighting", short: "No fighting" },
+};
+/* Spoiler-light: a mission's fight rating shows only once it's the next story mission, or after you've played it. */
+const fightVisible = (a) => !!(a && a.fight && FIGHT[a.fight.level] && (a === nextMain() || isResolved(a.id)));
+function fightChip(a) {
+  const f = a.fight;
+  if (!f || f.level === "none" || a !== nextMain() || !FIGHT[f.level]) return "";
+  return `<span class="chip f-${f.level}">${ICON.crosshair}${esc(FIGHT[f.level].label)}</span>`;
+}
+/* One line of loadout advice for a mission, once trunk loadouts are open (the long-gun tip's "from" step). */
+function fightAdvice(a) {
+  const f = a.fight; if (!f || !FIGHT[f.level]) return "";
+  const lg = TIP_BY_ID.get("tip.weapons.long-guns");
+  const trunk = !lg || !lg.from || isResolved(lg.from);
+  const line = {
+    gunfight: trunk ? "Gunfight expected. Take a long gun from the trunk before you start." : "Gunfight expected.",
+    possible: trunk ? "Some shooting is possible. A long gun from the trunk is cheap insurance." : "Some shooting is possible.",
+    melee: "Fists only. No need to swap guns.",
+    none: trunk ? "No fighting. Your long guns can stay in the trunk." : "No fighting.",
+  }[f.level];
+  return line + (f.note ? " " + f.note : "");
+}
+function fightLineHTML(a) {
+  if (!fightVisible(a)) return "";
+  const f = a.fight;
+  const more = (f.level === "gunfight" || f.level === "possible") && TIP_BY_ID.has("tip.weapons.long-guns")
+    ? ` <button class="linkbtn" data-action="tip-goto" data-id="tip.weapons.long-guns">More</button>` : "";
+  return `<p class="tip-nudge"><b>Fight</b><span>${esc(fightAdvice(a))}${f.verificationStatus !== "verified" ? " " + verifBadge(f) : ""}${more}</span></p>`;
 }
 function teaserChip(a) {
   if (!a.rewardTeaser) return "";
@@ -1020,17 +1210,17 @@ function cardHTML(a, opts = {}) {
   const nameHidden = a.category === "story" && !showName(a);
   const chips = [
     a.category === "story" && a.marker && showName(a) ? `<span class="chip">Marker: ${esc(a.marker)}</span>` : "",
-    statusChip(st), missChip(a), priorityChip(a), teaserChip(a), charChip(a),
+    statusChip(st), missChip(a), fightChip(a), priorityChip(a), teaserChip(a), charChip(a),
     a.timeOfDay ? `<span class="chip">${ICON.moon}${esc(a.timeOfDay)}</span>` : "",
     a.edition ? `<span class="chip">${esc(a.edition)}</span>` : "",
     (DURING.get(a.id) || []).length ? `<span class="chip miss">${ICON.warn}${DURING.get(a.id).length} one-time pickup inside</span>` : "",
-    verifBadge(a),
+    a.verificationStatus === "unconfirmed" ? verifBadge(a, true) : "",
   ].join("");
   return `<article class="card s-${st} cat-${a.category} ${open ? "is-open" : ""}" id="card-${esc(a.id)}">
     <div class="card-row">
       <button class="check" data-action="toggle" data-id="${esc(a.id)}" aria-pressed="${st === "done"}" aria-label="${st === "done" ? "Mark not done" : "Mark done"}: ${esc(title)}">${checkIcon(st)}</button>
       <button class="card-main" data-action="expand" data-id="${esc(a.id)}" aria-expanded="${open}">
-        <span class="card-eyebrow">${opts.showChapter ? esc(chapterOf(a).title) + " · " : ""}${eyebrow(a)}</span>
+        <span class="card-eyebrow">${opts.showChapter ? esc(chapterOf(a).title) + " · " : ""}${opts.inside && a.duringMission && BY_ID.has(a.duringMission) ? "Inside " + esc(displayTitle(BY_ID.get(a.duringMission))) + " · " : ""}${eyebrow(a)}</span>
         <span class="card-title">${esc(title)}${nameHidden ? ' <span class="muted small" style="font-family:var(--font-body)">(name hidden)</span>' : ""}</span>
         <span class="chips">${chips}</span>
       </button>
@@ -1075,15 +1265,16 @@ function hintsHTML(a) {
   </div>`;
 }
 
-function bodyHTML(a) {
+function bodyHTML(a, opts = {}) {
   const st = statusOf(a);
   const parts = [];
   if (a.category === "story" && !showName(a)) {
     parts.push(`<p class="muted small">Mission name hidden because it's ahead of where you are. <button class="name-reveal" data-action="reveal-name" data-id="${esc(a.id)}">Show the name</button></p>`);
   }
   parts.push(`<p class="desc">${esc(a.spoilerFreeDescription)}</p>`);
-  if (a.whyNow) parts.push(`<p class="why"><b>Why now:</b> ${esc(a.whyNow)}</p>`);
+  if (a.whyNow) parts.push(`<div><span class="eyebrow">Why now</span><p class="why">${esc(a.whyNow)}</p></div>`);
   if (a.unlocks && a.unlocks.length) parts.push(`<div><span class="eyebrow">Unlocks</span><ul class="unlocks">${a.unlocks.map((u) => `<li>${esc(u)}</li>`).join("")}</ul></div>`);
+  if (fightVisible(a)) parts.push(`<div><span class="eyebrow">Fighting</span><p class="small">${esc(FIGHT[a.fight.level].label)}.${a.fight.note ? " " + esc(a.fight.note) : ""} ${verifBadge(a.fight, true)}</p></div>`);
   if (a.missable) parts.push(missBoxHTML(a));
   const during = DURING.get(a.id) || [];
   if (during.length) parts.push(`<div class="during"><span class="eyebrow">During this mission</span>${during.map((d) => cardHTML(d)).join("")}</div>`);
@@ -1091,6 +1282,8 @@ function bodyHTML(a) {
     const needs = (a.prerequisites || []).filter((p) => !isResolved(p));
     parts.push(`<p class="muted small">${ICON.lock.replace("<svg", '<svg style="width:14px;height:14px;vertical-align:-2px"')} Available after: ${needs.map((p) => esc(labelFor(p))).join(", ")}</p>`);
   }
+  const tipsHere = TIPS_FOR.get(a.id) || [];
+  if (tipsHere.length) parts.push(`<div><span class="eyebrow">Tips</span><div class="list">${tipsHere.map(tipRow).join("")}</div></div>`);
   parts.push(hintsHTML(a));
   // Details
   const det = [];
@@ -1105,19 +1298,102 @@ function bodyHTML(a) {
     <dt>Research</dt><dd>${verifBadge(a, true)} · checked ${esc(a.lastVerified || "")}</dd>
   </dl>`);
   if (a.notes) det.push(`<p class="small muted">${esc(a.notes)}</p>`);
-  if (a.sources && a.sources.length) det.push(`<ul class="sources">${a.sources.map((k) => {
-    const s = DATA.sources[k]; if (!s) return "";
-    const isUrl = /^https?:/.test(s.url);
-    return `<li>${isUrl ? `<a href="${esc(s.url)}" target="_blank" rel="noopener">${esc(s.name)}</a>` : esc(s.name)}${s.published ? ` <span>(${esc(s.published)})</span>` : ""}</li>`;
-  }).join("")}</ul>`);
+  if (a.sources && a.sources.length) det.push(sourcesListHTML(a.sources));
   parts.push(`<details class="more"><summary>Details, sources and spoiler notes</summary><div>${det.join("")}</div></details>`);
   // Actions
   const act = [];
-  if (st !== "done") act.push(`<button class="btn btn-sm" data-action="status" data-s="done" data-id="${esc(a.id)}">${ICON.check}Done</button>`);
-  if (st !== "deferred" && st !== "done" && st !== "skipped") act.push(`<button class="btn btn-sm btn-ghost" data-action="status" data-s="deferred" data-id="${esc(a.id)}">${ICON.clock}Later</button>`);
+  if (st !== "done" && !opts.hero) act.push(`<button class="btn btn-sm" data-action="status" data-s="done" data-id="${esc(a.id)}">${ICON.check}Done</button>`);
+  if (st !== "deferred" && st !== "done" && st !== "skipped" && !opts.hero) act.push(`<button class="btn btn-sm btn-ghost" data-action="status" data-s="deferred" data-id="${esc(a.id)}">${ICON.clock}Later</button>`);
   if (st !== "skipped" && st !== "done") act.push(`<button class="btn btn-sm btn-ghost" data-action="status" data-s="skipped" data-id="${esc(a.id)}">Skip</button>`);
   if (stored(a.id) !== "todo") act.push(`<button class="btn btn-sm btn-ghost" data-action="status" data-s="todo" data-id="${esc(a.id)}">Reset</button>`);
   parts.push(`<div class="actions">${act.join("")}</div>`);
+  return parts.join("");
+}
+
+function sourcesListHTML(keys) {
+  return `<ul class="sources">${(keys || []).map((k) => {
+    const s = DATA.sources[k]; if (!s) return "";
+    const isUrl = /^https?:/.test(s.url);
+    return `<li>${isUrl ? `<a href="${esc(s.url)}" target="_blank" rel="noopener">${esc(s.name)}</a>` : esc(s.name)}${s.published ? ` <span>(${esc(s.published)})</span>` : ""}</li>`;
+  }).join("")}</ul>`;
+}
+
+/* ═════════════ Tips ═════════════ */
+function tipTopicName(k) { return ((DATA.taxonomy && DATA.taxonomy.tipTopics) || {})[k] || k; }
+function tipRow(t) {
+  return `<button class="mini-row" data-action="tip-goto" data-id="${esc(t.id)}"><span class="t">${esc(t.title)}<small>${esc(tipTopicName(t.topic))}</small></span>${ICON.chev}</button>`;
+}
+/* The one tip worth a line on the Next up card: a nudge for this step's category or this step, once it applies. */
+function tipNudgeFor(a) {
+  if (!a) return null;
+  const live = TIPS.filter((t) => t.nudge && t.nudge.text && (!t.from || isResolved(t.from)));
+  return live.find((t) => (t.related || []).includes(a.id)) || live.find((t) => (t.nudge.on || []).includes(a.category)) || null;
+}
+const tipHidden = (id) => !!(S.tips[id] && S.tips[id].h);
+/* Up to three tips for the Now tab: ones tied to what's next, then ones that just unlocked this chapter,
+   then one per topic so the list doesn't fill up with a single subject. Hidden tips and the card's own nudge are skipped. */
+function tipsForNow(hero, recs, nm) {
+  const nudgeId = (tipNudgeFor(hero) || {}).id;
+  const near = new Map([hero, ...recs.slice(1, 4), nm].filter(Boolean).map((a) => [a.id, a]));
+  const curCh = CHAPTERS[currentChapterIdx()].id;
+  const scored = [];
+  for (const t of TIPS) {
+    if (t.id === nudgeId || tipHidden(t.id) || (t.from && !isResolved(t.from))) continue;
+    const rel = (t.related || []).map((id) => near.get(id)).find(Boolean);
+    const fromStep = t.from && BY_ID.get(t.from);
+    if (rel) scored.push({ t, score: 3, why: "For " + displayTitle(rel), near: true });
+    else if (fromStep && fromStep.chapter === curCh) scored.push({ t, score: 2, why: "New since " + displayTitle(fromStep) });
+    else scored.push({ t, score: t.verificationStatus === "verified" ? 1 : 0, why: tipTopicName(t.topic) });
+  }
+  scored.sort((x, y) => y.score - x.score);
+  const out = [], topics = new Set();
+  for (const x of scored) {
+    if (out.length === 3) break;
+    if (x.score < 2 && topics.has(x.t.topic)) continue;
+    topics.add(x.t.topic); out.push(x);
+  }
+  return out;
+}
+function tipNowHTML({ t, why, near }) {
+  const open = UI.expanded.has(t.id);
+  return `<article class="tip tip-now ${open ? "is-open" : ""}" id="tip-${esc(t.id)}">
+    <button class="tip-main" data-action="expand" data-id="${esc(t.id)}" aria-expanded="${open}">
+      <span class="tip-why ${near ? "is-near" : ""}">${esc(why)}</span>
+      <span class="tip-title">${esc(t.title)}</span>
+      <span class="tip-sum">${esc(t.summary)}</span>
+    </button>
+    <button class="tip-hide" data-action="tip-hide" data-id="${esc(t.id)}" aria-label="Hide this tip from Now: ${esc(t.title)}">${ICON.x}</button>
+    ${open ? `<div class="tip-body">${tipBodyHTML(t)}</div>` : ""}
+  </article>`;
+}
+function tipMatch(t, q) {
+  const hay = [t.title, t.summary, ...(t.points || []), tipTopicName(t.topic)].join(" ").toLowerCase();
+  return q.split(/\s+/).filter(Boolean).every((w) => hay.includes(w));
+}
+function tipHTML(t) {
+  const open = UI.expanded.has(t.id);
+  const chips = [
+    t.from ? `<span class="chip">${isResolved(t.from) ? "" : ICON.lock}From ${esc(labelFor(t.from))}</span>` : "",
+    t.verificationStatus !== "verified" ? verifBadge(t, true) : "",
+  ].join("");
+  return `<article class="tip ${open ? "is-open" : ""}" id="tip-${esc(t.id)}">
+    <button class="tip-main" data-action="expand" data-id="${esc(t.id)}" aria-expanded="${open}">
+      <span class="tip-title">${esc(t.title)}</span>
+      <span class="tip-sum">${esc(t.summary)}</span>
+      ${chips ? `<span class="chips">${chips}</span>` : ""}
+    </button>
+    ${open ? `<div class="tip-body">${tipBodyHTML(t)}</div>` : ""}
+  </article>`;
+}
+function tipBodyHTML(t) {
+  const parts = [];
+  if (t.points && t.points.length) parts.push(`<ul class="tip-points">${t.points.map((p) => `<li>${esc(p)}</li>`).join("")}</ul>`);
+  const rel = (t.related || []).map((id) => BY_ID.get(id)).filter(Boolean);
+  if (rel.length) parts.push(`<div><span class="eyebrow">In the journal</span><div class="list">${rel.map((a) => miniRow(a)).join("")}</div></div>`);
+  const det = [`<dl class="kv"><dt>Topic</dt><dd>${esc(tipTopicName(t.topic))}</dd><dt>Research</dt><dd>${verifBadge(t, true)} · checked ${esc(t.lastVerified || "")}</dd></dl>`];
+  if (t.notes) det.push(`<p class="small muted">${esc(t.notes)}</p>`);
+  if (t.sources && t.sources.length) det.push(sourcesListHTML(t.sources));
+  parts.push(`<details class="more"><summary>Sources and caveats</summary><div>${det.join("")}</div></details>`);
   return parts.join("");
 }
 
@@ -1151,37 +1427,44 @@ function viewNow() {
   const nm = nextMain();
   const hero = recs[0];
   const pace = S.prefs.pace;
+  const kicker = ch.number === 0 ? "" : ch.postGame ? "Free roam" : "Chapter " + ch.number;
   let h = `<section class="banner-hero" data-enter>${bannerHTML(ch.id)}<div class="wrap"><div class="chapter-hero on-banner hero-text">
-    <span class="eyebrow">${ch.number === 0 ? "Prologue" : ch.postGame ? "Free roam" : "Chapter " + ch.number} · ${esc(ch.base)} · ${esc(ch.protagonists.join(" & "))}</span>
+    ${kicker ? `<span class="kicker">${kicker}</span>` : ""}
     <h1>${esc(ch.title)}</h1>
-    <div class="progress-line"><div class="bar"><i style="width:${stats.pct}%"></i></div><span class="num">${stats.done} of ${stats.total - stats.skipped} · ${stats.pct}%</span></div>
+    <p class="hero-meta">${esc(ch.base)} · ${esc(ch.protagonists.join(" & "))}</p>
+    <div class="progress-line"><div class="bar"><i style="width:${stats.pct}%"></i></div><span class="num">${stats.done} of ${stats.total - stats.skipped} done</span></div>
   </div></div></section><section class="board"><div class="wrap">`;
-  // Two columns on desktop (main: what next and what else; side: will I miss anything, pace).
-  // On phones the columns dissolve and the "o" classes keep the order: next, miss check, pace, then the rest.
+  // Desktop: main column = next up and also open; side column = the advance check, keep in mind, leftovers.
+  // Phones: one column in the "o" order: next, advance check, keep in mind, also open, leftovers.
   const main = [], side = [];
 
   // Q1 + Q2: what next, and why
   if (hero) {
     const open = UI.heroOpen;
     const during = DURING.get(hero.id) || [];
+    const reason = reasonFor(hero, nm);
+    let nudge = tipNudgeFor(hero);
+    if (fightVisible(hero) && nudge && !(nudge.related || []).includes(hero.id)) nudge = null;
+    const tags = [hero.region ? `<span class="chip">${esc(hero.region)}</span>` : "", missChip(hero), priorityChip(hero), teaserChip(hero), charChip(hero),
+      hero.timeOfDay ? `<span class="chip">${ICON.moon}${esc(hero.timeOfDay)}</span>` : "", hero.verificationStatus === "unconfirmed" ? verifBadge(hero, true) : ""].join("");
     main.push(`<section class="section o1"><div class="next">
-      <span class="next-q">What should I do next?</span>
-      <span class="card-eyebrow">${eyebrow(hero)}</span>
+      <span class="next-q">Next up · ${esc(DATA.taxonomy.categories[hero.category] || hero.category)}</span>
       <h2>${esc(displayTitle(hero))}</h2>
-      <div class="chips">${[missChip(hero), priorityChip(hero), teaserChip(hero), charChip(hero), hero.timeOfDay ? `<span class="chip">${ICON.moon}${esc(hero.timeOfDay)}</span>` : "", verifBadge(hero)].join("")}</div>
-      <p class="why"><b>Why it's worth doing now:</b> ${esc(reasonFor(hero, nm))}</p>
-      ${hero.category === "story" || hero.whyNow ? `<p class="small" style="color:var(--ink-2)">${esc(hero.spoilerFreeDescription)}</p>` : ""}
+      ${tags ? `<div class="chips">${tags}</div>` : ""}
+      <p class="why">${esc(reason)}</p>
+      ${hero.category === "story" && hero.whyNow && hero.spoilerFreeDescription !== reason ? `<p class="small" style="color:var(--ink-2)">${esc(hero.spoilerFreeDescription)}</p>` : ""}
+      ${fightLineHTML(hero)}
+      ${nudge ? `<p class="tip-nudge"><b>Tip</b><span>${esc(nudge.nudge.text)} <button class="linkbtn" data-action="tip-goto" data-id="${esc(nudge.id)}">More</button></span></p>` : ""}
       ${during.length ? `<div class="missbox"><div class="missbox-head">${ICON.warn}<span>${during.length} one-time pickup${during.length > 1 ? "s" : ""} inside this mission</span></div>${during.map((d) => `<p class="small">${esc(d.spoilerFreeDescription)}</p>`).join("")}<p class="small muted">Open the hints if you want a nudge before you start.</p></div>` : ""}
       <div class="next-actions">
         <button class="btn btn-primary" data-action="status" data-s="done" data-id="${esc(hero.id)}">${ICON.check}Done</button>
         <button class="btn" data-action="status" data-s="deferred" data-id="${esc(hero.id)}">Later</button>
-        <button class="btn" data-action="status" data-s="skipped" data-id="${esc(hero.id)}">Skip</button>
-        <button class="btn" data-action="hero-toggle" aria-expanded="${open}">${open ? "Less" : "Hints"}</button>
+        <button class="btn" data-action="hero-toggle" aria-expanded="${open}">${open ? "Less" : "Hints and details"}</button>
       </div>
-      ${open ? `<div class="card-body" style="padding:14px 0 0;border-color:var(--line-strong)">${bodyHTML(hero)}</div>` : ""}
+      ${open ? `<div class="card-body" style="padding:16px 0 0;border-top:1px solid var(--line-strong)">${bodyHTML(hero, { hero: true })}</div>` : ""}
     </div></section>`);
   } else {
-    main.push(`<section class="section o1"><div class="next"><span class="next-q">What should I do next?</span><h2>You're all caught up</h2><p class="why">Nothing open at your current pace. Try a wider pace, or check items you saved for later.</p></div></section>`);
+    main.push(`<section class="section o1"><div class="next"><span class="next-q">Next up</span><h2>You're all caught up</h2><p class="why">Nothing open at your current pace. Try a wider pace, or check items you saved for later.</p></div></section>`);
   }
 
   // Q3: will I miss anything?
@@ -1190,33 +1473,37 @@ function viewNow() {
     const gate = nm.gate;
     const warn = lost.length > 0 || (gate && gate.severity === "hard");
     const during = DURING.get(nm.id) || [];
+    const name = esc(displayTitle(nm)) + (nm.marker && showName(nm) ? ` <span class="muted" style="font-weight:500">(${esc(nm.marker)})</span>` : "");
     side.push(`<section class="section o2"><div class="gatecheck ${warn ? "warn" : "ok"}">
-      <span class="q-label"><span class="eyebrow">Will I miss anything if I advance the story?</span></span>
-      <h3>Next story mission: ${esc(displayTitle(nm))}${nm.marker && showName(nm) ? ` <span class="muted small" style="font-weight:500;font-family:var(--font-body)">(${esc(nm.marker)})</span>` : ""}</h3>
-      ${lost.length ? `<div class="verdict">${ICON.warn}<span>Yes. Finish ${lost.length === 1 ? "this" : "these " + lost.length} first. Starting it closes ${lost.length === 1 ? "it" : "them"} for good.</span></div><div class="list">${lost.map((a) => miniRow(a, firstSentence(a.missable.warning))).join("")}</div>`
-        : gate && gate.severity === "hard" ? `<div class="verdict">${ICON.warn}<span>Nothing tracked is still open, but this is a point of no return.</span></div>`
-        : `<div class="verdict">${ICON.shield}<span>Safe to continue. Nothing known is lost when you start it.</span></div>`}
+      <h2 class="section-title">Before you advance</h2>
+      ${lost.length ? `<div class="verdict">${ICON.warn}<span>Finish ${lost.length === 1 ? "this" : "these " + lost.length} before ${name}. Starting it closes ${lost.length === 1 ? "it" : "them"} for good.</span></div><div class="list">${lost.map((a) => miniRow(a, firstSentence(a.missable.warning))).join("")}</div>`
+        : gate && gate.severity === "hard" ? `<div class="verdict">${ICON.warn}<span>${name} is a point of no return. Nothing tracked is still open.</span></div>`
+        : `<div class="verdict">${ICON.shield}<span>Safe to start ${name}. Nothing known is lost.</span></div>`}
       ${gate ? `<p class="small">${esc(gate.warning)}</p>${gate.save ? `<p class="gate-save">${ICON.save}<span>${esc(gate.save)}</span></p>` : ""}` : ""}
       ${during.length ? `<p class="small muted">${during.length} one-time pickup${during.length > 1 ? "s" : ""} happen${during.length > 1 ? "" : "s"} inside this mission. Check its card before you start.</p>` : ""}
+      ${nm !== hero ? fightLineHTML(nm) : ""}
     </div></section>`);
   }
 
-  side.push(`<section class="section o3" aria-label="Pace"><div class="section-head"><h2 class="section-title">Your pace</h2></div><div class="pace" role="group" aria-label="Choose your pace">${Object.entries(PACES).map(([k, p]) => `<button data-action="pace" data-pace="${k}" aria-pressed="${k === pace}">${esc(p.label)}</button>`).join("")}</div><p class="small muted">${esc(PACES[pace].blurb)} ${esc(ch.intro)}</p></section>`);
+  // Keep in mind: tips for this moment, then habits and chance encounters (they never block the story).
+  const tipsNow = tipsForNow(hero, recs, nm);
+  const amb = ambientNow().slice(0, 2);
+  if (tipsNow.length || amb.length) {
+    side.push(`<section class="section o3"><div class="section-head"><h2 class="section-title">Keep in mind</h2><button class="btn btn-sm btn-ghost" data-action="nav" data-view="tips">All tips</button></div><div class="list">${tipsNow.map(tipNowHTML).join("")}${amb.map((a) => cardHTML(a)).join("")}</div></section>`);
+  }
 
-  // Also available
+  // Also open, with the pace that decides what shows here
   const lostIds = new Set(lostAtMission(nm).map((a) => a.id));
-  const more = recs.slice(1).filter((a) => !lostIds.has(a.id)).slice(0, 5);
-  if (more.length) {
-    main.push(`<section class="section o4"><div class="section-head"><h2 class="section-title">Also open right now</h2><button class="btn btn-sm btn-ghost" data-action="nav" data-view="journal">Full journal</button></div><div class="list">${more.map((a) => cardHTML(a)).join("")}</div></section>`);
-  }
-  const amb = ambientNow();
-  if (amb.length) {
-    main.push(`<section class="section o5"><div class="section-head"><h2 class="section-title">Keep in mind as you play</h2></div><p class="small muted">Habits and chance encounters. They never block the story.</p><div class="list">${amb.slice(0, 4).map((a) => cardHTML(a)).join("")}</div></section>`);
-  }
+  const rest = recs.slice(1).filter((a) => !lostIds.has(a.id));
+  const more = rest.slice(0, 3);
+  main.push(`<section class="section o4"><div class="section-head"><h2 class="section-title">Also open</h2><label class="pace-pick">Pace <select id="pace-sel" aria-label="Pace: what the Now tab suggests">${Object.entries(PACES).map(([k, p]) => `<option value="${k}"${k === pace ? " selected" : ""}>${esc(p.label)}</option>`).join("")}</select></label></div>
+    ${more.length ? `<div class="list">${more.map((a) => cardHTML(a)).join("")}</div>` : `<p class="small muted">Nothing else open at this pace.</p>`}
+    <button class="mini-row now-more" data-action="nav" data-view="journal"><span class="t">${rest.length > more.length ? `${rest.length - more.length} more in the journal` : "Open the journal"}<small>${esc(PACES[pace].blurb)}</small></span>${ICON.chev}</button></section>`);
+
   const left = earlierLeftovers();
   const deferred = ORDERED.filter((a) => statusOf(a) === "deferred");
   if (left.length || deferred.length) {
-    side.push(`<section class="section o6"><div class="list">
+    side.push(`<section class="section o5"><div class="list">
       ${left.length ? `<button class="mini-row" data-action="filter-open-earlier"><span class="t">${left.length} still open from earlier chapters<small>Optional finds you passed. None are urgent.</small></span>${ICON.chev}</button>` : ""}
       ${deferred.length ? `<button class="mini-row" data-action="filter-deferred"><span class="t">${deferred.length} saved for later<small>Things you chose to come back to.</small></span>${ICON.chev}</button>` : ""}
     </div></section>`);
@@ -1236,6 +1523,7 @@ function filterMatch(a) {
   if (f.status !== "all" && f.status !== "todo" && st !== f.status) return false;
   if (f.missable && !a.missable) return false;
   if (f.available && st !== "todo") return false;
+  if (f.weapons && !(a.uniqueWeapons > 0)) return false;
   if (f.character !== "any" && !(a.character === f.character || a.character === "Both" || a.character === "Either")) return false;
   if (f.verif !== "any" && a.verificationStatus !== f.verif) return false;
   return true;
@@ -1243,6 +1531,135 @@ function filterMatch(a) {
 function searchMatch(a, q) {
   const hay = [displayTitle(a), a.category === "story" && showName(a) ? a.marker : "", a.region, a.spoilerFreeDescription, a.rewardTeaser, DATA.taxonomy.categories[a.category], a.character].join(" ").toLowerCase();
   return q.split(/\s+/).filter(Boolean).every((w) => hay.includes(w));
+}
+
+/* ═════════════ Unique weapons checklist (data: weapons[], taxonomy.weaponGroups, taxonomy.weaponHow) ═════════════
+   A row counts as collected from its own tick or from its Journal step being done; whichever changed last wins.
+   Rows show the weapon type until the player turns names on or opens the row. Edition extras don't count toward the total. */
+function weaponGot(w) {
+  const own = S.items[w.id], st = w.step ? S.items[w.step] : null;
+  if (own && !(st && (st.t || 0) > (own.t || 0))) return own.s === "done";
+  return !!(st && st.s === "done");
+}
+function weaponStats(list = WEAPONS) { const l = list.filter((w) => !w.edition); return { got: l.filter(weaponGot).length, total: l.length }; }
+const WHOW_FILTER = { found: ["found"], robbery: ["robbery"], shop: ["shop"], mission: ["mission", "challenge", "encounter"], unknown: ["unknown"], edition: ["edition"] };
+const WHOW_OPTIONS = [["any", "Any way to get it"], ["found", "Found in the world"], ["robbery", "Illegal operations"], ["shop", "Gun shops"], ["mission", "Missions and events"], ["unknown", "Not located yet"], ["edition", "Ultimate Edition"]];
+const weaponLabel = (w) => (S.prefs.wnames ? w.name : w.type);
+const weaponHow = (w) => (DATA.taxonomy.weaponHow && DATA.taxonomy.weaponHow[w.how]) || w.how;
+function weaponMatch(w) {
+  const f = UI.w;
+  if (f.show === "todo" && weaponGot(w)) return false;
+  if (f.show === "done" && !weaponGot(w)) return false;
+  if (WHOW_FILTER[f.how] && !WHOW_FILTER[f.how].includes(w.how)) return false;
+  const q = (UI.wq || "").trim().toLowerCase();
+  if (!q) return true;
+  const hay = [w.type, w.area, w.where, weaponHow(w), (DATA.taxonomy.weaponGroups || {})[w.group], S.prefs.wnames ? w.name : ""].join(" ").toLowerCase();
+  return q.split(/\s+/).filter(Boolean).every((x) => hay.includes(x));
+}
+function weaponRowHTML(w) {
+  const got = weaponGot(w), open = UI.expanded.has(w.id);
+  const step = w.step ? BY_ID.get(w.step) : null;
+  const meta = [w.area, weaponHow(w), w.price ? "$" + w.price.toLocaleString("en-US") : "", w.character ? (CHAR_SHORT[w.character] || w.character) + " only" : ""]
+    .filter(Boolean).map(esc).join(" · ");
+  const srcs = (w.sources || []).map((k) => { const x = DATA.sources[k]; return x && x.url ? `<a href="${esc(x.url)}" target="_blank" rel="noopener">${esc(x.name)}</a>` : esc((x && x.name) || k); }).join(", ");
+  const body = open ? `<div class="card-body">
+      ${S.prefs.wnames ? `<p class="small muted">${esc(w.type)}</p>` : `<div><span class="eyebrow">Name</span><p>${esc(w.name)}</p></div>`}
+      <p class="desc">${w.where ? esc(w.where) : "Nobody has documented where this one comes from yet."}</p>
+      ${w.notes ? `<p class="small" style="color:var(--ink-2)">${esc(w.notes)}</p>` : ""}
+      ${step ? `<p class="small">${got && stored(step.id) === "done" && !S.items[w.id] ? "Ticked off with its Journal step. " : ""}<button class="btn btn-sm" data-action="goto" data-id="${esc(step.id)}">Open in the Journal</button></p>` : ""}
+      <p class="small muted">${verifBadge(w, true)}${srcs ? " · " + srcs : ""}</p>
+    </div>` : "";
+  return `<article class="card wcard ${got ? "s-done" : ""} ${open ? "is-open" : ""}" id="w-${esc(w.id)}">
+    <div class="card-row">
+      <button class="check" data-action="wtoggle" data-id="${esc(w.id)}" aria-pressed="${got}" aria-label="${got ? "Mark not collected" : "Mark collected"}: ${esc(weaponLabel(w))}${w.area ? ", " + esc(w.area) : ""}">${ICON.check}</button>
+      <button class="card-main" data-action="expand" data-id="${esc(w.id)}" aria-expanded="${open}">
+        <span class="card-eyebrow">${meta}</span>
+        <span class="card-title">${esc(weaponLabel(w))}</span>
+        ${w.verificationStatus === "unconfirmed" ? `<span class="chips">${verifBadge(w, true)}</span>` : ""}
+      </button>
+    </div>${body}
+  </article>`;
+}
+function viewWeapons() {
+  const { got, total } = weaponStats();
+  const shown = WEAPONS.filter(weaponMatch);
+  let h = `<div class="wrap"><section class="chapter-hero">
+    <span class="eyebrow">Checklist</span>
+    <h1>Unique weapons</h1>
+    <p class="hero-meta">${got} of ${total} collected</p>
+    <div class="bar wbar"><i style="width:${pct(got, total)}%"></i></div>
+    ${DATA.meta.uniqueWeaponsNote ? `<p class="intro small">${esc(DATA.meta.uniqueWeaponsNote)}</p>` : ""}
+  </section>
+  <div class="toolbar">
+    <label class="search">${ICON.search}<input id="wq" type="search" placeholder="Search types and places" value="${esc(UI.wq || "")}" autocomplete="off" aria-label="Search the weapons checklist">${UI.wq ? '<button class="clear" data-action="wq-clear" aria-label="Clear search">' + ICON.x + "</button>" : ""}</label>
+  </div>
+  <div class="wtools">
+    <div class="toggles" role="group" aria-label="Order">${[["story", "Story order"], ["type", "By type"]].map(([k, l]) => `<button class="tog" data-action="wsort" data-v="${k}" aria-pressed="${(UI.w.sort || "story") === k}">${l}</button>`).join("")}</div>
+    <div class="toggles" role="group" aria-label="Show">${[["all", "All"], ["todo", "To find"], ["done", "Collected"]].map(([k, l]) => `<button class="tog" data-action="wshow" data-v="${k}" aria-pressed="${UI.w.show === k}">${l}</button>`).join("")}</div>
+    <select id="w-how" class="sel" aria-label="How you get it">${WHOW_OPTIONS.map(([k, l]) => `<option value="${k}"${UI.w.how === k ? " selected" : ""}>${esc(l)}</option>`).join("")}</select>
+    <button class="tog" data-action="wnames" aria-pressed="${!!S.prefs.wnames}">Show names</button>
+  </div>`;
+  if (!WEAPONS.length) h += `<div class="empty">No weapons in the guide yet.</div>`;
+  else if (!shown.length) h += `<div class="empty">No weapons match. <button class="name-reveal" data-action="w-reset">Clear the filters</button></div>`;
+  else h += UI.w.sort === "type" ? weaponsByType(shown) : weaponsByStory(shown);
+  return h + footHTML() + `</div>`;
+}
+function weaponGroupHTML(label, all, rows, note) {
+  const st = weaponStats(all);
+  const count = st.total ? `${st.got} of ${st.total}` : "Not counted";
+  return `<div class="wgroup"><span class="eyebrow">${esc(label)}</span><span class="wcount">${count}</span>${note ? `<p class="small wnote">${esc(note)}</p>` : ""}</div><div class="list">${rows.map(weaponRowHTML).join("")}</div>`;
+}
+const wTypeRank = (w) => { const i = Object.keys(DATA.taxonomy.weaponGroups || {}).indexOf(w.group); return i < 0 ? 99 : i; };
+function weaponsByType(shown) {
+  let h = "";
+  for (const [g, label] of Object.entries(DATA.taxonomy.weaponGroups || {})) {
+    /* Located rows first, then ones nobody has found, then edition extras. */
+    const rank = (w) => (w.edition ? 2 : w.how === "unknown" ? 1 : 0);
+    const rows = shown.filter((w) => w.group === g).sort((a, b) => rank(a) - rank(b));
+    if (!rows.length) continue;
+    h += weaponGroupHTML(label, WEAPONS.filter((w) => w.group === g), rows);
+  }
+  return h;
+}
+/* Story order: only a linked Journal step gives a sourced point in the story. Those rows sit in that step's chapter,
+   in Journal order. Everything else is grouped by how you get it, and the page says plainly that its timing is unknown. */
+function weaponsByStory(shown) {
+  const stepOf = (w) => (w.step && BY_ID.has(w.step) ? BY_ID.get(w.step) : null);
+  let h = "";
+  for (const c of CHAPTERS) {
+    const inCh = (w) => { const a = stepOf(w); return a && a.chapter === c.id; };
+    const rows = shown.filter(inCh).sort((x, y) => (stepOf(x).recommendedOrder - stepOf(y).recommendedOrder) || (wTypeRank(x) - wTypeRank(y)));
+    if (rows.length) h += weaponGroupHTML(`${chapterName(c)} · ${c.title}`, WEAPONS.filter(inCh), rows);
+  }
+  const loose = (w) => !stepOf(w);
+  const shownLoose = shown.filter(loose);
+  if (!shownLoose.length) return h;
+  h += `<div class="wsection"><h2>Story timing not known yet</h2><p class="small">No guide says when in the story these become available. They're grouped by how you get them, then by area.</p></div>`;
+  const opener = ACTS.find((a) => (a.unlocks || []).some((u) => /ammu-nation/i.test(u)));
+  const notes = {
+    shop: opener ? `Ammu-Nation opens early in ${chapterName(chapterOf(opener))}, but no guide says when each shop starts selling these.` : "",
+  };
+  const byArea = (x, y) => (!x.area - !y.area) || (x.area || "").localeCompare(y.area || "") || (wTypeRank(x) - wTypeRank(y));
+  for (const [k, label] of WHOW_OPTIONS) {
+    if (!WHOW_FILTER[k]) continue;
+    const inB = (w) => loose(w) && WHOW_FILTER[k].includes(w.how);
+    const rows = shown.filter(inB).sort(byArea);
+    if (rows.length) h += weaponGroupHTML(label, WEAPONS.filter(inB), rows, notes[k]);
+  }
+  return h;
+}
+function toggleWeapon(id) {
+  const w = WPN_BY_ID.get(id); if (!w) return;
+  const was = weaponGot(w);
+  S.items[id] = { s: was ? "todo" : "done", t: now() };
+  persist(); render();
+  showToast(was ? "Marked not collected" : "Collected", () => { S.items[id] = { s: was ? "done" : "todo", t: now() }; persist(); render(); });
+}
+function gotoWeapon(id) {
+  if (!WPN_BY_ID.has(id)) return;
+  UI.wq = ""; UI.w = Object.assign(defaultWeaponView(), { sort: UI.w.sort }); UI.expanded.add(id); saveUI();
+  navigate("weapons");
+  requestAnimationFrame(() => { const el = document.getElementById("w-" + id); if (el) el.scrollIntoView({ block: "center" }); });
 }
 
 function viewJournal() {
@@ -1253,7 +1670,7 @@ function viewJournal() {
   let h = `<div class="wrap">`;
   h += `<div class="chapter-tabs" role="group" aria-label="Chapters">${CHAPTERS.map((c, i) => {
     const s = chapterStats(c.id);
-    return `<button class="ctab" data-action="chapter" data-ch="${c.id}" aria-pressed="${!q && UI.chapter === c.id}">${thumbHTML(c.id, false)}<span class="meta">
+    return `<button class="ctab" data-action="chapter" data-ch="${c.id}" aria-pressed="${!q && !UI.filters.weapons && UI.chapter === c.id}">${thumbHTML(c.id, false)}<span class="meta">
       <span class="n"><span>${c.number === 0 ? "Prologue" : c.postGame ? "Post-game" : "Ch " + c.number}</span>${i === cur ? '<span class="here">Here</span>' : `<span>${s.pct}%</span>`}</span>
       <span class="tt">${esc(c.title)}</span><span class="bar"><i style="width:${s.pct}%"></i></span></span></button>`;
   }).join("")}</div>`;
@@ -1263,9 +1680,28 @@ function viewJournal() {
   </div>`;
 
   if (q) {
-    const res = ORDERED.filter((a) => !a.duringMission && searchMatch(a, q) && filterMatch(a));
+    const res = ORDERED.filter((a) => (!a.duringMission || UI.filters.weapons) && searchMatch(a, q) && filterMatch(a));
     h += `<div class="chapter-head"><span class="eyebrow">Search · ${res.length} result${res.length === 1 ? "" : "s"} across all chapters</span></div>`;
-    h += res.length ? `<div class="list">${res.map((a) => cardHTML(a, { showChapter: true })).join("")}</div>` : `<div class="empty">Nothing matches “${esc(UI.q)}”${nf ? " with your filters" : ""}.</div>`;
+    h += res.length ? `<div class="list">${res.map((a) => cardHTML(a, { showChapter: true, inside: true })).join("")}</div>` : `<div class="empty">Nothing matches “${esc(UI.q)}”${nf ? " with your filters" : ""}.</div>`;
+  } else if (UI.filters.weapons) {
+    /* Unique weapons: every step that holds one, grouped by chapter, including one-time pickups inside missions. */
+    const all = ACTS.filter((a) => a.uniqueWeapons > 0);
+    const total = all.reduce((n, a) => n + a.uniqueWeapons, 0);
+    const res = ORDERED.filter(filterMatch);
+    h += `<div class="chapter-head">
+      <span class="eyebrow">Filter · All chapters</span>
+      <h2>Unique weapons</h2>
+      <div class="stats"><span>${all.length} places</span><span>${total} weapons</span></div>
+      ${WEAPONS.length ? `<p class="small" style="color:var(--ink-2)">These are the places with their own Journal step. The Weapons tab has the full checklist of ${weaponStats().total} variants. <button class="linkbtn" data-action="nav" data-view="weapons">Open the checklist</button></p>` : ""}
+      <p class="small"><button class="linkbtn" data-action="weapons-off">Back to the chapter list</button></p>
+    </div>`;
+    if (!res.length) h += `<div class="empty">No unique weapons match your other filters. <button class="name-reveal" data-action="reset-filters">Clear filters</button></div>`;
+    for (const c of CHAPTERS) {
+      const g = res.filter((a) => a.chapter === c.id);
+      if (!g.length) continue;
+      h += `<div class="wgroup" id="wgrp-${c.id}"><span class="eyebrow">${esc(chapterName(c))} · ${esc(c.title)}</span></div>
+        <div class="list">${g.map((a) => cardHTML(a, { inside: true })).join("")}</div>`;
+    }
   } else {
     const ch = CHAPTERS[CH_IDX.get(UI.chapter)];
     const s = chapterStats(ch.id);
@@ -1275,6 +1711,7 @@ function viewJournal() {
       <span class="eyebrow">${ch.number === 0 ? "Prologue" : ch.postGame ? "Post-game" : "Chapter " + ch.number} · ${esc(ch.base)}</span>
       <h2>${esc(ch.title)}</h2>
       <p class="small" style="color:var(--ink-2)">${esc(ch.intro)}</p>
+      ${coverageNoteHTML(ch)}
       <div class="stats"><span>${s.done} done</span><span>${s.open} open</span>${s.skipped ? `<span>${s.skipped} skipped</span>` : ""}${s.missed ? `<span style="color:var(--danger)">${s.missed} missed</span>` : ""}<span>${s.pct}%</span></div>
       ${ch.id !== "post" && ch.id !== "prologue" ? `<p class="small muted">${esc(DATA.meta.orderNote)}</p>` : ""}
     </div>`;
@@ -1299,15 +1736,13 @@ function viewMissables() {
   const missed = all.filter((a) => statusOf(a) === "missed");
   const handled = all.filter((a) => isResolved(a.id));
   let h = `<div class="wrap"><section class="chapter-hero">
-    <span class="eyebrow">Missables and points of no return</span>
     <h1>Don't leave these behind</h1>
     <p class="intro">Everything research says can be lost, in story order. Warnings here are more direct than the exploration hints because missing something for good is worse than a small spoiler. Exact rewards stay behind the hint levels.</p>
   </section>
-  <div class="stat-grid" style="margin-top:18px">
-    <div class="stat"><b>${open.length}</b><span>Still open</span></div>
-    <div class="stat"><b>${handled.length}</b><span>Done or skipped</span></div>
-    <div class="stat"><b style="color:${missed.length ? "var(--danger)" : "inherit"}">${missed.length}</b><span>Missed</span></div>
-    <div class="stat"><b>${all.length}</b><span>Tracked in total</span></div>
+  <div class="tally">
+    <div><b>${open.length}<small> / ${all.length}</small></b><span>Still open</span></div>
+    <div><b>${handled.length}</b><span>Done or skipped</span></div>
+    <div class="${missed.length ? "bad" : ""}"><b>${missed.length}</b><span>Missed</span></div>
   </div>`;
   // group by lock mission
   const groups = new Map();
@@ -1331,9 +1766,34 @@ function viewMissables() {
     else if (k.startsWith("__timed_")) label = "Time-limited when they appear";
     else label = "Other risks";
     const ahead = chapterIdx(m || first) > cur;
-    h += `<section class="section"><div class="section-head"><h2 class="section-title">${esc(label)}</h2><span class="eyebrow">${esc(chTitle)}${ahead ? " · ahead" : ""}</span></div>
+    h += `<section class="section"><div class="section-head"><h2 class="section-title">${esc(label)}</h2><span class="eyebrow">${esc(chTitle)}${ahead ? ", later chapter" : ""}</span></div>
       ${m && m.gate ? `<p class="small muted">${esc(m.gate.warning)}</p>` : ""}
       <div class="list">${items.map((a) => cardHTML(a)).join("")}</div></section>`;
+  }
+  h += footHTML() + `</div>`;
+  return h;
+}
+
+function viewTips() {
+  const q = (UI.tq || "").trim().toLowerCase();
+  const topics = (DATA.taxonomy && DATA.taxonomy.tipTopics) || {};
+  let h = `<div class="wrap"><section class="chapter-hero">
+    <h1>Tips and tricks</h1>
+    <p class="intro">Practical advice from launch guides: loadouts, combat, the police, money, cars, Jason and Lucia, and settings. Each tip says how well it's backed up, and details that come from a single guide say so.</p>
+    ${(() => { const n = TIPS.filter((t) => tipHidden(t.id)).length; return n ? `<p class="small muted">${n} hidden from the Now tab. <button class="linkbtn" data-action="tips-unhide">Show ${n === 1 ? "it" : "them"} again</button></p>` : ""; })()}
+  </section>
+  <div class="toolbar"><label class="search">${ICON.search}<input id="tq" type="search" placeholder="Search tips" value="${esc(UI.tq || "")}" autocomplete="off" aria-label="Search tips">${UI.tq ? '<button class="clear" data-action="clear-tip-search" aria-label="Clear search">' + ICON.x + "</button>" : ""}</label></div>`;
+  if (!TIPS.length) h += `<div class="empty">No tips yet.</div>`;
+  else if (q) {
+    const res = TIPS.filter((t) => tipMatch(t, q));
+    h += `<div class="chapter-head"><span class="eyebrow">${res.length} tip${res.length === 1 ? "" : "s"} match</span></div>`;
+    h += res.length ? `<div class="list">${res.map(tipHTML).join("")}</div>` : `<div class="empty">No tip matches “${esc(UI.tq)}”. Ask the guide might still know.</div>`;
+  } else {
+    for (const [k, label] of Object.entries(topics)) {
+      const list = TIPS.filter((t) => t.topic === k);
+      if (!list.length) continue;
+      h += `<section class="section"><div class="section-head"><h2 class="section-title">${esc(label)}</h2></div><div class="list">${list.map(tipHTML).join("")}</div></section>`;
+    }
   }
   h += footHTML() + `</div>`;
   return h;
@@ -1351,16 +1811,15 @@ function viewProgress() {
   const mMissed = miss.filter((a) => statusOf(a) === "missed").length;
   const syncLabel = Sync.label();
   let h = `<div class="wrap"><section class="chapter-hero">
-    <span class="eyebrow">Your journey so far</span>
     <h1>${o.pct}% of the journal</h1>
     <p class="intro">${o.done} of ${o.total - o.skipped} steps done${o.skipped ? `, ${o.skipped} skipped` : ""}. This counts the guide's steps, not the in-game 100% screen.</p>
     <span class="sync ${Sync.mode === "on" ? "on" : Sync.mode === "offline" ? "off" : ""}"><i></i>${esc(syncLabel)}</span>
   </section>
-  <div class="stat-grid" style="margin-top:18px">
-    <div class="stat"><b>${sDone}/${story.length}</b><span>Story steps</span></div>
-    <div class="stat"><b>${uDone}/${uniques.length}</b><span>Unique rewards found</span></div>
-    <div class="stat"><b>${miss.filter((a) => isResolved(a.id)).length}/${miss.length}</b><span>Missables handled</span></div>
-    <div class="stat"><b style="color:${mMissed ? "var(--danger)" : "inherit"}">${mMissed}</b><span>Missed</span></div>
+  <div class="tally">
+    <div><b>${sDone}<small> / ${story.length}</small></b><span>Story steps</span></div>
+    <div><b>${uDone}<small> / ${uniques.length}</small></b><span>Unique rewards</span></div>
+    <div><b>${miss.filter((a) => isResolved(a.id)).length}<small> / ${miss.length}</small></b><span>Missables handled</span></div>
+    <div class="${mMissed ? "bad" : ""}"><b>${mMissed}</b><span>Missed</span></div>
   </div>
   <div class="progress-cols"><div>
   <section class="section"><h2 class="section-title">Chapters</h2><div class="chap-rows">${CHAPTERS.map((c) => {
@@ -1400,7 +1859,8 @@ function viewProgress() {
       <span>${verifBadge({ verificationStatus: "community" }, true)} · ${esc(DATA.meta.verificationLegend.community)}</span>
       <span>${verifBadge({ verificationStatus: "unconfirmed" }, true)} · ${esc(DATA.meta.verificationLegend.unconfirmed)}</span>
     </div><p class="small muted">Counts: ${["verified", "community", "unconfirmed"].map((v) => `${all.filter((a) => a.verificationStatus === v).length} ${v}`).join(" · ")}. Data version ${esc(DATA.meta.dataVersion)}, last updated ${esc(DATA.meta.lastUpdated)}.</p></div>
-    <div class="panel"><h3>Known research gaps</h3><ul class="gaps">${DATA.researchGaps.map((g) => `<li><b>${esc(g.area)}.</b> ${esc(g.detail)}</li>`).join("")}</ul></div>
+    ${wipHTML({ place: "progress" })}
+    <div class="panel" id="gaps"><details class="more"><summary>Known research gaps (${DATA.researchGaps.length}). These name later missions and characters.</summary><div><ul class="gaps">${DATA.researchGaps.map((g) => `<li><b>${esc(g.area)}.</b> ${esc(g.detail)}</li>`).join("")}</ul></div></details></div>
     <div class="panel"><details class="more"><summary>All sources (${Object.keys(DATA.sources).length})</summary><div><ul class="sources">${Object.values(DATA.sources).map((s) => `<li>${/^https?:/.test(s.url) ? `<a href="${esc(s.url)}" target="_blank" rel="noopener">${esc(s.name)}</a>` : esc(s.name)}${s.published ? ` (${esc(s.published)})` : ""}</li>`).join("")}</ul></div></details></div>
   </section>`;
   h += footHTML() + `</div>`;
@@ -1446,8 +1906,488 @@ function privacySheet() {
     <div class="sheet-actions"><button class="btn btn-primary" data-action="close-sheet-btn">Close</button></div>`);
 }
 
+/* ═════════════ Work in progress (meta.workInProgress + chapters[].coverage) ═════════════
+   The update-guide skill keeps these current; a new dataVersion re-opens the card. */
+const COVERAGE = { solid: "Well covered", partial: "Gaps remain", thin: "Still thin" };
+const WIP_TOPO = (() => {
+  const ring = (k) => {
+    const r = 12 + k * 16, n = 72; let s = "";
+    for (let i = 0; i <= n; i++) {
+      const t = (i / n) * Math.PI * 2;
+      const w = 1 + 0.15 * Math.sin(3 * t + k * 0.7) + 0.08 * Math.sin(5 * t - k * 1.3) + 0.04 * Math.cos(7 * t + k);
+      s += (i ? "L" : "M") + (232 + Math.cos(t) * r * w * 1.3).toFixed(1) + " " + (78 + Math.sin(t) * r * w * 0.82).toFixed(1);
+    }
+    return s + "Z";
+  };
+  const inner = [1, 2, 3, 4, 5].map(ring).join(""), edge = [6, 7, 8].map(ring).join("");
+  return `<svg class="wip-topo" viewBox="0 0 340 230" aria-hidden="true" focusable="false"><path d="${inner}"/><path class="edge" d="${edge}"/></svg>`;
+})();
+function coverageOf(c) { const l = c && c.coverage && c.coverage.level; return COVERAGE[l] ? l : "solid"; }
+function fmtDay(s) {
+  const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(s || "");
+  return m ? new Date(+m[1], +m[2] - 1, +m[3]).toLocaleDateString(undefined, { month: "short", day: "numeric" }) : (s || "");
+}
+function chapterShort(c) { return c.number === 0 ? "P" : c.postGame ? "Post" : String(c.number); }
+function chapterLong(c) { return c.number === 0 ? "the Prologue" : c.postGame ? "free roam" : "Chapter " + c.number; }
+function wipHTML({ place = "progress" } = {}) {
+  const w = DATA.meta.workInProgress;
+  if (!w || !w.show) return "";
+  const cur = CHAPTERS[currentChapterIdx()];
+  const latest = (DATA.changelog || []).slice(-1)[0];
+  const updated = fmtDay(DATA.meta.lastUpdated);
+  const lv = coverageOf(cur);
+  const map = CHAPTERS.map((c) => `<span class="wip-seg${c.id === cur.id ? " here" : ""}" title="${esc(c.title)}: ${COVERAGE[coverageOf(c)]}"><i class="lv-${coverageOf(c)}"></i><b>${chapterShort(c)}</b></span>`).join("");
+  const spoken = CHAPTERS.map((c) => `${chapterShort(c) === "P" ? "Prologue" : chapterShort(c) === "Post" ? "Post-game" : "Chapter " + c.number}: ${COVERAGE[coverageOf(c)]}`).join("; ");
+  return `<div class="wip" role="note" aria-label="Work in progress">${WIP_TOPO}
+    <div class="wip-head"><span class="wip-live"><i></i>Work in progress</span><span class="wip-date">Updated ${esc(updated)}</span></div>
+    <h3>${esc(w.headline)}</h3>
+    <p class="lede">${esc(w.body)}</p>
+    <div class="wip-cov"><div class="wip-map" style="--n:${CHAPTERS.length}" role="img" aria-label="Guide coverage by chapter. ${esc(spoken)}. You're in ${esc(chapterLong(cur))}.">${map}</div>
+      <div class="wip-legend" aria-hidden="true">${Object.entries(COVERAGE).map(([k, t]) => `<span><i class="lv-${k}"></i>${t}</span>`).join("")}</div></div>
+    ${lv !== "solid" && cur.coverage.note ? `<p class="wip-here"><b>You're in ${esc(chapterLong(cur))}.</b> ${esc(cur.coverage.note)}</p>` : ""}
+    ${w.focus && w.focus.length ? `<div class="wip-block"><span class="eyebrow">Still charting</span><ul class="wip-focus">${w.focus.map((f) => `<li>${esc(f)}</li>`).join("")}</ul></div>` : ""}
+    ${latest && latest.note ? `<div class="wip-block wip-new"><span class="eyebrow">Latest update · ${esc(fmtDay(latest.date))}</span><p class="small">${esc(latest.note)}</p></div>` : ""}
+    ${place === "pop" ? `<div class="wip-actions"><button class="btn btn-sm" data-action="wip-gaps">Every open question</button></div>` : ""}
+  </div>`;
+}
+function coverageNoteHTML(c) {
+  const lv = coverageOf(c);
+  if (lv === "solid" || !c.coverage.note) return "";
+  return `<p class="wip-inline"><span class="wip-live"><i></i>${COVERAGE[lv]}</span><span>${esc(c.coverage.note)}</span></p>`;
+}
+
+/* ═════════════ Header popovers: completion summary and work in progress ═════════════
+   Hover opens them on a mouse; a click or tap pins them open; a click outside or Escape closes. */
+function chapterName(c) { return c.number === 0 ? "Prologue" : c.postGame ? "Post-game" : "Chapter " + c.number; }
+function statsPopHTML() {
+  const o = overallStats();
+  const ci = currentChapterIdx(), cur = CHAPTERS[ci], cs = chapterStats(cur.id);
+  const tally = (pred) => { const l = ACTS.filter(pred); return `${l.filter((a) => stored(a.id) === "done").length} of ${l.length}`; };
+  const miss = ACTS.filter((a) => a.missable);
+  const handled = miss.filter((a) => isResolved(a.id)).length;
+  const missed = miss.filter((a) => statusOf(a) === "missed").length;
+  const openNow = miss.filter((a) => chapterIdx(a) <= ci && statusOf(a) === "todo").length;
+  const later = ACTS.filter((a) => statusOf(a) === "deferred").length;
+  const row = (label, val, cls, extra) => `<li${cls ? ` class="${cls}"` : ""}><span>${label}</span><b>${val}${extra ? `<small>${extra}</small>` : ""}</b></li>`;
+  return `<div class="pop-head"><span class="pop-big">${o.pct}%</span><span>of the journal</span></div>
+    <p class="pop-sub">${o.done} of ${o.total - o.skipped} steps done${o.skipped ? ` · ${o.skipped} skipped` : ""}</p>
+    <div class="bar"><i style="width:${o.pct}%"></i></div>
+    <ul class="pop-rows">
+      ${row(`${esc(chapterName(cur))} so far`, `${cs.done} of ${cs.total - cs.skipped}`, "", `${cs.pct}%`)}
+      ${row("Story steps", tally((a) => a.category === "story"))}
+      ${row("Unique rewards", tally((a) => a.uniqueReward))}
+      ${WEAPONS.length ? (() => { const w = weaponStats(); return row("Unique weapons", `${w.got} of ${w.total}`); })() : ""}
+      ${row("Missables handled", `${handled} of ${miss.length}`)}
+      ${row("Missables open now", openNow, openNow ? "warn" : "")}
+      ${missed ? row("Missed for good", missed, "bad") : ""}
+      ${later ? row("Saved for later", later) : ""}
+    </ul>
+    <div class="pop-foot"><span>Counts the guide's steps, not the in-game 100%.</span><button class="linkbtn" data-action="pop-nav" data-view="progress">Progress</button></div>`;
+}
+const POP = { which: null, pinned: false, timer: 0, html: "" };
+const popAnchor = (w) => (w === "stats" ? $("#ring") : $("#wipBtn"));
+function popPlace() {
+  const pop = $("#pop"), a = popAnchor(POP.which);
+  if (!pop || !a) return;
+  const r = a.getBoundingClientRect(), vw = document.documentElement.clientWidth, w = pop.offsetWidth;
+  pop.style.top = Math.round(r.bottom + 6) + "px";
+  pop.style.left = Math.round(Math.max(12, Math.min(r.right - w, vw - w - 12))) + "px";
+  pop.style.maxHeight = Math.max(200, Math.round(window.innerHeight - r.bottom - 22)) + "px";
+}
+function popRender() {
+  for (const w of ["stats", "wip"]) { const b = popAnchor(w); if (b) b.setAttribute("aria-expanded", String(POP.which === w)); }
+  const root = $("#popRoot");
+  const html = !POP.which || !DATA ? "" : POP.which === "stats" ? statsPopHTML() : wipHTML({ place: "pop" });
+  if (!html) { POP.which = null; POP.html = ""; root.innerHTML = ""; return; }
+  if (html === POP.html && $("#pop")) { popPlace(); return; }
+  POP.html = html;
+  root.innerHTML = `<div class="pop pop-${POP.which}" id="pop" role="dialog" tabindex="-1" aria-label="${POP.which === "stats" ? "Completion summary" : "Work in progress"}">${html}</div>`;
+  popPlace();
+}
+function popOpen(which, pin) {
+  clearTimeout(POP.timer);
+  const changed = POP.which !== which;
+  POP.which = which;
+  POP.pinned = changed ? !!pin : POP.pinned || !!pin;
+  if (changed) popRender();
+  if (which === "wip" && POP.which === "wip" && UI.wipSeen !== DATA.meta.dataVersion) { UI.wipSeen = DATA.meta.dataVersion; saveUI(); wipBtnRender(); }
+}
+function popClose() {
+  clearTimeout(POP.timer);
+  if (!POP.which) return;
+  POP.which = null; POP.pinned = false;
+  popRender();
+}
+function wipBtnRender() {
+  const b = $("#wipBtn");
+  if (!b || !DATA) return;
+  const w = DATA.meta.workInProgress, on = !!(w && w.show);
+  const fresh = on && UI.wipSeen !== DATA.meta.dataVersion;
+  b.hidden = !on;
+  b.querySelector(".wip-dot").hidden = !fresh;
+  b.setAttribute("aria-label", fresh ? "Work in progress. The guide was updated." : "Work in progress");
+}
+document.addEventListener("pointerover", (e) => {
+  if (e.pointerType !== "mouse" || !DATA) return;
+  const t = e.target.closest("[data-pop]");
+  if (t) { if (!(POP.pinned && POP.which !== t.dataset.pop)) popOpen(t.dataset.pop, false); return; }
+  if (e.target.closest("#pop")) clearTimeout(POP.timer);
+});
+document.addEventListener("pointerout", (e) => {
+  if (e.pointerType !== "mouse" || POP.pinned || !POP.which) return;
+  if (!e.target.closest("[data-pop], #pop")) return;
+  const to = e.relatedTarget && e.relatedTarget.closest ? e.relatedTarget.closest("[data-pop], #pop") : null;
+  if (to && (to.id === "pop" || to.dataset.pop === POP.which)) return;
+  clearTimeout(POP.timer);
+  POP.timer = setTimeout(popClose, 200);
+});
+window.addEventListener("resize", () => popClose());
+
+/* ═════════════ Ask the guide (the artifact's sample capability) ═════════════
+   Answers come only from walkthrough.json. Each question sends a spoiler-safe index of every step plus
+   the player's progress; two page tools hand Claude a step's full entry or search the guide's text.
+   Each question spends the viewer's own Claude usage, and the first one asks their permission. */
+const ASK_KEY = "completionist-journey:ask:v1";
+const ASK_OFF = ["not_granted", "sampling_disabled", "not_declared", "capability_disabled", "capability_removed"];
+const ASK_ERR = {
+  cancelled: "Stopped.",
+  rate_limited: "Claude is busy, or you've reached your usage limit. Try again in a little while.",
+  session_expired: "Your claude.ai sign-in has expired. Sign in again, then ask.",
+  refused: "Claude couldn't answer that. Try asking it another way.",
+  empty_completion: "No answer came back. Try a shorter question.",
+  prompt_too_large: "This chat has grown too long. Clear it and ask again.",
+  not_granted: "This page isn't allowed to use Claude, so asking is off. Reload the page if you want to be asked again.",
+  sampling_disabled: "Claude isn't available for your account here.",
+  tools_unavailable: "Claude couldn't open the guide's full entries here. Ask again for an answer from the step list.",
+};
+const askErrText = (c) => ASK_ERR[c] || (ASK_OFF.includes(c) ? "Asking Claude isn't available on this page right now." : "Couldn't reach Claude. Try again.");
+const VERIF_WORD = { verified: "Verified", community: "Community-reported", unconfirmed: "Unconfirmed" };
+const ASK = { fn: undefined, limits: null, reason: "", log: [], busy: false, ctl: null, open: false, ready: null };
+try {
+  const l = JSON.parse(lsGet(ASK_KEY) || "[]");
+  if (Array.isArray(l)) ASK.log = l.filter((x) => x && typeof x.q === "string").slice(-20).map((x) => ({ q: x.q, a: String(x.a || ""), err: String(x.err || ""), status: "" }));
+} catch { /* start with an empty chat */ }
+function askSave() { lsSet(ASK_KEY, JSON.stringify(ASK.log.slice(-20).map(({ q, a, err }) => ({ q, a, err })))); }
+const isLocalDev = () => /^(localhost|127\.0\.0\.1|\[::1\])$/.test(location.hostname);
+
+async function askInit() {
+  if (window.claude && typeof window.claude.use === "function") {
+    $("#askbar").hidden = false;
+    try { ASK.fn = await window.claude.use("sample"); } catch { ASK.fn = null; }
+    if (ASK.fn) { try { ASK.limits = await ASK.fn.limits(); } catch { ASK.limits = null; } }
+    else ASK.reason = "off";
+  } else {
+    ASK.fn = null;
+    ASK.reason = isLocalDev() ? "local" : "off";
+  }
+  askBarRender();
+}
+function askBarRender() {
+  const bar = $("#askbar");
+  if (!bar) return;
+  bar.hidden = ASK.reason === "off";
+  const inp = $("#askBarInput");
+  if (inp) inp.placeholder = ASK.log.length ? "Ask a follow-up" : "Ask the guide a question";
+  syncHead();
+}
+
+function askBrief(withTools) {
+  const ci = currentChapterIdx(), cur = CHAPTERS[ci], nm = nextMain();
+  const o = overallStats(), cs = chapterStats(cur.id);
+  const risk = lostAtMission(nm);
+  const next = recommendations()[0];
+  const pace = PACES[S.prefs.pace] || PACES.savor;
+  const steps = ORDERED.map((a) => {
+    const m = a.missable;
+    const flags = [m ? (m.hourglass ? "timed missable" : m.type === "in-mission" ? "missable inside its mission" : "missable") : "",
+      a.gate ? (a.gate.severity === "hard" ? "point of no return" : "choice inside") : "", a.uniqueReward ? "unique reward" : "", a.uniqueWeapons ? a.uniqueWeapons + " unique weapon" + (a.uniqueWeapons > 1 ? "s" : "") : "",
+      a.ambient ? "habit" : "", a.duringMission ? "pickup inside " + a.duringMission : "", fightVisible(a) ? "fight: " + a.fight.level : ""].filter(Boolean).join(", ");
+    return [a.id, chapterShort(chapterOf(a)), a.category, a.priority, statusOf(a), displayTitle(a).replace(/\s*\|\s*/g, " / "), flags || "-", a.verificationStatus].join(" | ");
+  });
+  const chapters = CHAPTERS.map((c) => `${chapterShort(c)} = ${chapterName(c)}: ${c.title} (coverage: ${COVERAGE[coverageOf(c)].toLowerCase()}${c.coverage && c.coverage.note ? ". " + c.coverage.note : ""})`);
+  const gaps = (DATA.researchGaps || []).map((g) => `- ${g.area}: ${g.detail}`);
+  return [
+`You are "Ask the guide", the helper inside an unofficial, spoiler-light completionist companion for Grand Theft Auto VI. The player asks you questions while they play.
+
+Rules:
+1. Use only the guide data in this message${withTools ? " and what your tools return" : ""}. GTA VI came out after your training, so you know nothing about it yourself. Never fill a gap from memory and never guess. If the guide doesn't cover something, say "The guide doesn't cover that yet", and say so if a research gap below matches.
+2. Say how sure the guide is when it matters. Research status: verified = two or more guides agree; community = one detailed guide or community reports; unconfirmed = conflicting or thin evidence. Flag details that rest on community or unconfirmed steps. Nothing here was tested in-game, so never say it was.
+3. Stay spoiler-light. Story missions ahead of the player show a safe title instead of their name: use that title and never guess the real name or the plot. For how-to questions, give the gentlest hint that answers (each step's hints go Explorer, Gentle nudge, Direct hint, Full reveal), then offer more. Give the full reveal only when the player asks for the answer outright. Warnings about things that can be missed for good may be blunt, because missing them is worse than a small spoiler.
+4. When you mention a step or a tip, write its id in double square brackets, like [[${(nm || ORDERED[0]).id}]]${TIPS.length ? ` or [[${TIPS[0].id}]]` : ""}. The app turns it into a link showing the title, so don't repeat the title next to it. Use only ids from the lists below.
+5. ${withTools ? "The step list has titles only. Call get_steps before you give hints, locations, rewards or exact details, and search_guide when the player names a place, item or activity you can't match to a title." : "Full step entries aren't available in this view, so answer from the titles and flags below and suggest opening the step for details."}
+6. For how-to and strategy questions (weapons and loadouts, the police, money, robberies, cars, getting around, training), answer from the tips list below.${withTools ? " get_steps also takes tip ids and returns a tip's full advice and caveats; read it before giving specifics." : ""} Mention when a tip's detail comes from a single guide.
+7. The next story mission carries a fight rating from walkthroughs (flag "fight: gunfight", "possible", "melee" or "none"). Use it when the player asks what to bring: gunfight means take a long gun from the trunk. Ratings for missions further ahead are withheld on purpose, to avoid spoilers: say so if asked. Never describe what happens inside a mission the player hasn't played.
+8. Unique weapon variants are in the weapons checklist below (ids start with wpn.). A weapon's name is a small spoiler: describe it by type and place unless the player names it or asks for names. Link a row with its id in double square brackets, like a step.${withTools ? " get_steps takes weapon ids too and returns the exact location." : ""} Many rows rest on one guide, and some have no known location yet: say so. Only rows tied to a Journal step have a known point in the story (the story point column); for the rest, guides don't say when they become available, so never guess a chapter.
+9. Keep it short: two to five sentences, or a short list. Plain text. You may use "- " bullets and **bold**. No headings, no tables.`,
+`The player right now:
+- In ${chapterName(cur)}, "${cur.title}": ${cs.done} of ${cs.total - cs.skipped} steps done there. Overall: ${o.done} of ${o.total - o.skipped} (${o.pct}%).
+- Next story mission: ${nm ? `[[${nm.id}]]` : "none, the story is finished"}.
+- Open missables the next story mission closes for good: ${risk.length ? risk.map((a) => `[[${a.id}]]`).join(", ") : "none"}.
+- The app's suggested next step: ${next ? `[[${next.id}]]` : "nothing open"}.
+- Pace: ${pace.label}. ${pace.blurb}
+- Mission names: ${S.prefs.names === "always" ? "the player shows every name" : "names ahead of the player stay hidden"}.
+Status words: todo = open; done; skipped; deferred = saved for later; locked = needs an earlier step first; missed = closed before they did it.`,
+`Chapters, in order:\n${chapters.join("\n")}`,
+`Steps in recommended order (id | chapter | type | priority | player status | title | flags | research status):\n${steps.join("\n")}`,
+`Tips and tricks (id | topic | title | summary | research status):\n${TIPS.map((t) => [t.id, tipTopicName(t.topic), t.title, t.summary, t.verificationStatus].join(" | ")).join("\n") || "none yet"}`,
+`Unique weapons checklist (id | type | name | area | how you get it | story point | player status | research status), ${weaponStats().got} of ${weaponStats().total} collected:\n${WEAPONS.map((w) => [w.id, w.type, w.name, w.area || "-", weaponHow(w) + (w.price ? " $" + w.price : ""), w.step && BY_ID.has(w.step) ? chapterName(chapterOf(BY_ID.get(w.step))) : "unknown", weaponGot(w) ? "collected" : "not yet", w.verificationStatus].join(" | ")).join("\n") || "none yet"}`,
+`Research gaps (still unknown):\n${gaps.join("\n")}`,
+`Guide data version ${DATA.meta.dataVersion}, updated ${DATA.meta.lastUpdated}.`].join("\n\n");
+}
+function askTipDetail(t) {
+  const d = { id: t.id, kind: "tip", topic: tipTopicName(t.topic), title: t.title, summary: t.summary, research: t.verificationStatus, lastVerified: t.lastVerified };
+  if (t.points && t.points.length) d.points = t.points;
+  if (t.from) d.appliesFrom = `[[${t.from}]] (${isResolved(t.from) ? "the player has done it" : "the player hasn't done it yet"})`;
+  if (t.related && t.related.length) d.relatedSteps = t.related.map((r) => `[[${r}]]`);
+  if (t.notes) d.caveats = t.notes;
+  d.sources = (t.sources || []).map((s) => (DATA.sources[s] && DATA.sources[s].name) || s);
+  return d;
+}
+function askWeaponDetail(w) {
+  const d = { id: w.id, kind: "unique weapon", type: w.type, name: w.name + " (a small spoiler: use it only if the player named it or asked)", group: (DATA.taxonomy.weaponGroups || {})[w.group], howYouGetIt: weaponHow(w), playerStatus: weaponGot(w) ? "collected" : "not yet", research: w.verificationStatus };
+  for (const k of ["area", "where", "price", "character", "edition", "notes"]) if (w[k]) d[k] = w[k];
+  if (w.step) d.journalStep = `[[${w.step}]]`;
+  d.storyPoint = w.step && BY_ID.has(w.step) ? chapterName(chapterOf(BY_ID.get(w.step))) + " (from its Journal step)" : "unknown: no guide says when it becomes available";
+  d.sources = (w.sources || []).map((k) => (DATA.sources[k] && DATA.sources[k].name) || k);
+  return d;
+}
+function askStepDetail(id) {
+  if (TIP_BY_ID.has(id)) return askTipDetail(TIP_BY_ID.get(id));
+  if (WPN_BY_ID.has(id)) return askWeaponDetail(WPN_BY_ID.get(id));
+  const a = BY_ID.get(id);
+  if (!a) return { id, error: "No step or tip has this id." };
+  const hidden = a.category === "story" && !showName(a);
+  const d = { id: a.id, title: displayTitle(a), chapter: chapterName(chapterOf(a)), type: DATA.taxonomy.categories[a.category] || a.category, priority: a.priority, playerStatus: statusOf(a), research: a.verificationStatus, lastVerified: a.lastVerified };
+  if (hidden) d.spoilerNote = "Story mission ahead of the player. Its real name is hidden: use the title above.";
+  for (const k of ["region", "character", "timeOfDay", "rewardTeaser", "spoilerFreeDescription", "whyNow", "notes"]) if (a[k]) d[k] = a[k];
+  if (a.rewardCategory) d.rewardDetail = (DATA.taxonomy.rewardCategories[a.rewardCategory] || a.rewardCategory) + " (a spoiler: say it only if asked)";
+  if (a.uniqueReward) d.uniqueReward = true;
+  if (a.uniqueWeapons) d.uniqueWeapons = a.uniqueWeapons + " unique weapon variant(s); the names are in the last hint, a spoiler";
+  if (a.unlocks && a.unlocks.length) d.unlocks = a.unlocks;
+  if (a.hints) d.hints = a.hints.map((h, i) => `${HINT_LABELS[i]}: ${h}`);
+  if (a.prerequisites && a.prerequisites.length) d.needsFirst = a.prerequisites.map((p) => `[[${p}]]`);
+  if (a.duringMission) d.insideMission = `[[${a.duringMission}]]`;
+  const pickups = DURING.get(a.id);
+  if (pickups && pickups.length) d.pickupsInside = pickups.map((p) => `[[${p.id}]]`);
+  if (a.missable) {
+    const m = a.missable;
+    d.missable = { type: m.type, closesAt: m.locksAt ? `[[${m.locksAt}]]` : undefined, latestSafe: m.latestSafe, earliest: m.earliest, comesBack: m.returns, warning: m.warning, timed: !!m.hourglass };
+  }
+  if (fightVisible(a)) d.fight = { rating: FIGHT[a.fight.level] ? FIGHT[a.fight.level].label : a.fight.level, note: a.fight.note, research: a.fight.verificationStatus };
+  if (a.gate) { const g = a.gate; d.pointOfNoReturn = { severity: g.severity, kind: g.kind, title: g.title, warning: g.warning, lose: g.lose, keep: g.keep, save: g.save }; }
+  d.sources = (a.sources || []).map((s) => (DATA.sources[s] && DATA.sources[s].name) || s);
+  return d;
+}
+function askSearch(query) {
+  const words = String(query).toLowerCase().split(/[^a-z0-9']+/).filter((w) => w.length > 2);
+  if (!words.length) return [];
+  const hits = [];
+  for (const a of ORDERED) {
+    const hidden = a.category === "story" && !showName(a);
+    const text = [hidden ? a.safeTitle : a.title, a.region, a.spoilerFreeDescription, a.whyNow, ...(a.hints || []), a.notes, ...(a.unlocks || []), a.missable && a.missable.warning]
+      .filter(Boolean).map(String).join(" · ");
+    const hay = text.toLowerCase();
+    const found = words.filter((w) => hay.includes(w));
+    if (!found.length) continue;
+    const at = hay.indexOf(found[0]);
+    hits.push({ id: a.id, title: displayTitle(a), chapter: chapterName(chapterOf(a)), status: statusOf(a), score: found.length, snippet: text.slice(Math.max(0, at - 60), at + 110).replace(/\s+/g, " ").trim() });
+  }
+  for (const t of TIPS) {
+    const text = [t.title, t.summary, ...(t.points || []), t.notes, tipTopicName(t.topic)].filter(Boolean).map(String).join(" · ");
+    const hay = text.toLowerCase();
+    const found = words.filter((w) => hay.includes(w));
+    if (!found.length) continue;
+    const at = hay.indexOf(found[0]);
+    hits.push({ id: t.id, title: t.title, chapter: "Tip · " + tipTopicName(t.topic), status: "tip", score: found.length, snippet: text.slice(Math.max(0, at - 60), at + 110).replace(/\s+/g, " ").trim() });
+  }
+  for (const w of WEAPONS) {
+    const text = [w.name, w.type, w.area, w.where, weaponHow(w), w.notes].filter(Boolean).map(String).join(" · ");
+    const hay = text.toLowerCase();
+    const found = words.filter((x) => hay.includes(x));
+    if (!found.length) continue;
+    const at = hay.indexOf(found[0]);
+    hits.push({ id: w.id, title: w.type + (w.area ? " · " + w.area : ""), chapter: "Unique weapon", status: weaponGot(w) ? "collected" : "not yet", score: found.length, snippet: text.slice(Math.max(0, at - 60), at + 110).replace(/\s+/g, " ").trim() });
+  }
+  return hits.sort((x, y) => y.score - x.score).slice(0, 12).map(({ score, ...h }) => h);
+}
+function askTools(x) {
+  return [
+    { name: "get_steps",
+      description: "Returns the full guide entries for up to 8 step, tip or weapon (wpn.) ids. Steps: description, why now, missable details, point-of-no-return warning, the four hint levels, notes, prerequisites, sources and research status. Tips: the full advice points, caveats, related steps, sources and research status.",
+      inputSchema: { type: "object", properties: { ids: { type: "array", items: { type: "string" }, description: "Step or tip ids from the lists" } }, required: ["ids"] },
+      execute: (input) => {
+        const ids = (Array.isArray(input.ids) ? input.ids : [input.ids]).filter(Boolean).map(String).slice(0, 8);
+        x.status = `Reading ${ids.length === 1 ? "an entry" : ids.length + " entries"} in the guide…`; askUpdateEx(x);
+        return ids.map(askStepDetail);
+      } },
+    { name: "search_guide",
+      description: "Searches every step's text (titles, descriptions, hints, notes, regions, unlocks, missable warnings), every tip and every unique weapon row, and returns up to 12 matching ids with a short snippet.",
+      inputSchema: { type: "object", properties: { query: { type: "string", description: "A few words, like a place, item or activity" } }, required: ["query"] },
+      execute: (input) => {
+        const q = String(input.query || "").slice(0, 80);
+        x.status = `Searching the guide for “${q}”…`; askUpdateEx(x);
+        return askSearch(q);
+      } },
+  ];
+}
+
+function askInline(s) {
+  return esc(s)
+    .replace(/\[\[([a-z0-9._-]+)\]\]/gi, (m, id) => {
+      const t = TIP_BY_ID.get(id);
+      if (t) return `<button class="ask-ref" data-action="ask-tip" data-id="${esc(id)}" title="${esc("Tip · " + tipTopicName(t.topic) + " · " + (VERIF_WORD[t.verificationStatus] || ""))}">${esc(t.title)}</button>`;
+      const w = WPN_BY_ID.get(id);
+      if (w) return `<button class="ask-ref" data-action="ask-wpn" data-id="${esc(id)}" title="${esc("Unique weapon · " + (VERIF_WORD[w.verificationStatus] || ""))}">${esc(weaponLabel(w) + (w.area ? ", " + w.area : ""))}</button>`;
+      const a = BY_ID.get(id);
+      return a ? `<button class="ask-ref" data-action="ask-goto" data-id="${esc(id)}" title="${esc(chapterName(chapterOf(a)) + " · " + (VERIF_WORD[a.verificationStatus] || ""))}">${esc(displayTitle(a))}</button>` : "";
+    })
+    .replace(/\*\*([^*]+)\*\*/g, "<b>$1</b>");
+}
+function askFormat(text) {
+  const out = [];
+  let para = [], list = null;
+  const endPara = () => { if (para.length) { out.push(`<p>${askInline(para.join(" "))}</p>`); para = []; } };
+  const endList = () => { if (list) { out.push(`<${list.tag}>${list.items.map((i) => `<li>${askInline(i)}</li>`).join("")}</${list.tag}>`); list = null; } };
+  for (const raw of String(text).split("\n")) {
+    const line = raw.trim();
+    const ul = /^[-*•]\s+(.*)$/.exec(line), ol = /^\d+[.)]\s+(.*)$/.exec(line);
+    if (ul || ol) {
+      endPara();
+      const tag = ul ? "ul" : "ol";
+      if (!list || list.tag !== tag) { endList(); list = { tag, items: [] }; }
+      list.items.push((ul || ol)[1]);
+    } else if (!line) { endPara(); endList(); }
+    else { endList(); para.push(line.replace(/^#+\s*/, "")); }
+  }
+  endPara(); endList();
+  return out.join("");
+}
+function askExHTML(x) {
+  return `<p class="ask-q">${esc(x.q)}</p>${x.a ? `<div class="ask-a">${askFormat(x.a)}</div>` : ""}${x.status ? `<p class="ask-status">${esc(x.status)}</p>` : ""}${x.err ? `<p class="ask-err">${esc(x.err)}</p>` : ""}`;
+}
+function askEmptyHTML() {
+  const qs = [nextMain() ? "Can I miss anything if I start my next story mission?" : "What's still left in the guide?", "What's still open in this chapter?", "Give me a gentle hint for what to do next.", TIPS.length ? "When should I take a long gun into a mission?" : "Which parts of the guide are still unconfirmed?"];
+  return `<div class="ask-empty"><p>Ask about a mission, a missable, a collectible, a tip or what to do next. Answers come from this guide and your progress, and stay spoiler-light unless you ask for the full answer.</p>
+    ${ASK.reason === "local" ? `<p class="ask-err">This local preview can't reach Claude. Asking works on the live page at claude.ai.</p>` : ""}
+    <div>${qs.map((q) => `<button class="ask-suggest" data-action="ask-suggest" data-q="${esc(q)}">${esc(q)}</button>`).join("")}</div></div>`;
+}
+function askLogHTML() {
+  return ASK.log.length ? ASK.log.map((x, i) => `<div class="ask-ex" id="askEx${i}">${askExHTML(x)}</div>`).join("") : askEmptyHTML();
+}
+function askRenderLog() {
+  const log = $("#askLog");
+  if (!log) return;
+  log.innerHTML = askLogHTML();
+  log.scrollTop = log.scrollHeight;
+  askFormRender();
+}
+function askUpdateEx(x) {
+  const el = document.getElementById("askEx" + ASK.log.indexOf(x));
+  if (!el) return;
+  const log = $("#askLog");
+  const near = log && log.scrollHeight - log.scrollTop - log.clientHeight < 96;
+  el.innerHTML = askExHTML(x);
+  if (near) log.scrollTop = log.scrollHeight;
+}
+function askFormRender() {
+  const b = $("#askSubmit");
+  if (b) {
+    if (ASK.busy) { b.type = "button"; b.dataset.action = "ask-stop"; b.className = "btn"; b.textContent = "Stop"; }
+    else { b.type = "submit"; delete b.dataset.action; b.className = "btn btn-primary"; b.textContent = "Ask"; }
+  }
+  const c = $("#askClear");
+  if (c) c.hidden = !ASK.log.length || ASK.busy;
+}
+function askViewport() {
+  const vv = window.visualViewport, st = document.documentElement.style;
+  if (!vv) return;
+  st.setProperty("--ask-vh", Math.round(vv.height) + "px");
+  st.setProperty("--ask-vt", Math.round(vv.offsetTop) + "px");
+}
+if (window.visualViewport) { visualViewport.addEventListener("resize", () => { if (ASK.open) askViewport(); }); visualViewport.addEventListener("scroll", () => { if (ASK.open) askViewport(); }); }
+function askAutosize(t) { t.style.height = "auto"; t.style.height = Math.min(t.scrollHeight + 2, 140) + "px"; }
+function askOpen() {
+  if (!DATA) return;
+  popClose();
+  if (!ASK.open) {
+    askViewport();
+    $("#askRoot").innerHTML = `<div class="scrim ask-scrim" data-action="ask-close"><div class="sheet ask" role="dialog" aria-modal="true" aria-labelledby="askTitle" data-stop>
+      <div class="ask-head"><h3 id="askTitle">Ask the guide</h3><div class="ask-head-actions"><button class="btn btn-sm btn-ghost" id="askClear" data-action="ask-clear">Clear</button><button class="icon-btn" data-action="ask-close-btn" aria-label="Close">${ICON.x}</button></div></div>
+      <div class="ask-log" id="askLog" aria-live="polite">${askLogHTML()}</div>
+      <form class="ask-form" id="askPanelForm" autocomplete="off"><textarea id="askPanelInput" rows="1" enterkeyhint="send" maxlength="600" placeholder="Ask a question" aria-label="Ask the guide a question"></textarea><button type="submit" class="btn btn-primary" id="askSubmit">Ask</button></form>
+      <p class="ask-foot">Answers come only from this guide (data ${esc(DATA.meta.dataVersion)}). Each question uses your Claude usage.</p>
+    </div></div>`;
+    ASK.open = true;
+    const log = $("#askLog");
+    log.scrollTop = log.scrollHeight;
+    askFormRender();
+  }
+  const t = $("#askPanelInput");
+  if (t && window.matchMedia("(hover: hover)").matches) t.focus({ preventScroll: true });
+}
+function askClose() {
+  if (!ASK.open) return;
+  $("#askRoot").innerHTML = "";
+  ASK.open = false;
+  askBarRender();
+  const i = $("#askBarInput");
+  if (i && !$("#askbar").hidden && window.matchMedia("(hover: hover)").matches) i.focus({ preventScroll: true });
+}
+async function askSend(text) {
+  if (ASK.busy) { askOpen(); return; }
+  const q = String(text || "").trim().slice(0, 600);
+  askOpen();
+  if (!q) return;
+  const x = { q, a: "", err: "", status: "Thinking…" };
+  ASK.log.push(x);
+  if (ASK.log.length > 20) ASK.log.shift();
+  askRenderLog(); askBarRender();
+  if (ASK.ready) await ASK.ready;
+  if (!ASK.fn) {
+    x.status = "";
+    x.err = ASK.reason === "local" ? "This local preview can't reach Claude. Asking works on the live page at claude.ai." : askErrText(ASK.reason === "off" ? "capability_disabled" : "");
+    askUpdateEx(x); askSave(); return;
+  }
+  ASK.busy = true;
+  const ctl = (ASK.ctl = new AbortController());
+  askFormRender();
+  const tools = ASK.limits && ASK.limits.tools ? askTools(x) : null;
+  const history = ASK.log.slice(0, -1).filter((p) => p.a && !p.err).slice(-4).flatMap((p) => [{ role: "user", content: p.q }, { role: "assistant", content: p.a }]);
+  const opts = { modelTier: "quick", cache: false, signal: ctl.signal, onText: ({ text: t }) => { x.a = t; x.status = ""; askUpdateEx(x); } };
+  if (tools) opts.tools = tools;
+  try {
+    const res = await ASK.fn([{ role: "user", content: askBrief(!!tools) }, ...history, { role: "user", content: q }], opts);
+    x.a = res.text;
+    if (res.truncated) x.err = "The answer was cut short. Try asking for less at once.";
+  } catch (e) {
+    const code = (e && e.code) || "upstream_error";
+    x.a = code === "refused" ? "" : (e && e.text) || x.a;
+    x.err = askErrText(code);
+    if (ASK_OFF.includes(code)) { ASK.fn = null; ASK.reason = "off"; }
+    if (code === "tools_unavailable") ASK.limits = Object.assign({}, ASK.limits, { tools: undefined });
+  } finally {
+    x.status = ""; ASK.busy = false;
+    if (ASK.ctl === ctl) ASK.ctl = null;
+    askSave(); askUpdateEx(x); askFormRender(); askBarRender();
+  }
+}
+let syncHead = () => {};
+function trackHead() {
+  const top = $(".topbar"), bar = $("#askbar"), st = document.documentElement.style;
+  const wide = window.matchMedia("(min-width: 900px)");
+  const set = () => {
+    const t = top.offsetHeight;
+    st.setProperty("--tb-h", t + "px");
+    st.setProperty("--sticky-h", t + (wide.matches && !bar.hidden ? bar.offsetHeight : 0) + "px");
+  };
+  syncHead = set;
+  set();
+  if ("ResizeObserver" in window) { const ro = new ResizeObserver(set); ro.observe(top); ro.observe(bar); }
+  if (wide.addEventListener) wide.addEventListener("change", set);
+}
+
 function footHTML() {
-  return `<footer class="foot"><p>${esc(DATA.meta.disclaimer)} Data ${esc(DATA.meta.dataVersion)}. Chapter photographs from Wikimedia Commons, used under their licences.</p><p><button class="btn btn-sm btn-ghost" data-action="credits">Photo credits</button>${Sync.available ? ' <button class="btn btn-sm btn-ghost" data-action="privacy">Privacy</button>' : ""}</p></footer>`;
+  return `<footer class="foot"><p>${esc(DATA.meta.disclaimer)} Data ${esc(DATA.meta.dataVersion)}. Chapter photographs from Wikimedia Commons, used under their licences.</p><p><button class="linkbtn" data-action="credits">Photo credits</button>${Sync.available ? '<button class="linkbtn" data-action="privacy">Privacy</button>' : ""}</p></footer>`;
 }
 
 /* ═════════════ Sheets ═════════════ */
@@ -1475,7 +2415,7 @@ function filtersSheet() {
     </div></div>
     <div class="fgroup"><span class="eyebrow">Activity type</span><div class="toggles">${Object.entries(DATA.taxonomy.categories).map(([k, v]) => tog("cat", k, v, f.cat.includes(k))).join("")}</div></div>
     <div class="fgroup"><span class="eyebrow">Status</span><div class="toggles">${[["all", "Any"], ["todo", "To do"], ["done", "Done"], ["deferred", "Later"], ["skipped", "Skipped"], ["missed", "Missed"]].map(([k, v]) => tog("status", k, v, f.status === k)).join("")}</div></div>
-    <div class="fgroup"><span class="eyebrow">Only show</span><div class="toggles">${tog("missable", "1", "Missable", f.missable)}${tog("available", "1", "Available now", f.available)}</div></div>
+    <div class="fgroup"><span class="eyebrow">Only show</span><div class="toggles">${tog("missable", "1", "Missable", f.missable)}${tog("available", "1", "Available now", f.available)}${tog("weapons", "1", "Unique weapons", f.weapons)}</div></div>
     <div class="fgroup"><span class="eyebrow">Character</span><div class="toggles">${[["any", "Anyone"], ["Jason", "Jason"], ["Lucia", "Lucia"]].map(([k, v]) => tog("character", k, v, f.character === k)).join("")}</div></div>
     <div class="fgroup"><span class="eyebrow">Research status</span><div class="toggles">${[["any", "Any"], ["verified", "Verified"], ["community", "Community-reported"], ["unconfirmed", "Unconfirmed"]].map(([k, v]) => tog("verif", k, v, f.verif === k)).join("")}</div></div>
     <div class="sheet-actions"><button class="btn btn-ghost" data-action="reset-filters">Clear all</button><button class="btn btn-primary" data-action="close-sheet-btn">Show results</button></div>`);
@@ -1525,7 +2465,7 @@ function doImport() {
   for (const k of Object.keys(S.hints)) if (!incoming.hints[k]) incoming.hints[k] = { l: 0, t };
   incoming.prefsT = t;
   S = incoming; migrateIds(); persist(); closeSheet(); render();
-  const n = Object.values(S.items).filter((x) => x.s === "done").length;
+  const n = Object.entries(S.items).filter(([k, x]) => x.s === "done" && BY_ID.has(k)).length;
   showToast(`Imported · ${n} steps done`);
 }
 function resetSheet() {
@@ -1555,11 +2495,13 @@ function catchUp() {
 function renderChrome() {
   if (!DATA) return;
   const o = overallStats();
-  const C = 2 * Math.PI * 18;
-  $("#ring").innerHTML = `<svg viewBox="0 0 44 44" aria-hidden="true"><circle cx="22" cy="22" r="18" fill="none" stroke="var(--surface-3)" stroke-width="4"/><circle cx="22" cy="22" r="18" fill="none" stroke="var(--accent)" stroke-width="4" stroke-linecap="round" stroke-dasharray="${C}" stroke-dashoffset="${C * (1 - o.pct / 100)}"/></svg><span>${o.pct}%</span>`;
-  $("#ring").setAttribute("aria-label", `Overall completion ${o.pct}%`);
+  $("#ring").innerHTML = `<span><b>${o.pct}%</b><small>done</small></span>`;
+  $("#ring").setAttribute("aria-label", `Overall completion ${o.pct}%. Show the summary`);
+  wipBtnRender();
+  syncHead();
+  if (POP.which) popRender();
   const openMiss = ACTS.filter((a) => a.missable && chapterIdx(a) <= currentChapterIdx() && statusOf(a) === "todo").length;
-  const tabs = [["now", "Now", ICON.tabNow, 0], ["journal", "Journal", ICON.tabJournal, 0], ["missables", "Missables", ICON.tabMiss, openMiss], ["progress", "Progress", ICON.tabProgress, 0]];
+  const tabs = [["now", "Now", ICON.tabNow, 0], ["journal", "Journal", ICON.tabJournal, 0], ["missables", "Missables", ICON.tabMiss, openMiss], ["weapons", "Weapons", ICON.crosshair, 0], ["tips", "Tips", ICON.tabTips, 0], ["progress", "Progress", ICON.tabProgress, 0]];
   const html = tabs.map(([k, l, ic, b]) => `<button class="tab" data-action="nav" data-view="${k}" ${UI.view === k ? 'aria-current="page"' : ""}>${ic}<span>${l}</span>${b ? `<span class="badge">${b}</span>` : ""}</button>`).join("");
   $("#tabs").innerHTML = html;
   $("#deskTabs").innerHTML = html;
@@ -1570,9 +2512,9 @@ function render() {
   if (!DATA) return;
   const y = window.scrollY;
   const focusId = document.activeElement && document.activeElement.id;
-  const selStart = focusId === "q" ? document.activeElement.selectionStart : null;
+  const selStart = focusId === "q" || focusId === "tq" || focusId === "wq" ? document.activeElement.selectionStart : null;
   const v = UI.view;
-  $("#view").innerHTML = v === "journal" ? viewJournal() : v === "missables" ? viewMissables() : v === "progress" ? viewProgress() : viewNow();
+  $("#view").innerHTML = v === "journal" ? viewJournal() : v === "missables" ? viewMissables() : v === "weapons" ? viewWeapons() : v === "tips" ? viewTips() : v === "progress" ? viewProgress() : viewNow();
   renderChrome();
   window.scrollTo(0, y);
   if (focusId) { const el = document.getElementById(focusId); if (el) { el.focus({ preventScroll: true }); if (selStart != null && el.setSelectionRange) el.setSelectionRange(selStart, selStart); } }
@@ -1582,6 +2524,13 @@ function navigate(view, { scrollTop = true } = {}) {
   if (location.hash.slice(1) !== view) history.replaceState(null, "", "#" + view);
   render();
   if (scrollTop) window.scrollTo(0, 0);
+}
+function gotoTip(id) {
+  if (!TIP_BY_ID.has(id)) return;
+  UI.tq = ""; UI.expanded.add(id);
+  UI.view = "tips"; history.replaceState(null, "", "#tips");
+  render();
+  requestAnimationFrame(() => { const el = document.getElementById("tip-" + id); if (el) el.scrollIntoView({ block: "center", behavior: "smooth" }); });
 }
 function gotoCard(id) {
   const a = BY_ID.get(id); if (!a) return;
@@ -1594,10 +2543,12 @@ function gotoCard(id) {
 
 /* ═════════════ Events ═════════════ */
 document.addEventListener("click", (e) => {
+  if (POP.which && !e.target.closest("#pop, [data-pop]")) popClose();
   const el = e.target.closest("[data-action]");
   if (!el) return;
   const act = el.dataset.action, id = el.dataset.id;
   if (act === "close-sheet") { if (e.target.closest("[data-stop]")) return; closeSheet(); return; }
+  if (act === "ask-close") { if (e.target.closest("[data-stop]")) return; askClose(); return; }
   switch (act) {
     case "nav": navigate(el.dataset.view); break;
     case "toggle": toggleDone(id); break;
@@ -1609,17 +2560,40 @@ document.addEventListener("click", (e) => {
     case "hero-toggle": UI.heroOpen = !UI.heroOpen; render(); break;
     case "pace": setPref("pace", el.dataset.pace); break;
     case "names": setPref("names", el.dataset.v); break;
-    case "chapter": UI.chapter = el.dataset.ch; UI.q = ""; render(); window.scrollTo(0, 0); break;
+    case "chapter":
+      if (UI.filters.weapons && !UI.q) {
+        UI.chapter = el.dataset.ch;
+        const g = document.getElementById("wgrp-" + el.dataset.ch);
+        if (g) g.scrollIntoView({ block: "start" }); else showToast("No unique weapons listed in that chapter.");
+        break;
+      }
+      UI.chapter = el.dataset.ch; UI.q = ""; render(); window.scrollTo(0, 0); break;
+    case "wtoggle": toggleWeapon(id); break;
+    case "wshow": UI.w.show = el.dataset.v; saveUI(); render(); break;
+    case "wnames": setPref("wnames", !S.prefs.wnames); break;
+    case "wq-clear": UI.wq = ""; render(); { const i = document.getElementById("wq"); if (i) i.focus(); } break;
+    case "w-reset": UI.w = Object.assign(defaultWeaponView(), { sort: UI.w.sort }); UI.wq = ""; saveUI(); render(); break;
+    case "wsort": UI.w.sort = el.dataset.v === "type" ? "type" : "story"; saveUI(); render(); break;
+    case "ask-wpn": askClose(); gotoWeapon(id); break;
+    case "weapons-off": UI.filters.weapons = false; saveUI(); render(); window.scrollTo(0, 0); break;
     case "chapter-go": UI.chapter = el.dataset.ch; UI.q = ""; navigate("journal"); break;
     case "goto": closeSheet(); gotoCard(id); break;
     case "open-search": UI.view = "journal"; history.replaceState(null, "", "#journal"); render(); requestAnimationFrame(() => { const q = $("#q"); if (q) q.focus(); }); break;
     case "clear-search": UI.q = ""; render(); break;
+    case "clear-tip-search": UI.tq = ""; render(); break;
+    case "tip-goto": closeSheet(); gotoTip(id); break;
+    case "tip-hide":
+      S.tips[id] = { h: 1, t: now() }; UI.expanded.delete(id); persist(); render();
+      showToast("Hidden from Now. It's still in Tips.", () => { S.tips[id] = { h: 0, t: now() }; persist(); render(); });
+      break;
+    case "tips-unhide": for (const k of Object.keys(S.tips)) if (S.tips[k] && S.tips[k].h) S.tips[k] = { h: 0, t: now() }; persist(); render(); break;
     case "open-filters": filtersSheet(); break;
     case "credits": creditsSheet(); break;
+    case "wip-gaps": popClose(); navigate("progress"); requestAnimationFrame(() => { const g = document.getElementById("gaps"); if (g) { const det = g.querySelector("details"); if (det) det.open = true; g.scrollIntoView({ block: "start", behavior: "smooth" }); } }); break;
     case "ftog": {
       const f = UI.filters, g = el.dataset.g, v = el.dataset.v;
       if (g === "pri" || g === "cat") { f[g] = f[g].includes(v) ? f[g].filter((x) => x !== v) : [...f[g], v]; }
-      else if (g === "missable" || g === "available") f[g] = !f[g];
+      else if (g === "missable" || g === "available" || g === "weapons") f[g] = !f[g];
       else f[g] = v;
       saveUI(); render(); filtersSheet(); break;
     }
@@ -1649,30 +2623,63 @@ document.addEventListener("click", (e) => {
     case "delete-account": deleteAccountSheet(); break;
     case "do-delete-account": Sync.deleteAccount(); break;
     case "privacy": privacySheet(); break;
+    case "pop-toggle": { const w = el.dataset.pop; if (POP.which === w && POP.pinned) popClose(); else { popOpen(w, true); if (e.detail === 0) { const p = $("#pop"); if (p) p.focus({ preventScroll: true }); } } break; }
+    case "pop-nav": popClose(); navigate(el.dataset.view); break;
+    case "ask-close-btn": askClose(); break;
+    case "ask-clear": if (!ASK.busy) { ASK.log = []; askSave(); askRenderLog(); askBarRender(); const t = $("#askPanelInput"); if (t) t.focus({ preventScroll: true }); } break;
+    case "ask-stop": if (ASK.ctl) ASK.ctl.abort(); break;
+    case "ask-suggest": askSend(el.dataset.q); break;
+    case "ask-goto": askClose(); gotoCard(id); break;
+    case "ask-tip": askClose(); gotoTip(id); break;
   }
 });
 document.addEventListener("input", (e) => {
   if (e.target.id === "q") { UI.q = e.target.value; render(); }
+  if (e.target.id === "tq") { UI.tq = e.target.value; render(); }
+  if (e.target.id === "wq") { UI.wq = e.target.value; render(); }
   if (e.target.id === "io-in") { const m = $("#io-msg"); if (m) m.textContent = ""; }
+  if (e.target.id === "askPanelInput") askAutosize(e.target);
 });
 document.addEventListener("change", (e) => {
   if (e.target.id === "cu-ch") { UI.cuCh = e.target.value; render(); }
+  if (e.target.id === "pace-sel" && PACES[e.target.value]) setPref("pace", e.target.value);
+  if (e.target.id === "w-how") { UI.w.how = e.target.value; saveUI(); render(); }
   if (e.target.id === "io-file" && e.target.files && e.target.files[0]) {
     const r = new FileReader();
     r.onload = () => { const ta = $("#io-in"); if (ta) ta.value = String(r.result || ""); };
     r.readAsText(e.target.files[0]);
   }
 });
-document.addEventListener("keydown", (e) => { if (e.key === "Escape" && $("#sheetRoot").innerHTML) closeSheet(); });
+document.addEventListener("keydown", (e) => {
+  if (e.key === "Escape") {
+    if (POP.which) { const back = popAnchor(POP.which); popClose(); if (back) back.focus({ preventScroll: true }); return; }
+    if ($("#sheetRoot").innerHTML) { closeSheet(); return; }
+    if (ASK.open) { askClose(); return; }
+  }
+  if (e.key === "Enter" && !e.shiftKey && !e.isComposing && e.target.id === "askPanelInput") { e.preventDefault(); e.target.form.requestSubmit(); }
+});
+document.addEventListener("submit", (e) => {
+  const f = e.target;
+  if (f.id !== "askBarForm" && f.id !== "askPanelForm") return;
+  e.preventDefault();
+  const inp = f.id === "askBarForm" ? $("#askBarInput") : $("#askPanelInput");
+  const v = inp.value;
+  if (f.id === "askPanelForm" && !v.trim()) return;
+  inp.value = "";
+  if (f.id === "askPanelForm") askAutosize(inp);
+  else inp.blur();
+  askSend(v);
+});
 window.addEventListener("hashchange", () => {
   const v = location.hash.slice(1);
-  if (["now", "journal", "missables", "progress"].includes(v) && v !== UI.view) navigate(v);
+  if (["now", "journal", "missables", "weapons", "tips", "progress"].includes(v) && v !== UI.view) navigate(v);
 });
 
 /* ═════════════ Boot ═════════════ */
 async function boot() {
+  trackHead();
   const h = location.hash.slice(1);
-  if (["now", "journal", "missables", "progress"].includes(h)) UI.view = h;
+  if (["now", "journal", "missables", "weapons", "tips", "progress"].includes(h)) UI.view = h;
   try {
     const res = await fetch(DATA_URL, { cache: "no-cache" });
     if (!res.ok) throw new Error("HTTP " + res.status);
@@ -1687,6 +2694,7 @@ async function boot() {
   render();
   setTimeout(() => document.documentElement.classList.remove("is-entering"), 1600);
   Sync.start();
+  ASK.ready = askInit();
 }
 boot();
 })();
