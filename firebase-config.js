@@ -8,3 +8,6 @@ window.FIREBASE_CONFIG = {
   messagingSenderId: "149548815111",
   appId: "1:149548815111:web:3cc15800d88fe458062ba2",
 };
+
+// App Check (reCAPTCHA v3) site key. Leave empty until App Check is set up in the Firebase console.
+window.FIREBASE_APPCHECK_KEY = "";

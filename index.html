@@ -874,6 +874,10 @@ const Sync = {
     await this.loadScript(base + "firebase-app-compat.js");
     await Promise.all([this.loadScript(base + "firebase-auth-compat.js"), this.loadScript(base + "firebase-firestore-compat.js")]);
     firebase.initializeApp(cfg);
+    // App Check (reCAPTCHA) keeps scripts and bots from using the project's quota. Inactive until a site key is set.
+    if (window.FIREBASE_APPCHECK_KEY) {
+      try { await this.loadScript(base + "firebase-app-check-compat.js"); firebase.appCheck().activate(window.FIREBASE_APPCHECK_KEY, true); } catch { /* sign-in still works until enforcement is on */ }
+    }
     const auth = firebase.auth(), db = firebase.firestore();
     this.fb = { auth, db };
     if (auth.isSignInWithEmailLink(location.href)) {

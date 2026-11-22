@@ -6,9 +6,12 @@ service cloud.firestore {
       allow read, delete: if request.auth != null && request.auth.uid == uid;
       allow create, update: if request.auth != null && request.auth.uid == uid
         && request.resource.data.keys().hasOnly(['v', 'items', 'hints', 'names', 'prefs', 'prefsT'])
-        && request.resource.data.items is map && request.resource.data.items.size() <= 2000
-        && request.resource.data.hints is map && request.resource.data.hints.size() <= 2000
-        && request.resource.data.names is map && request.resource.data.names.size() <= 2000;
+        && request.resource.data.v is int
+        && (!('prefsT' in request.resource.data) || request.resource.data.prefsT is number)
+        && request.resource.data.items is map && request.resource.data.items.size() <= 1500
+        && request.resource.data.hints is map && request.resource.data.hints.size() <= 1500
+        && request.resource.data.names is map && request.resource.data.names.size() <= 1500
+        && request.resource.data.prefs is map && request.resource.data.prefs.size() <= 10;
     }
     match /{document=**} { allow read, write: if false; }
   }
