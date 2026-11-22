@@ -419,15 +419,16 @@ textarea.io { width: 100%; min-height: 160px; border-radius: var(--r-md); border
 .acct-btn.on { color: var(--accent); }
 @media (hover: hover) { .acct-btn:hover { background: var(--surface-2); } }
 @media (max-width: 479px) { .acct-btn { padding: 0 6px; font-size: 13px; } }
-.pub-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr)); gap: 12px; }
-.pub-card { display: flex; flex-direction: column; gap: 12px; padding: 16px; border: 1px solid var(--line-strong); border-radius: var(--r-md); background: var(--surface); }
-.pub-head { display: flex; align-items: center; gap: 14px; }
-.pub-head h3 { margin: 0 0 2px; font-size: 18px; line-height: 1.2; }
-.pub-head p { margin: 0; }
-.pub-logo { flex: none; width: 48px; height: 48px; border-radius: 10px; object-fit: contain; padding: 5px; background: #efeadf; }
-.pub-initial { display: grid; place-items: center; font-weight: 800; font-size: 22px; color: var(--ink-2); background: var(--surface-3); padding: 0; }
-.pub-card .more { margin: 0; }
-.pub-support { margin: 0; padding-top: 10px; border-top: 1px solid var(--line-strong); }
+.pub-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 250px), 1fr)); gap: 8px; }
+.pub-card { display: flex; flex-direction: column; gap: 6px; padding: 10px 12px; border: 1px solid var(--line-strong); border-radius: var(--r-md); background: var(--surface); }
+.pub-head { display: flex; align-items: center; gap: 10px; }
+.pub-head h3 { margin: 0; font-size: 15px; line-height: 1.2; }
+.pub-head p { margin: 0; font-size: 12.5px; }
+.pub-logo { flex: none; width: 34px; height: 34px; border-radius: 8px; object-fit: contain; padding: 4px; background: #efeadf; }
+.pub-initial { display: grid; place-items: center; font-weight: 800; font-size: 16px; color: var(--ink-2); background: var(--surface-3); padding: 0; }
+.pub-pages summary { cursor: pointer; font-size: 12.5px; color: var(--ink-3); }
+.pub-pages .sources { margin-top: 6px; font-size: 13px; }
+.pub-support { margin: 0; font-size: 13px; }
 input.inp { width: 100%; min-height: 44px; border-radius: var(--r-md); border: 1px solid var(--line-strong); background: var(--bg-deep); padding: 0 12px; color: var(--ink); margin: 6px 0 10px; }
 .linkbtn { background: none; border: 0; padding: 0; color: var(--accent); text-decoration: underline; text-underline-offset: 3px; font: inherit; cursor: pointer; }
 select.sel { width: 100%; min-height: 44px; border-radius: var(--r-md); border: 1px solid var(--line-strong); background: var(--bg-deep); padding: 0 12px; }
@@ -1351,7 +1352,7 @@ function viewSources() {
     if (!groups.has(p.id)) groups.set(p.id, { p, pages: [], refs: 0 });
     const g = groups.get(p.id); g.pages.push({ k, s }); g.refs += use.get(k) || 0;
   }
-  const ordered = [...groups.values()].filter((g) => g.p.id !== "project").sort((a, b) => b.refs - a.refs || a.p.name.localeCompare(b.p.name));
+  const ordered = [...groups.values()].filter((g) => g.p.id !== "project").sort((a, b) => (!!(b.p.support && b.p.support.length) - !!(a.p.support && a.p.support.length)) || b.refs - a.refs || a.p.name.localeCompare(b.p.name));
   const project = groups.get("project");
   const logoFor = (g) => {
     const meta = (DATA.publishers || {})[g.p.host] || {};
@@ -1359,20 +1360,16 @@ function viewSources() {
   };
   const card = (g) => `<article class="pub-card">
     <header class="pub-head">${logoFor(g)}<div><h3>${g.p.host ? `<a href="https://${esc(g.p.host)}/" target="_blank" rel="noopener">${esc(g.p.name)}</a>` : esc(g.p.name)}</h3>
-    <p class="small muted">${g.refs ? `Cited in ${g.refs} place${g.refs === 1 ? "" : "s"}` : "Checked, not currently cited"}</p></div></header>
-    <details class="more"><summary>${g.pages.length} page${g.pages.length === 1 ? "" : "s"} we used</summary><div><ul class="sources">${g.pages.map(({ s }) => `<li>${/^https?:/.test(s.url) ? `<a href="${esc(s.url)}" target="_blank" rel="noopener">${esc(String(s.name).replace(/^[^:]+:\s*/, "") || s.name)}</a>` : esc(s.name)}${s.published ? ` <span>(${esc(s.published)})</span>` : ""}</li>`).join("")}</ul></div></details>
-    ${g.p.support && g.p.support.length ? `<p class="small pub-support">Support them: ${g.p.support.map((x) => `<a href="${esc(x.url)}" target="_blank" rel="noopener">${esc(x.label)}</a>`).join(" · ")}</p>` : ""}</article>`;
-  const supporters = ordered.filter((g) => g.p.support && g.p.support.length);
+    <p class="small muted">${g.refs ? `${g.refs} citation${g.refs === 1 ? "" : "s"} · ` : ""}${g.pages.length} page${g.pages.length === 1 ? "" : "s"}</p></div></header>
+    <details class="pub-pages"><summary>Pages we used</summary><ul class="sources">${g.pages.map(({ s }) => `<li>${/^https?:/.test(s.url) ? `<a href="${esc(s.url)}" target="_blank" rel="noopener">${esc(String(s.name).replace(/^[^:]+:\s*/, "") || s.name)}</a>` : esc(s.name)}${s.published ? ` <span>(${esc(s.published)})</span>` : ""}</li>`).join("")}</ul></details>
+    ${g.p.support && g.p.support.length ? `<p class="small pub-support"><span class="muted">Support:</span> ${g.p.support.map((x) => `<a href="${esc(x.url)}" target="_blank" rel="noopener">${esc(x.label)}</a>`).join(" · ")}</p>` : ""}</article>`;
   return `<div class="wrap"><section class="chapter-hero">
     <span class="eyebrow">Acknowledgments</span>
     <h1>Thank you</h1>
-    <p class="intro">Every fact in this guide was found, mapped or documented by someone else first. The guide is written in its own words and nothing here was tested in-game, but it only exists because these people did the legwork. Read their full guides, and if you can, support them.</p>
+    <p class="intro">This guide exists because these people did the legwork first. It's written in its own words, but the facts are theirs. Read their full guides and, where there's a link, support them.</p>
     <p><button class="btn btn-sm" data-action="nav" data-view="now">Back to the guide</button></p>
   </section>
-  ${supporters.length ? `<section class="section"><h2 class="section-title">Support the people behind this guide</h2>
-    <div class="panel"><p class="small muted">These sites publish a way to support them. Links appear only where a site offers one.</p>
-    <ul class="sources">${supporters.map((g) => `<li><b>${esc(g.p.name)}</b>: ${g.p.support.map((x) => `<a href="${esc(x.url)}" target="_blank" rel="noopener">${esc(x.label)}</a>`).join(" · ")}</li>`).join("")}</ul></div></section>` : ""}
-  <section class="section"><h2 class="section-title">Everyone we learned from (${ordered.length})</h2><div class="pub-grid">${ordered.map(card).join("")}</div></section>
+  <section class="section"><div class="pub-grid">${ordered.map(card).join("")}</div></section>
   ${project ? `<section class="section"><h2 class="section-title">This guide's own notes</h2><div class="panel"><ul class="sources">${project.pages.map(({ s }) => `<li>${esc(s.name)}</li>`).join("")}</ul></div></section>` : ""}
   <section class="section"><div class="panel"><h3>Listed here and want a change?</h3><p class="small muted">If you run one of these sites and want a link corrected, a support link added, or an entry removed, <a href="https://github.com/davidarechiga/gta6-completionist-journey/issues" target="_blank" rel="noopener">open an issue</a>. Support links appear only where a site publishes one. Logos are each site's own icon, shown only to identify it; if you'd rather yours weren't, say so in the same place.</p></div></section>
   ${footHTML()}</div>`;
