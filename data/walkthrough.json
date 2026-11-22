@@ -12299,7 +12299,8 @@
           "label": "Buy Me a Coffee",
           "url": "https://buymeacoffee.com/m4r92h8c6yh"
         }
-      ]
+      ],
+      "logo": "assets/pub/endgametools.com.png"
     },
     "gtabase.com": {
       "name": "GTABase",
@@ -12308,7 +12309,8 @@
           "label": "MyBase VIP membership",
           "url": "https://gtabase.com/membership"
         }
-      ]
+      ],
+      "logo": "assets/pub/gtabase.com.png"
     },
     "game-checklists.com": {
       "name": "Game-Checklists",
@@ -12317,7 +12319,8 @@
           "label": "Founder subscription",
           "url": "https://game-checklists.com/founder/"
         }
-      ]
+      ],
+      "logo": "assets/pub/game-checklists.com.png"
     },
     "wikigtavi.com": {
       "name": "WikiGTAVI",
@@ -12339,7 +12342,95 @@
           "label": "Become a Supporter (ad-free)",
           "url": "https://www.pushsquare.com/supporter"
         }
-      ]
+      ],
+      "logo": "assets/pub/pushsquare.com.png"
+    },
+    "powerpyx.com": {
+      "logo": "assets/pub/powerpyx.com.png"
+    },
+    "egamers.io": {
+      "logo": "assets/pub/egamers.io.png"
+    },
+    "finalboss.io": {
+      "logo": "assets/pub/finalboss.io.png"
+    },
+    "xboxplay.games": {
+      "logo": "assets/pub/xboxplay.games.png"
+    },
+    "movieweb.com": {
+      "logo": "assets/pub/movieweb.com.png"
+    },
+    "invenglobal.com": {
+      "logo": "assets/pub/invenglobal.com.png"
+    },
+    "promptowy.com": {
+      "logo": "assets/pub/promptowy.com.png"
+    },
+    "ign.com": {
+      "logo": "assets/pub/ign.com.png"
+    },
+    "fdaytalk.com": {
+      "logo": "assets/pub/fdaytalk.com.png"
+    },
+    "pcgamer.com": {
+      "logo": "assets/pub/pcgamer.com.png"
+    },
+    "gta6collectiblesmap.com": {
+      "logo": "assets/pub/gta6collectiblesmap.com.png"
+    },
+    "outputlag.com": {
+      "logo": "assets/pub/outputlag.com.png"
+    },
+    "games.gg": {
+      "logo": "assets/pub/games.gg.png"
+    },
+    "sportskeeda.com": {
+      "logo": "assets/pub/sportskeeda.com.png"
+    },
+    "showgamer.com": {
+      "logo": "assets/pub/showgamer.com.png"
+    },
+    "keengamer.com": {
+      "logo": "assets/pub/keengamer.com.png"
+    },
+    "redbull.com": {
+      "logo": "assets/pub/redbull.com.png"
+    },
+    "gamerbolt.com": {
+      "logo": "assets/pub/gamerbolt.com.png"
+    },
+    "noobfeed.com": {
+      "logo": "assets/pub/noobfeed.com.png"
+    },
+    "detonated.com": {
+      "logo": "assets/pub/detonated.com.png"
+    },
+    "shacknews.com": {
+      "logo": "assets/pub/shacknews.com.png"
+    },
+    "gta-zone.com": {
+      "logo": "assets/pub/gta-zone.com.png"
+    },
+    "rockstargames.com": {
+      "logo": "assets/pub/rockstargames.com.png"
+    },
+    "leonidaguide.gg": {
+      "logo": "assets/pub/leonidaguide.gg.png"
+    },
+    "gta6gps.com": {
+      "logo": "assets/pub/gta6gps.com.png"
+    },
+    "gamerblurb.com": {
+      "logo": "assets/pub/gamerblurb.com.png"
+    },
+    "thethumbwars.com": {
+      "logo": "assets/pub/thethumbwars.com.png"
+    },
+    "readdork.com": {
+      "logo": "assets/pub/readdork.com.png"
+    },
+    "beebom.com": {
+      "logo": "assets/pub/beebom.com.png"
     }
   }
 }
