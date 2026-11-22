@@ -1320,12 +1320,44 @@ function bodyHTML(a, opts = {}) {
   return parts.join("");
 }
 
+const hostOf = (u) => { try { return new URL(u).hostname.replace(/^www\./, ""); } catch { return ""; } };
+function publisherOf(key) {
+  const s = DATA.sources[key]; if (!s) return { id: key, name: key };
+  const host = hostOf(s.url);
+  const meta = (DATA.publishers || {})[host] || {};
+  return { id: host || "project", host, name: meta.name || String(s.name).split(":")[0].trim(), support: meta.support || [] };
+}
+/* Short attribution on a step, tip or weapon; the full list lives on the Sources page. */
 function sourcesListHTML(keys) {
-  return `<ul class="sources">${(keys || []).map((k) => {
-    const s = DATA.sources[k]; if (!s) return "";
-    const isUrl = /^https?:/.test(s.url);
-    return `<li>${isUrl ? `<a href="${esc(s.url)}" target="_blank" rel="noopener">${esc(s.name)}</a>` : esc(s.name)}${s.published ? ` <span>(${esc(s.published)})</span>` : ""}</li>`;
-  }).join("")}</ul>`;
+  const names = [...new Set((keys || []).map((k) => publisherOf(k).name))];
+  if (!names.length) return "";
+  return `<p class="small muted">Checked against ${names.map(esc).join(", ")}. <button class="linkbtn" data-action="nav" data-view="sources">All sources</button></p>`;
+}
+function viewSources() {
+  const use = new Map();
+  for (const list of [DATA.activities, DATA.tips || [], DATA.weapons || []]) for (const x of list) for (const k of x.sources || []) use.set(k, (use.get(k) || 0) + 1);
+  const groups = new Map();
+  for (const [k, s] of Object.entries(DATA.sources)) {
+    const p = publisherOf(k);
+    if (!groups.has(p.id)) groups.set(p.id, { p, pages: [], refs: 0 });
+    const g = groups.get(p.id); g.pages.push({ k, s }); g.refs += use.get(k) || 0;
+  }
+  const ordered = [...groups.values()].filter((g) => g.p.id !== "project").sort((a, b) => b.refs - a.refs || a.p.name.localeCompare(b.p.name));
+  const project = groups.get("project");
+  const card = (g) => `<div class="panel"><h3>${g.p.host ? `<a href="https://${esc(g.p.host)}/" target="_blank" rel="noopener">${esc(g.p.name)}</a>` : esc(g.p.name)}</h3>
+    <p class="small muted">${g.refs ? `Cited in ${g.refs} place${g.refs === 1 ? "" : "s"}` : "Checked, not currently cited"} · ${g.pages.length} page${g.pages.length === 1 ? "" : "s"}</p>
+    <ul class="sources">${g.pages.map(({ s }) => `<li>${/^https?:/.test(s.url) ? `<a href="${esc(s.url)}" target="_blank" rel="noopener">${esc(String(s.name).replace(/^[^:]+:\s*/, "") || s.name)}</a>` : esc(s.name)}${s.published ? ` <span>(${esc(s.published)})</span>` : ""}</li>`).join("")}</ul>
+    ${g.p.support && g.p.support.length ? `<p class="small">Support them: ${g.p.support.map((x) => `<a href="${esc(x.url)}" target="_blank" rel="noopener">${esc(x.label)}</a>`).join(" · ")}</p>` : ""}</div>`;
+  return `<div class="wrap"><section class="chapter-hero">
+    <span class="eyebrow">Credit where it's due</span>
+    <h1>Sources</h1>
+    <p class="intro">This guide is written in its own words, but the facts come from people who played, mapped and documented the game. Nothing here was tested in-game. Please visit these sites and support the ones you use.</p>
+    <p><button class="btn btn-sm" data-action="nav" data-view="now">Back to the guide</button></p>
+  </section>
+  <section class="section"><h2 class="section-title">${ordered.length} publishers</h2><div class="progress-cols"><div>${ordered.filter((_, i) => i % 2 === 0).map(card).join("")}</div><div>${ordered.filter((_, i) => i % 2 === 1).map(card).join("")}</div></div></section>
+  ${project ? `<section class="section"><h2 class="section-title">This guide's own notes</h2><div class="panel"><ul class="sources">${project.pages.map(({ s }) => `<li>${esc(s.name)}</li>`).join("")}</ul></div></section>` : ""}
+  <section class="section"><div class="panel"><h3>Listed here and want a change?</h3><p class="small muted">If you run one of these sites and want a link corrected, a support link added, or an entry removed, <a href="https://github.com/davidarechiga/gta6-completionist-journey/issues" target="_blank" rel="noopener">open an issue</a>. Support links appear only where a site publishes one.</p></div></section>
+  ${footHTML()}</div>`;
 }
 
 /* ═════════════ Tips ═════════════ */
@@ -1571,13 +1603,13 @@ function weaponRowHTML(w) {
   const step = w.step ? BY_ID.get(w.step) : null;
   const meta = [w.area, weaponHow(w), w.price ? "$" + w.price.toLocaleString("en-US") : "", w.character ? (CHAR_SHORT[w.character] || w.character) + " only" : ""]
     .filter(Boolean).map(esc).join(" · ");
-  const srcs = (w.sources || []).map((k) => { const x = DATA.sources[k]; return x && x.url ? `<a href="${esc(x.url)}" target="_blank" rel="noopener">${esc(x.name)}</a>` : esc((x && x.name) || k); }).join(", ");
+  const srcs = [...new Set((w.sources || []).map((k) => publisherOf(k).name))].map(esc).join(", ");
   const body = open ? `<div class="card-body">
       ${S.prefs.wnames ? `<p class="small muted">${esc(w.type)}</p>` : `<div><span class="eyebrow">Name</span><p>${esc(w.name)}</p></div>`}
       <p class="desc">${w.where ? esc(w.where) : "Nobody has documented where this one comes from yet."}</p>
       ${w.notes ? `<p class="small" style="color:var(--ink-2)">${esc(w.notes)}</p>` : ""}
       ${step ? `<p class="small">${got && stored(step.id) === "done" && !S.items[w.id] ? "Ticked off with its Journal step. " : ""}<button class="btn btn-sm" data-action="goto" data-id="${esc(step.id)}">Open in the Journal</button></p>` : ""}
-      <p class="small muted">${verifBadge(w, true)}${srcs ? " · " + srcs : ""}</p>
+      <p class="small muted">${verifBadge(w, true)}${srcs ? " · " + srcs + ' · <button class="linkbtn" data-action="nav" data-view="sources">Sources</button>' : ""}</p>
     </div>` : "";
   return `<article class="card wcard ${got ? "s-done" : ""} ${open ? "is-open" : ""}" id="w-${esc(w.id)}">
     <div class="card-row">
@@ -1871,7 +1903,7 @@ function viewProgress() {
     </div><p class="small muted">Counts: ${["verified", "community", "unconfirmed"].map((v) => `${all.filter((a) => a.verificationStatus === v).length} ${v}`).join(" · ")}. Data version ${esc(DATA.meta.dataVersion)}, last updated ${esc(DATA.meta.lastUpdated)}.</p></div>
     ${wipHTML({ place: "progress" })}
     <div class="panel" id="gaps"><details class="more"><summary>Known research gaps (${DATA.researchGaps.length}). These name later missions and characters.</summary><div><ul class="gaps">${DATA.researchGaps.map((g) => `<li><b>${esc(g.area)}.</b> ${esc(g.detail)}</li>`).join("")}</ul></div></details></div>
-    <div class="panel"><details class="more"><summary>All sources (${Object.keys(DATA.sources).length})</summary><div><ul class="sources">${Object.values(DATA.sources).map((s) => `<li>${/^https?:/.test(s.url) ? `<a href="${esc(s.url)}" target="_blank" rel="noopener">${esc(s.name)}</a>` : esc(s.name)}${s.published ? ` (${esc(s.published)})` : ""}</li>`).join("")}</ul></div></details></div>
+    <div class="panel"><h3>Sources</h3><p class="small muted">${Object.keys(DATA.sources).length} pages from ${new Set(Object.keys(DATA.sources).map((k) => publisherOf(k).id)).size} publishers, with links and ways to support them.</p><div class="actions"><button class="btn btn-sm" data-action="nav" data-view="sources">See all sources</button></div></div>
   </section>`;
   h += footHTML() + `</div>`;
   return h;
@@ -2538,7 +2570,7 @@ function render() {
   const focusId = document.activeElement && document.activeElement.id;
   const selStart = focusId === "q" || focusId === "tq" || focusId === "wq" ? document.activeElement.selectionStart : null;
   const v = UI.view;
-  $("#view").innerHTML = v === "journal" ? viewJournal() : v === "missables" ? viewMissables() : v === "weapons" ? viewWeapons() : v === "tips" ? viewTips() : v === "progress" ? viewProgress() : viewNow();
+  $("#view").innerHTML = v === "journal" ? viewJournal() : v === "missables" ? viewMissables() : v === "weapons" ? viewWeapons() : v === "tips" ? viewTips() : v === "progress" ? viewProgress() : v === "sources" ? viewSources() : viewNow();
   renderChrome();
   window.scrollTo(0, y);
   if (focusId) { const el = document.getElementById(focusId); if (el) { el.focus({ preventScroll: true }); if (selStart != null && el.setSelectionRange) el.setSelectionRange(selStart, selStart); } }
@@ -2697,14 +2729,14 @@ document.addEventListener("submit", (e) => {
 });
 window.addEventListener("hashchange", () => {
   const v = location.hash.slice(1);
-  if (["now", "journal", "missables", "weapons", "tips", "progress"].includes(v) && v !== UI.view) navigate(v);
+  if (["now", "journal", "missables", "weapons", "tips", "progress", "sources"].includes(v) && v !== UI.view) navigate(v);
 });
 
 /* ═════════════ Boot ═════════════ */
 async function boot() {
   trackHead();
   const h = location.hash.slice(1);
-  if (["now", "journal", "missables", "weapons", "tips", "progress"].includes(h)) UI.view = h;
+  if (["now", "journal", "missables", "weapons", "tips", "progress", "sources"].includes(h)) UI.view = h;
   try {
     const res = await fetch(DATA_URL, { cache: "no-cache" });
     if (!res.ok) throw new Error("HTTP " + res.status);

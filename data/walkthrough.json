@@ -12290,5 +12290,34 @@
       "verificationStatus": "community",
       "lastVerified": "2026-11-22"
     }
-  ]
+  ],
+  "publishers": {
+    "endgametools.com": {
+      "name": "Endgame Tools",
+      "support": [
+        {
+          "label": "Buy Me a Coffee",
+          "url": "https://buymeacoffee.com/m4r92h8c6yh"
+        }
+      ]
+    },
+    "gtabase.com": {
+      "name": "GTABase",
+      "support": [
+        {
+          "label": "MyBase VIP membership",
+          "url": "https://gtabase.com/membership"
+        }
+      ]
+    },
+    "game-checklists.com": {
+      "name": "Game-Checklists",
+      "support": [
+        {
+          "label": "Founder subscription",
+          "url": "https://game-checklists.com/founder/"
+        }
+      ]
+    }
+  }
 }
