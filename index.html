@@ -1348,13 +1348,17 @@ function viewSources() {
     <p class="small muted">${g.refs ? `Cited in ${g.refs} place${g.refs === 1 ? "" : "s"}` : "Checked, not currently cited"} · ${g.pages.length} page${g.pages.length === 1 ? "" : "s"}</p>
     <ul class="sources">${g.pages.map(({ s }) => `<li>${/^https?:/.test(s.url) ? `<a href="${esc(s.url)}" target="_blank" rel="noopener">${esc(String(s.name).replace(/^[^:]+:\s*/, "") || s.name)}</a>` : esc(s.name)}${s.published ? ` <span>(${esc(s.published)})</span>` : ""}</li>`).join("")}</ul>
     ${g.p.support && g.p.support.length ? `<p class="small">Support them: ${g.p.support.map((x) => `<a href="${esc(x.url)}" target="_blank" rel="noopener">${esc(x.label)}</a>`).join(" · ")}</p>` : ""}</div>`;
+  const supporters = ordered.filter((g) => g.p.support && g.p.support.length);
   return `<div class="wrap"><section class="chapter-hero">
-    <span class="eyebrow">Credit where it's due</span>
-    <h1>Sources</h1>
-    <p class="intro">This guide is written in its own words, but the facts come from people who played, mapped and documented the game. Nothing here was tested in-game. Please visit these sites and support the ones you use.</p>
+    <span class="eyebrow">Acknowledgments</span>
+    <h1>Thank you</h1>
+    <p class="intro">Every fact in this guide was found, mapped or documented by someone else first. The guide is written in its own words and nothing here was tested in-game, but it only exists because these people did the legwork. Read their full guides, and if you can, support them.</p>
     <p><button class="btn btn-sm" data-action="nav" data-view="now">Back to the guide</button></p>
   </section>
-  <section class="section"><h2 class="section-title">${ordered.length} publishers</h2><div class="progress-cols"><div>${ordered.filter((_, i) => i % 2 === 0).map(card).join("")}</div><div>${ordered.filter((_, i) => i % 2 === 1).map(card).join("")}</div></div></section>
+  ${supporters.length ? `<section class="section"><h2 class="section-title">Support the people behind this guide</h2>
+    <div class="panel"><p class="small muted">These sites publish a way to support them. Links appear only where a site offers one.</p>
+    <ul class="sources">${supporters.map((g) => `<li><b>${esc(g.p.name)}</b>: ${g.p.support.map((x) => `<a href="${esc(x.url)}" target="_blank" rel="noopener">${esc(x.label)}</a>`).join(" · ")}</li>`).join("")}</ul></div></section>` : ""}
+  <section class="section"><h2 class="section-title">Everyone we learned from (${ordered.length})</h2><div class="progress-cols"><div>${ordered.filter((_, i) => i % 2 === 0).map(card).join("")}</div><div>${ordered.filter((_, i) => i % 2 === 1).map(card).join("")}</div></div></section>
   ${project ? `<section class="section"><h2 class="section-title">This guide's own notes</h2><div class="panel"><ul class="sources">${project.pages.map(({ s }) => `<li>${esc(s.name)}</li>`).join("")}</ul></div></section>` : ""}
   <section class="section"><div class="panel"><h3>Listed here and want a change?</h3><p class="small muted">If you run one of these sites and want a link corrected, a support link added, or an entry removed, <a href="https://github.com/davidarechiga/gta6-completionist-journey/issues" target="_blank" rel="noopener">open an issue</a>. Support links appear only where a site publishes one.</p></div></section>
   ${footHTML()}</div>`;
@@ -1903,7 +1907,7 @@ function viewProgress() {
     </div><p class="small muted">Counts: ${["verified", "community", "unconfirmed"].map((v) => `${all.filter((a) => a.verificationStatus === v).length} ${v}`).join(" · ")}. Data version ${esc(DATA.meta.dataVersion)}, last updated ${esc(DATA.meta.lastUpdated)}.</p></div>
     ${wipHTML({ place: "progress" })}
     <div class="panel" id="gaps"><details class="more"><summary>Known research gaps (${DATA.researchGaps.length}). These name later missions and characters.</summary><div><ul class="gaps">${DATA.researchGaps.map((g) => `<li><b>${esc(g.area)}.</b> ${esc(g.detail)}</li>`).join("")}</ul></div></details></div>
-    <div class="panel"><h3>Sources</h3><p class="small muted">${Object.keys(DATA.sources).length} pages from ${new Set(Object.keys(DATA.sources).map((k) => publisherOf(k).id)).size} publishers, with links and ways to support them.</p><div class="actions"><button class="btn btn-sm" data-action="nav" data-view="sources">See all sources</button></div></div>
+    <div class="panel"><h3>Thanks and sources</h3><p class="small muted">${Object.keys(DATA.sources).length} pages from ${new Set(Object.keys(DATA.sources).map((k) => publisherOf(k).id)).size} publishers, who made this guide possible, with links and ways to support them.</p><div class="actions"><button class="btn btn-sm" data-action="nav" data-view="sources">See the thank-you page</button></div></div>
   </section>`;
   h += footHTML() + `</div>`;
   return h;

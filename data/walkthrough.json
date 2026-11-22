@@ -12318,6 +12318,28 @@
           "url": "https://game-checklists.com/founder/"
         }
       ]
+    },
+    "wikigtavi.com": {
+      "name": "WikiGTAVI",
+      "support": [
+        {
+          "label": "Patreon",
+          "url": "https://www.patreon.com/cw/GTA6VIPCommunity"
+        },
+        {
+          "label": "Ko-fi",
+          "url": "https://ko-fi.com/gta6vipcommunity"
+        }
+      ]
+    },
+    "pushsquare.com": {
+      "name": "Push Square",
+      "support": [
+        {
+          "label": "Become a Supporter (ad-free)",
+          "url": "https://www.pushsquare.com/supporter"
+        }
+      ]
     }
   }
 }
